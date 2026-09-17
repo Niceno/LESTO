@@ -52,3 +52,10 @@ As in case `001`:
 First converged solution:
 - 388 SIMPLE iterations
 
+## Re-run after retreiving from github repository
+
+- gmsh -3 pipe.geo regenerates pipe.msh.
+- gmshToFoam pipe.msh recreates constant/polyMesh/.
+- checkMesh should end with Mesh OK.
+- simpleFoam re-runs the simulation
+

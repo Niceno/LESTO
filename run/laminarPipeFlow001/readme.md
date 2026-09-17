@@ -99,3 +99,11 @@ Create marker file:
 Open:
 
     paraview laminarPipeFlow.foam
+
+## Re-run after retreiving from github repository
+
+- gmsh -3 pipe.geo regenerates pipe.msh.
+- gmshToFoam pipe.msh recreates constant/polyMesh/.
+- checkMesh should end with Mesh OK.
+- simpleFoam re-runs the simulation
+
