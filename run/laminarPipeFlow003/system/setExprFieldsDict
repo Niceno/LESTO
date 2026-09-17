@@ -1,0 +1,25 @@
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      setExprFieldsDict;
+}
+
+expressions
+(
+    U
+    {
+        field       U;
+
+        expression
+        #{
+            vector
+            (
+                0.19*(1.0 - (sqr(pos().y()) + sqr(pos().z()))/sqr(0.0024)),
+                0,
+                0
+            )
+        #};
+    }
+);
