@@ -35,5 +35,9 @@ As before:
     setExprFields
     rhoSimpleFoam > out &
 
-The consistent initialization of the temperature field results in
+The linearly variable temperature value on the wall resulted in
 significantly faster convergence of the energy equation.
+
+First converged solution:
+- 154 SIMPLE iterations
+
