@@ -61,5 +61,7 @@ First converged solution:
 - gmsh -3 pipe.geo regenerates pipe.msh.
 - gmshToFoam pipe.msh recreates constant/polyMesh/.
 - checkMesh should end with Mesh OK.
+- cp -r 0.orig 0
+- setExprFields create initial field (for U)
 - simpleFoam re-runs the simulation
 
