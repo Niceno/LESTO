@@ -1,0 +1,97 @@
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      controlDict;
+}
+
+application     rhoSimpleFoam;
+
+startFrom       startTime;
+startTime       0;
+
+stopAt          endTime;
+endTime         2000;
+
+deltaT          1;
+
+writeControl    timeStep;
+writeInterval   100;
+
+purgeWrite      0;
+
+writeFormat     ascii;
+writePrecision  6;
+writeCompression off;
+
+timeFormat      general;
+timePrecision   6;
+
+runTimeModifiable true;
+
+functions
+{
+    writeTransportProperties
+    {
+        type            coded;
+        libs            ("libutilityFunctionObjects.so");
+        name            writeTransportProperties;
+
+        writeControl    writeTime;
+
+        codeInclude
+        #{
+            #include "fvCFD.H"
+            #include "fluidThermo.H"
+        #};
+
+        codeOptions
+        #{
+            -I$(LIB_SRC)/thermophysicalModels/basic/lnInclude  \
+            -I$(LIB_SRC)/thermophysicalModels/specie/lnInclude  \
+            -I$(LIB_SRC)/transportModels/compressible/lnInclude
+        #};
+
+        codeLibs
+        #{
+            -lfluidThermophysicalModels  \
+            -lspecie
+        #};
+
+        codeWrite
+        #{
+            const fluidThermo& thermo =
+                mesh().lookupObject<fluidThermo>("thermophysicalProperties");
+
+            volScalarField muField
+            (
+                IOobject
+                (
+                    "mu",
+                    mesh().time().timeName(),
+                    mesh(),
+                    IOobject::NO_READ,
+                    IOobject::NO_WRITE
+                ),
+                thermo.mu()
+            );
+
+            volScalarField kappaField
+            (
+                IOobject
+                (
+                    "kappa",
+                    mesh().time().timeName(),
+                    mesh(),
+                    IOobject::NO_READ,
+                    IOobject::NO_WRITE
+                ),
+                thermo.kappa()
+            );
+
+            muField.write();
+            kappaField.write();
+        #};
+    }
+}
