@@ -8,14 +8,14 @@ FoamFile
 dimensions      [0 0 0 1 0 0 0];
 
 // Temporary value; internal field is overwritten by setExprFields
-internalField   uniform 400;
+internalField   uniform 1000;
 
 boundaryField
 {
     INLET
     {
         type    fixedValue;
-        value   uniform 400;
+        value   uniform 1000;
     }
 
     OUTLET
@@ -26,7 +26,7 @@ boundaryField
     WALL
     {
         type    codedFixedValue;
-        value   uniform 400;
+        value   uniform 1000;
         name    linearWallTemperature;
 
         code
@@ -37,8 +37,11 @@ boundaryField
             {
                 const scalar x = Cf[facei].x();
 
-                operator[](facei) =
-                    400.0 - 100.0*x/0.69;
+                /*-------------------------+
+                |  x = 0.0   =>  T = 1000  |
+                |  x = 0.69  =>  T =  300  |
+                +------------------------*/
+                operator[](facei) = 1000.0 - 700.0*x/0.69;
             }
         #};
     }

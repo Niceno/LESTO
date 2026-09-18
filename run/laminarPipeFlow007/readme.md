@@ -4,7 +4,8 @@ This case is based on `laminarPipeFlow006`.
 
 ## Differences from case 006
 
-The helium transport properties are now temperature dependent.
+The helium transport properties are now temperature dependent and temperatures
+range from 1000 K at the inlet to 300 K at the outlet.
 
 In
 
@@ -94,6 +95,6 @@ As in case `006`:
     rhoSimpleFoam > out &
 
 First converged solution:
-- 226 SIMPLE iterations
+- 261 SIMPLE iterations
 
 
