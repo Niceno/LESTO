@@ -21,8 +21,7 @@ writeInterval   100;
 
 purgeWrite      0;
 
-writeFormat     ascii;
-writePrecision  6;
+writeFormat     binary;
 writeCompression off;
 
 timeFormat      general;
