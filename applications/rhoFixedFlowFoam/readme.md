@@ -1,4 +1,4 @@
-# rhoFreezeFoam
+# rhoFixedFlowFoam
 
 ## Purpose
 
@@ -41,11 +41,11 @@ are not retroactively updated.
 
 ## Run
 
-Compile rhoFreezeFoam with wmake.
+Compile rhoFixedFlowFoam with wmake.
 
 Prepare a case containing the frozen carrier fields and Y_PbI2_g, then run:
 
-    rhoFreezeFoam
+    rhoFixedFlowFoam
 
 Before physical LESTO calculations, replace the test diffusion coefficient
 with the appropriate species diffusivity D(T,p).

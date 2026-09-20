@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-  rhoFreezeFoam -- frozen carrier flow, transient scalar transport, OF v2606.
+  rhoFixedFlowFoam -- fixed carrier flow, transient scalar transport, OF v2606.
 
   Derived from the initialization and program structure of rhoSimpleFoam:
   Copyright (C) 2011-2017 OpenFOAM Foundation.
