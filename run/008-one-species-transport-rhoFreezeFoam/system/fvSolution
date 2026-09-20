@@ -14,7 +14,7 @@ FoamFile{version 2.0;  format ascii; class dictionary; object fvSolution;}
 
 solvers {
 
-    Pb_g {
+    Y_PbI2_g {
         solver          GAMG;
         tolerance       1e-7;
         relTol          0;
@@ -27,6 +27,6 @@ solvers {
 relaxationFactors {
 
     equations {
-        Pb_g            0.995;
+        Y_PbI2_g            0.995;
     }
 }

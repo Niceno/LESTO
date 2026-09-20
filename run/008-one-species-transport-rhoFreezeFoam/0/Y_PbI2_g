@@ -2,7 +2,7 @@ FoamFile
 {
     format      ascii;
     class       volScalarField;
-    object      Pb_g;
+    object      Y_PbI2_g;
 }
 
 dimensions      [0 0 0 0 0 0 0];

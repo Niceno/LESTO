@@ -33,23 +33,23 @@ writeFormat     binary;
 writeCompression off;
 
 timeFormat      general;
-timePrecision   12;
+timePrecision   6;
 
 runTimeModifiable true;
 
 functions {
 
-    Pb_gTransport {
+    Y_PbI2_gTransport {
         type            scalarTransport;
         libs            ("libsolverFunctionObjects.so");
 
-        field           Pb_g;
+        field           Y_PbI2_g;
         phi             phi;
         rho             rho;
 
         D               1e-5;
 
-        schemesField    Pb_g;
+        schemesField    Y_PbI2_g;
 
         resetOnStartUp  no;
 

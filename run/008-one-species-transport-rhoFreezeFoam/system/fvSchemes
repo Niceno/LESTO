@@ -27,7 +27,7 @@ divSchemes {
 
     default         none;
 
-    div(phi,Pb_g)   Gauss upwind;
+    div(phi,Y_PbI2_g)   Gauss upwind;
 }
 
 laplacianSchemes {

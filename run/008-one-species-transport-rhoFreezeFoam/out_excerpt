@@ -9,9 +9,9 @@ Build  : _481094f-20260618 OPENFOAM=2606 version=2606
 Arch   : "LSB;label=32;scalar=64"
 Exec   : rhoFreezeFoam
 Date   : Sep 20 2026
-Time   : 13:39:13
+Time   : 15:09:32
 Host   : PC18046
-PID    : 148127
+PID    : 178987
 I/O    : uncollated
 Case   : /home/niceno/Development/OpenFOAM/LESTO/run/008-one-species-transport-rhoFreezeFoam
 nProcs : 1
@@ -43,472 +43,492 @@ Selecting thermodynamics package
 Using dynamicCode for patch WALL on field T at line 42 in "/home/niceno/Development/OpenFOAM/LESTO/run/008-one-species-transport-rhoFreezeFoam/0/T/boundaryField/WALL"
 Using dynamicCode for patch INLET on field U at line 33 in "/home/niceno/Development/OpenFOAM/LESTO/run/008-one-species-transport-rhoFreezeFoam/0/U/boundaryField/INLET"
 Frozen fields: U, p, e, T, rho, phi, mu, kappa
-Only Pb_g is advanced. D is in kg/(m s), not m2/s.
+Only Y_PbI2_g is advanced. D is in kg/(m s), not m2/s.
 No SIMPLE/PIMPLE, pressure, momentum or energy solve.
 Scalar controls are read at startup; restart to change them.
 Starting physical time loop
 Time = 0.004
 
-scalarTransport execute: Pb_g
-GAMG:  Solving for Pb_g, Initial residual = 1, Final residual = 7.56756e-08, No Iterations 40
-GAMG:  Solving for Pb_g, Initial residual = 0.0788096, Final residual = 8.74965e-08, No Iterations 32
-GAMG:  Solving for Pb_g, Initial residual = 0.0244375, Final residual = 9.02693e-08, No Iterations 28
-GAMG:  Solving for Pb_g, Initial residual = 0.00948023, Final residual = 8.80741e-08, No Iterations 25
-GAMG:  Solving for Pb_g, Initial residual = 0.00401241, Final residual = 7.61563e-08, No Iterations 23
-GAMG:  Solving for Pb_g, Initial residual = 0.00177379, Final residual = 8.51063e-08, No Iterations 21
-GAMG:  Solving for Pb_g, Initial residual = 0.000802823, Final residual = 9.01642e-08, No Iterations 19
-GAMG:  Solving for Pb_g, Initial residual = 0.000370256, Final residual = 9.0734e-08, No Iterations 17
-GAMG:  Solving for Pb_g, Initial residual = 0.000172407, Final residual = 8.87162e-08, No Iterations 15
-GAMG:  Solving for Pb_g, Initial residual = 8.10174e-05, Final residual = 8.57698e-08, No Iterations 13
-GAMG:  Solving for Pb_g, Initial residual = 3.82979e-05, Final residual = 8.36157e-08, No Iterations 11
-GAMG:  Solving for Pb_g, Initial residual = 1.81953e-05, Final residual = 8.36228e-08, No Iterations 9
-GAMG:  Solving for Pb_g, Initial residual = 8.67679e-06, Final residual = 9.018e-08, No Iterations 7
-GAMG:  Solving for Pb_g, Initial residual = 4.15152e-06, Final residual = 6.92656e-08, No Iterations 6
-GAMG:  Solving for Pb_g, Initial residual = 1.99232e-06, Final residual = 9.57348e-08, No Iterations 4
-GAMG:  Solving for Pb_g, Initial residual = 9.61211e-07, Final residual = 9.18761e-08, No Iterations 3
-GAMG:  Solving for Pb_g, Initial residual = 4.73481e-07, Final residual = 9.68463e-08, No Iterations 2
-GAMG:  Solving for Pb_g, Initial residual = 2.50337e-07, Final residual = 6.03842e-08, No Iterations 2
-GAMG:  Solving for Pb_g, Initial residual = 1.37305e-07, Final residual = 7.07643e-08, No Iterations 1
-GAMG:  Solving for Pb_g, Initial residual = 9.61813e-08, Final residual = 9.61813e-08, No Iterations 0
-scalarTransport: Pb_gTransport: Pb_g is converged.
+scalarTransport execute: Y_PbI2_g
+GAMG:  Solving for Y_PbI2_g, Initial residual = 1, Final residual = 7.56756e-08, No Iterations 40
+GAMG:  Solving for Y_PbI2_g, Initial residual = 0.0788096, Final residual = 8.74965e-08, No Iterations 32
+GAMG:  Solving for Y_PbI2_g, Initial residual = 0.0244375, Final residual = 9.02693e-08, No Iterations 28
+GAMG:  Solving for Y_PbI2_g, Initial residual = 0.00948023, Final residual = 8.80741e-08, No Iterations 25
+GAMG:  Solving for Y_PbI2_g, Initial residual = 0.00401241, Final residual = 7.61563e-08, No Iterations 23
+GAMG:  Solving for Y_PbI2_g, Initial residual = 0.00177379, Final residual = 8.51063e-08, No Iterations 21
+GAMG:  Solving for Y_PbI2_g, Initial residual = 0.000802823, Final residual = 9.01642e-08, No Iterations 19
+GAMG:  Solving for Y_PbI2_g, Initial residual = 0.000370256, Final residual = 9.0734e-08, No Iterations 17
+GAMG:  Solving for Y_PbI2_g, Initial residual = 0.000172407, Final residual = 8.87162e-08, No Iterations 15
+GAMG:  Solving for Y_PbI2_g, Initial residual = 8.10174e-05, Final residual = 8.57698e-08, No Iterations 13
+GAMG:  Solving for Y_PbI2_g, Initial residual = 3.82979e-05, Final residual = 8.36157e-08, No Iterations 11
+GAMG:  Solving for Y_PbI2_g, Initial residual = 1.81953e-05, Final residual = 8.36228e-08, No Iterations 9
+GAMG:  Solving for Y_PbI2_g, Initial residual = 8.67679e-06, Final residual = 9.018e-08, No Iterations 7
+GAMG:  Solving for Y_PbI2_g, Initial residual = 4.15152e-06, Final residual = 6.92656e-08, No Iterations 6
+GAMG:  Solving for Y_PbI2_g, Initial residual = 1.99232e-06, Final residual = 9.57348e-08, No Iterations 4
+GAMG:  Solving for Y_PbI2_g, Initial residual = 9.61211e-07, Final residual = 9.18761e-08, No Iterations 3
+GAMG:  Solving for Y_PbI2_g, Initial residual = 4.73481e-07, Final residual = 9.68463e-08, No Iterations 2
+GAMG:  Solving for Y_PbI2_g, Initial residual = 2.50337e-07, Final residual = 6.03842e-08, No Iterations 2
+GAMG:  Solving for Y_PbI2_g, Initial residual = 1.37305e-07, Final residual = 7.07643e-08, No Iterations 1
+GAMG:  Solving for Y_PbI2_g, Initial residual = 9.61813e-08, Final residual = 9.61813e-08, No Iterations 0
+scalarTransport: Y_PbI2_gTransport: Y_PbI2_g is converged.
 	initial-residual tolerance: 1e-07
 	outer iteration: 20
 
-Pb_g min/max = 1.84075e-35 4.48984e-07
-ExecutionTime = 3.61 s  ClockTime = 3 s
+Y_PbI2_g min/max = 1.84075e-35 4.48984e-07
+ExecutionTime = 3.59 s  ClockTime = 3 s
 
 Time = 0.008
 
-scalarTransport execute: Pb_g
-GAMG:  Solving for Pb_g, Initial residual = 0.0937441, Final residual = 8.89052e-08, No Iterations 31
-GAMG:  Solving for Pb_g, Initial residual = 0.0270942, Final residual = 7.53557e-08, No Iterations 28
-GAMG:  Solving for Pb_g, Initial residual = 0.0104261, Final residual = 8.70874e-08, No Iterations 25
-GAMG:  Solving for Pb_g, Initial residual = 0.00444422, Final residual = 9.78693e-08, No Iterations 23
-GAMG:  Solving for Pb_g, Initial residual = 0.00198574, Final residual = 7.21546e-08, No Iterations 22
-GAMG:  Solving for Pb_g, Initial residual = 0.000909119, Final residual = 7.23934e-08, No Iterations 20
-GAMG:  Solving for Pb_g, Initial residual = 0.000422544, Final residual = 7.05156e-08, No Iterations 18
-GAMG:  Solving for Pb_g, Initial residual = 0.000198436, Final residual = 9.78122e-08, No Iterations 15
-GAMG:  Solving for Pb_g, Initial residual = 9.38036e-05, Final residual = 9.39941e-08, No Iterations 13
-GAMG:  Solving for Pb_g, Initial residual = 4.45835e-05, Final residual = 9.15014e-08, No Iterations 11
-GAMG:  Solving for Pb_g, Initial residual = 2.12686e-05, Final residual = 9.17352e-08, No Iterations 9
-GAMG:  Solving for Pb_g, Initial residual = 1.01796e-05, Final residual = 9.99633e-08, No Iterations 7
-GAMG:  Solving for Pb_g, Initial residual = 4.88456e-06, Final residual = 7.7462e-08, No Iterations 6
-GAMG:  Solving for Pb_g, Initial residual = 2.35006e-06, Final residual = 6.30942e-08, No Iterations 5
-GAMG:  Solving for Pb_g, Initial residual = 1.1337e-06, Final residual = 9.9339e-08, No Iterations 3
-GAMG:  Solving for Pb_g, Initial residual = 5.56287e-07, Final residual = 5.68578e-08, No Iterations 3
-GAMG:  Solving for Pb_g, Initial residual = 2.77737e-07, Final residual = 5.79704e-08, No Iterations 2
-GAMG:  Solving for Pb_g, Initial residual = 1.4857e-07, Final residual = 7.12062e-08, No Iterations 1
-GAMG:  Solving for Pb_g, Initial residual = 1.00422e-07, Final residual = 5.23009e-08, No Iterations 1
-GAMG:  Solving for Pb_g, Initial residual = 7.00251e-08, Final residual = 7.00251e-08, No Iterations 0
-scalarTransport: Pb_gTransport: Pb_g is converged.
+scalarTransport execute: Y_PbI2_g
+GAMG:  Solving for Y_PbI2_g, Initial residual = 0.0937441, Final residual = 8.89052e-08, No Iterations 31
+GAMG:  Solving for Y_PbI2_g, Initial residual = 0.0270942, Final residual = 7.53557e-08, No Iterations 28
+GAMG:  Solving for Y_PbI2_g, Initial residual = 0.0104261, Final residual = 8.70874e-08, No Iterations 25
+GAMG:  Solving for Y_PbI2_g, Initial residual = 0.00444422, Final residual = 9.78693e-08, No Iterations 23
+GAMG:  Solving for Y_PbI2_g, Initial residual = 0.00198574, Final residual = 7.21546e-08, No Iterations 22
+GAMG:  Solving for Y_PbI2_g, Initial residual = 0.000909119, Final residual = 7.23934e-08, No Iterations 20
+GAMG:  Solving for Y_PbI2_g, Initial residual = 0.000422544, Final residual = 7.05156e-08, No Iterations 18
+GAMG:  Solving for Y_PbI2_g, Initial residual = 0.000198436, Final residual = 9.78122e-08, No Iterations 15
+GAMG:  Solving for Y_PbI2_g, Initial residual = 9.38036e-05, Final residual = 9.39941e-08, No Iterations 13
+GAMG:  Solving for Y_PbI2_g, Initial residual = 4.45835e-05, Final residual = 9.15014e-08, No Iterations 11
+GAMG:  Solving for Y_PbI2_g, Initial residual = 2.12686e-05, Final residual = 9.17352e-08, No Iterations 9
+GAMG:  Solving for Y_PbI2_g, Initial residual = 1.01796e-05, Final residual = 9.99633e-08, No Iterations 7
+GAMG:  Solving for Y_PbI2_g, Initial residual = 4.88456e-06, Final residual = 7.7462e-08, No Iterations 6
+GAMG:  Solving for Y_PbI2_g, Initial residual = 2.35006e-06, Final residual = 6.30942e-08, No Iterations 5
+GAMG:  Solving for Y_PbI2_g, Initial residual = 1.1337e-06, Final residual = 9.9339e-08, No Iterations 3
+GAMG:  Solving for Y_PbI2_g, Initial residual = 5.56287e-07, Final residual = 5.68578e-08, No Iterations 3
+GAMG:  Solving for Y_PbI2_g, Initial residual = 2.77737e-07, Final residual = 5.79704e-08, No Iterations 2
+GAMG:  Solving for Y_PbI2_g, Initial residual = 1.4857e-07, Final residual = 7.12062e-08, No Iterations 1
+GAMG:  Solving for Y_PbI2_g, Initial residual = 1.00422e-07, Final residual = 5.23009e-08, No Iterations 1
+GAMG:  Solving for Y_PbI2_g, Initial residual = 7.00251e-08, Final residual = 7.00251e-08, No Iterations 0
+scalarTransport: Y_PbI2_gTransport: Y_PbI2_g is converged.
 	initial-residual tolerance: 1e-07
 	outer iteration: 20
 
-Pb_g min/max = 4.60172e-35 6.57103e-07
-ExecutionTime = 6.64 s  ClockTime = 6 s
+Y_PbI2_g min/max = 4.60172e-35 6.57103e-07
+ExecutionTime = 6.61 s  ClockTime = 6 s
 
 Time = 0.012
 
-scalarTransport execute: Pb_g
-GAMG:  Solving for Pb_g, Initial residual = 0.0439895, Final residual = 9.26556e-08, No Iterations 28
-GAMG:  Solving for Pb_g, Initial residual = 0.0155191, Final residual = 7.12805e-08, No Iterations 27
-GAMG:  Solving for Pb_g, Initial residual = 0.00647038, Final residual = 7.42022e-08, No Iterations 25
-GAMG:  Solving for Pb_g, Initial residual = 0.00288417, Final residual = 7.38921e-08, No Iterations 23
-GAMG:  Solving for Pb_g, Initial residual = 0.00132633, Final residual = 7.15472e-08, No Iterations 21
-GAMG:  Solving for Pb_g, Initial residual = 0.000619988, Final residual = 9.86622e-08, No Iterations 18
-GAMG:  Solving for Pb_g, Initial residual = 0.000292623, Final residual = 9.38647e-08, No Iterations 16
-GAMG:  Solving for Pb_g, Initial residual = 0.000139001, Final residual = 8.96722e-08, No Iterations 14
-GAMG:  Solving for Pb_g, Initial residual = 6.63225e-05, Final residual = 8.66538e-08, No Iterations 12
-GAMG:  Solving for Pb_g, Initial residual = 3.17571e-05, Final residual = 8.5882e-08, No Iterations 10
-GAMG:  Solving for Pb_g, Initial residual = 1.52421e-05, Final residual = 9.0187e-08, No Iterations 8
-GAMG:  Solving for Pb_g, Initial residual = 7.33246e-06, Final residual = 6.72222e-08, No Iterations 7
-GAMG:  Solving for Pb_g, Initial residual = 3.53398e-06, Final residual = 8.68022e-08, No Iterations 5
-GAMG:  Solving for Pb_g, Initial residual = 1.70631e-06, Final residual = 7.75542e-08, No Iterations 4
-GAMG:  Solving for Pb_g, Initial residual = 8.29103e-07, Final residual = 7.42679e-08, No Iterations 3
-GAMG:  Solving for Pb_g, Initial residual = 4.10757e-07, Final residual = 7.8662e-08, No Iterations 2
-GAMG:  Solving for Pb_g, Initial residual = 2.16219e-07, Final residual = 9.89261e-08, No Iterations 1
-GAMG:  Solving for Pb_g, Initial residual = 1.43288e-07, Final residual = 7.26706e-08, No Iterations 1
-GAMG:  Solving for Pb_g, Initial residual = 9.86426e-08, Final residual = 9.86426e-08, No Iterations 0
-scalarTransport: Pb_gTransport: Pb_g is converged.
+scalarTransport execute: Y_PbI2_g
+GAMG:  Solving for Y_PbI2_g, Initial residual = 0.0439895, Final residual = 9.26556e-08, No Iterations 28
+GAMG:  Solving for Y_PbI2_g, Initial residual = 0.0155191, Final residual = 7.12805e-08, No Iterations 27
+GAMG:  Solving for Y_PbI2_g, Initial residual = 0.00647038, Final residual = 7.42022e-08, No Iterations 25
+GAMG:  Solving for Y_PbI2_g, Initial residual = 0.00288417, Final residual = 7.38921e-08, No Iterations 23
+GAMG:  Solving for Y_PbI2_g, Initial residual = 0.00132633, Final residual = 7.15472e-08, No Iterations 21
+GAMG:  Solving for Y_PbI2_g, Initial residual = 0.000619988, Final residual = 9.86622e-08, No Iterations 18
+GAMG:  Solving for Y_PbI2_g, Initial residual = 0.000292623, Final residual = 9.38647e-08, No Iterations 16
+GAMG:  Solving for Y_PbI2_g, Initial residual = 0.000139001, Final residual = 8.96722e-08, No Iterations 14
+GAMG:  Solving for Y_PbI2_g, Initial residual = 6.63225e-05, Final residual = 8.66538e-08, No Iterations 12
+GAMG:  Solving for Y_PbI2_g, Initial residual = 3.17571e-05, Final residual = 8.5882e-08, No Iterations 10
+GAMG:  Solving for Y_PbI2_g, Initial residual = 1.52421e-05, Final residual = 9.0187e-08, No Iterations 8
+GAMG:  Solving for Y_PbI2_g, Initial residual = 7.33246e-06, Final residual = 6.72222e-08, No Iterations 7
+GAMG:  Solving for Y_PbI2_g, Initial residual = 3.53398e-06, Final residual = 8.68022e-08, No Iterations 5
+GAMG:  Solving for Y_PbI2_g, Initial residual = 1.70631e-06, Final residual = 7.75542e-08, No Iterations 4
+GAMG:  Solving for Y_PbI2_g, Initial residual = 8.29103e-07, Final residual = 7.42679e-08, No Iterations 3
+GAMG:  Solving for Y_PbI2_g, Initial residual = 4.10757e-07, Final residual = 7.8662e-08, No Iterations 2
+GAMG:  Solving for Y_PbI2_g, Initial residual = 2.16219e-07, Final residual = 9.89261e-08, No Iterations 1
+GAMG:  Solving for Y_PbI2_g, Initial residual = 1.43288e-07, Final residual = 7.26706e-08, No Iterations 1
+GAMG:  Solving for Y_PbI2_g, Initial residual = 9.86426e-08, Final residual = 9.86426e-08, No Iterations 0
+scalarTransport: Y_PbI2_gTransport: Y_PbI2_g is converged.
 	initial-residual tolerance: 1e-07
 	outer iteration: 19
 
-Pb_g min/max = 1.02439e-34 7.64911e-07
-ExecutionTime = 9.43 s  ClockTime = 9 s
+Y_PbI2_g min/max = 1.02439e-34 7.64911e-07
+ExecutionTime = 9.41 s  ClockTime = 8 s
 
 Time = 0.016
 
-scalarTransport execute: Pb_g
-GAMG:  Solving for Pb_g, Initial residual = 0.0279405, Final residual = 8.48194e-08, No Iterations 28
-GAMG:  Solving for Pb_g, Initial residual = 0.010771, Final residual = 8.35493e-08, No Iterations 26
-GAMG:  Solving for Pb_g, Initial residual = 0.004687, Final residual = 7.97538e-08, No Iterations 24
-GAMG:  Solving for Pb_g, Initial residual = 0.00214338, Final residual = 7.55701e-08, No Iterations 22
-GAMG:  Solving for Pb_g, Initial residual = 0.00100298, Final residual = 7.13647e-08, No Iterations 20
-GAMG:  Solving for Pb_g, Initial residual = 0.000474825, Final residual = 9.76552e-08, No Iterations 17
-GAMG:  Solving for Pb_g, Initial residual = 0.000226251, Final residual = 9.32806e-08, No Iterations 15
-GAMG:  Solving for Pb_g, Initial residual = 0.000108285, Final residual = 9.01554e-08, No Iterations 13
-GAMG:  Solving for Pb_g, Initial residual = 5.19826e-05, Final residual = 8.89377e-08, No Iterations 11
-GAMG:  Solving for Pb_g, Initial residual = 2.50137e-05, Final residual = 9.14247e-08, No Iterations 9
-GAMG:  Solving for Pb_g, Initial residual = 1.20564e-05, Final residual = 6.63237e-08, No Iterations 8
-GAMG:  Solving for Pb_g, Initial residual = 5.82054e-06, Final residual = 7.94969e-08, No Iterations 6
-GAMG:  Solving for Pb_g, Initial residual = 2.81346e-06, Final residual = 6.6698e-08, No Iterations 5
-GAMG:  Solving for Pb_g, Initial residual = 1.3628e-06, Final residual = 5.9219e-08, No Iterations 4
-GAMG:  Solving for Pb_g, Initial residual = 6.63966e-07, Final residual = 5.67457e-08, No Iterations 3
-GAMG:  Solving for Pb_g, Initial residual = 3.29328e-07, Final residual = 6.0467e-08, No Iterations 2
-GAMG:  Solving for Pb_g, Initial residual = 1.72738e-07, Final residual = 7.65417e-08, No Iterations 1
-GAMG:  Solving for Pb_g, Initial residual = 1.13087e-07, Final residual = 5.6168e-08, No Iterations 1
-GAMG:  Solving for Pb_g, Initial residual = 7.70347e-08, Final residual = 7.70347e-08, No Iterations 0
-scalarTransport: Pb_gTransport: Pb_g is converged.
+scalarTransport execute: Y_PbI2_g
+GAMG:  Solving for Y_PbI2_g, Initial residual = 0.0279405, Final residual = 8.48194e-08, No Iterations 28
+GAMG:  Solving for Y_PbI2_g, Initial residual = 0.010771, Final residual = 8.35493e-08, No Iterations 26
+GAMG:  Solving for Y_PbI2_g, Initial residual = 0.004687, Final residual = 7.97538e-08, No Iterations 24
+GAMG:  Solving for Y_PbI2_g, Initial residual = 0.00214338, Final residual = 7.55701e-08, No Iterations 22
+GAMG:  Solving for Y_PbI2_g, Initial residual = 0.00100298, Final residual = 7.13647e-08, No Iterations 20
+GAMG:  Solving for Y_PbI2_g, Initial residual = 0.000474825, Final residual = 9.76552e-08, No Iterations 17
+GAMG:  Solving for Y_PbI2_g, Initial residual = 0.000226251, Final residual = 9.32806e-08, No Iterations 15
+GAMG:  Solving for Y_PbI2_g, Initial residual = 0.000108285, Final residual = 9.01554e-08, No Iterations 13
+GAMG:  Solving for Y_PbI2_g, Initial residual = 5.19826e-05, Final residual = 8.89377e-08, No Iterations 11
+GAMG:  Solving for Y_PbI2_g, Initial residual = 2.50137e-05, Final residual = 9.14247e-08, No Iterations 9
+GAMG:  Solving for Y_PbI2_g, Initial residual = 1.20564e-05, Final residual = 6.63237e-08, No Iterations 8
+GAMG:  Solving for Y_PbI2_g, Initial residual = 5.82054e-06, Final residual = 7.94969e-08, No Iterations 6
+GAMG:  Solving for Y_PbI2_g, Initial residual = 2.81346e-06, Final residual = 6.6698e-08, No Iterations 5
+GAMG:  Solving for Y_PbI2_g, Initial residual = 1.3628e-06, Final residual = 5.9219e-08, No Iterations 4
+GAMG:  Solving for Y_PbI2_g, Initial residual = 6.63966e-07, Final residual = 5.67457e-08, No Iterations 3
+GAMG:  Solving for Y_PbI2_g, Initial residual = 3.29328e-07, Final residual = 6.0467e-08, No Iterations 2
+GAMG:  Solving for Y_PbI2_g, Initial residual = 1.72738e-07, Final residual = 7.65417e-08, No Iterations 1
+GAMG:  Solving for Y_PbI2_g, Initial residual = 1.13087e-07, Final residual = 5.6168e-08, No Iterations 1
+GAMG:  Solving for Y_PbI2_g, Initial residual = 7.70347e-08, Final residual = 7.70347e-08, No Iterations 0
+scalarTransport: Y_PbI2_gTransport: Y_PbI2_g is converged.
 	initial-residual tolerance: 1e-07
 	outer iteration: 19
 
-Pb_g min/max = 1.67315e-34 8.26596e-07
-ExecutionTime = 12.13 s  ClockTime = 11 s
+Y_PbI2_g min/max = 1.67315e-34 8.26596e-07
+ExecutionTime = 12.17 s  ClockTime = 11 s
 
 Time = 0.02
 
-scalarTransport execute: Pb_g
-GAMG:  Solving for Pb_g, Initial residual = 0.0204506, Final residual = 9.37012e-08, No Iterations 27
-GAMG:  Solving for Pb_g, Initial residual = 0.00827672, Final residual = 8.81316e-08, No Iterations 25
-GAMG:  Solving for Pb_g, Initial residual = 0.00369348, Final residual = 8.23988e-08, No Iterations 23
-GAMG:  Solving for Pb_g, Initial residual = 0.00171551, Final residual = 7.72807e-08, No Iterations 21
-GAMG:  Solving for Pb_g, Initial residual = 0.000811493, Final residual = 7.30425e-08, No Iterations 19
-GAMG:  Solving for Pb_g, Initial residual = 0.000387288, Final residual = 6.98323e-08, No Iterations 17
-GAMG:  Solving for Pb_g, Initial residual = 0.000185702, Final residual = 9.84014e-08, No Iterations 14
-GAMG:  Solving for Pb_g, Initial residual = 8.93183e-05, Final residual = 9.73288e-08, No Iterations 12
-GAMG:  Solving for Pb_g, Initial residual = 4.30566e-05, Final residual = 9.92939e-08, No Iterations 10
-GAMG:  Solving for Pb_g, Initial residual = 2.07883e-05, Final residual = 7.11142e-08, No Iterations 9
-GAMG:  Solving for Pb_g, Initial residual = 1.00498e-05, Final residual = 8.0346e-08, No Iterations 7
-GAMG:  Solving for Pb_g, Initial residual = 4.86346e-06, Final residual = 6.38622e-08, No Iterations 6
-GAMG:  Solving for Pb_g, Initial residual = 2.35644e-06, Final residual = 9.28611e-08, No Iterations 4
-GAMG:  Solving for Pb_g, Initial residual = 1.14602e-06, Final residual = 9.16731e-08, No Iterations 3
-GAMG:  Solving for Pb_g, Initial residual = 5.66542e-07, Final residual = 9.93788e-08, No Iterations 2
-GAMG:  Solving for Pb_g, Initial residual = 2.95358e-07, Final residual = 6.16541e-08, No Iterations 2
-GAMG:  Solving for Pb_g, Initial residual = 1.58379e-07, Final residual = 7.36885e-08, No Iterations 1
-GAMG:  Solving for Pb_g, Initial residual = 1.05792e-07, Final residual = 5.3699e-08, No Iterations 1
-GAMG:  Solving for Pb_g, Initial residual = 7.2515e-08, Final residual = 7.2515e-08, No Iterations 0
-scalarTransport: Pb_gTransport: Pb_g is converged.
+scalarTransport execute: Y_PbI2_g
+GAMG:  Solving for Y_PbI2_g, Initial residual = 0.0204506, Final residual = 9.37012e-08, No Iterations 27
+GAMG:  Solving for Y_PbI2_g, Initial residual = 0.00827672, Final residual = 8.81316e-08, No Iterations 25
+GAMG:  Solving for Y_PbI2_g, Initial residual = 0.00369348, Final residual = 8.23988e-08, No Iterations 23
+GAMG:  Solving for Y_PbI2_g, Initial residual = 0.00171551, Final residual = 7.72807e-08, No Iterations 21
+GAMG:  Solving for Y_PbI2_g, Initial residual = 0.000811493, Final residual = 7.30425e-08, No Iterations 19
+GAMG:  Solving for Y_PbI2_g, Initial residual = 0.000387288, Final residual = 6.98323e-08, No Iterations 17
+GAMG:  Solving for Y_PbI2_g, Initial residual = 0.000185702, Final residual = 9.84014e-08, No Iterations 14
+GAMG:  Solving for Y_PbI2_g, Initial residual = 8.93183e-05, Final residual = 9.73288e-08, No Iterations 12
+GAMG:  Solving for Y_PbI2_g, Initial residual = 4.30566e-05, Final residual = 9.92939e-08, No Iterations 10
+GAMG:  Solving for Y_PbI2_g, Initial residual = 2.07883e-05, Final residual = 7.11142e-08, No Iterations 9
+GAMG:  Solving for Y_PbI2_g, Initial residual = 1.00498e-05, Final residual = 8.0346e-08, No Iterations 7
+GAMG:  Solving for Y_PbI2_g, Initial residual = 4.86346e-06, Final residual = 6.38622e-08, No Iterations 6
+GAMG:  Solving for Y_PbI2_g, Initial residual = 2.35644e-06, Final residual = 9.28611e-08, No Iterations 4
+GAMG:  Solving for Y_PbI2_g, Initial residual = 1.14602e-06, Final residual = 9.16731e-08, No Iterations 3
+GAMG:  Solving for Y_PbI2_g, Initial residual = 5.66542e-07, Final residual = 9.93788e-08, No Iterations 2
+GAMG:  Solving for Y_PbI2_g, Initial residual = 2.95358e-07, Final residual = 6.16541e-08, No Iterations 2
+GAMG:  Solving for Y_PbI2_g, Initial residual = 1.58379e-07, Final residual = 7.36885e-08, No Iterations 1
+GAMG:  Solving for Y_PbI2_g, Initial residual = 1.05792e-07, Final residual = 5.3699e-08, No Iterations 1
+GAMG:  Solving for Y_PbI2_g, Initial residual = 7.2515e-08, Final residual = 7.2515e-08, No Iterations 0
+scalarTransport: Y_PbI2_gTransport: Y_PbI2_g is converged.
 	initial-residual tolerance: 1e-07
 	outer iteration: 19
 
-Pb_g min/max = 2.38326e-34 8.65056e-07
-ExecutionTime = 14.71 s  ClockTime = 16 s
+Y_PbI2_g min/max = 2.38326e-34 8.65056e-07
+ExecutionTime = 14.75 s  ClockTime = 16 s
 
 Time = 0.024
 
-scalarTransport execute: Pb_g
-GAMG:  Solving for Pb_g, Initial residual = 0.0162198, Final residual = 9.8082e-08, No Iterations 26
-GAMG:  Solving for Pb_g, Initial residual = 0.00675904, Final residual = 9.16486e-08, No Iterations 24
-GAMG:  Solving for Pb_g, Initial residual = 0.00306434, Final residual = 8.56197e-08, No Iterations 22
-GAMG:  Solving for Pb_g, Initial residual = 0.00143762, Final residual = 8.11874e-08, No Iterations 20
-GAMG:  Solving for Pb_g, Initial residual = 0.000684845, Final residual = 7.81383e-08, No Iterations 18
-GAMG:  Solving for Pb_g, Initial residual = 0.000328591, Final residual = 7.62793e-08, No Iterations 16
-GAMG:  Solving for Pb_g, Initial residual = 0.000158219, Final residual = 7.56803e-08, No Iterations 14
-GAMG:  Solving for Pb_g, Initial residual = 7.63654e-05, Final residual = 7.68894e-08, No Iterations 12
-GAMG:  Solving for Pb_g, Initial residual = 3.69166e-05, Final residual = 8.05048e-08, No Iterations 10
-GAMG:  Solving for Pb_g, Initial residual = 1.78671e-05, Final residual = 8.79585e-08, No Iterations 8
-GAMG:  Solving for Pb_g, Initial residual = 8.65522e-06, Final residual = 6.72288e-08, No Iterations 7
-GAMG:  Solving for Pb_g, Initial residual = 4.1965e-06, Final residual = 8.7592e-08, No Iterations 5
-GAMG:  Solving for Pb_g, Initial residual = 2.0367e-06, Final residual = 7.94399e-08, No Iterations 4
-GAMG:  Solving for Pb_g, Initial residual = 9.93273e-07, Final residual = 7.74973e-08, No Iterations 3
-GAMG:  Solving for Pb_g, Initial residual = 4.91915e-07, Final residual = 8.38449e-08, No Iterations 2
-GAMG:  Solving for Pb_g, Initial residual = 2.55917e-07, Final residual = 5.20764e-08, No Iterations 2
-GAMG:  Solving for Pb_g, Initial residual = 1.3666e-07, Final residual = 6.21839e-08, No Iterations 1
-GAMG:  Solving for Pb_g, Initial residual = 9.04609e-08, Final residual = 9.04609e-08, No Iterations 0
-scalarTransport: Pb_gTransport: Pb_g is converged.
+scalarTransport execute: Y_PbI2_g
+GAMG:  Solving for Y_PbI2_g, Initial residual = 0.0162198, Final residual = 9.8082e-08, No Iterations 26
+GAMG:  Solving for Y_PbI2_g, Initial residual = 0.00675904, Final residual = 9.16486e-08, No Iterations 24
+GAMG:  Solving for Y_PbI2_g, Initial residual = 0.00306434, Final residual = 8.56197e-08, No Iterations 22
+GAMG:  Solving for Y_PbI2_g, Initial residual = 0.00143762, Final residual = 8.11874e-08, No Iterations 20
+GAMG:  Solving for Y_PbI2_g, Initial residual = 0.000684845, Final residual = 7.81383e-08, No Iterations 18
+GAMG:  Solving for Y_PbI2_g, Initial residual = 0.000328591, Final residual = 7.62793e-08, No Iterations 16
+GAMG:  Solving for Y_PbI2_g, Initial residual = 0.000158219, Final residual = 7.56803e-08, No Iterations 14
+GAMG:  Solving for Y_PbI2_g, Initial residual = 7.63654e-05, Final residual = 7.68894e-08, No Iterations 12
+GAMG:  Solving for Y_PbI2_g, Initial residual = 3.69166e-05, Final residual = 8.05048e-08, No Iterations 10
+GAMG:  Solving for Y_PbI2_g, Initial residual = 1.78671e-05, Final residual = 8.79585e-08, No Iterations 8
+GAMG:  Solving for Y_PbI2_g, Initial residual = 8.65522e-06, Final residual = 6.72288e-08, No Iterations 7
+GAMG:  Solving for Y_PbI2_g, Initial residual = 4.1965e-06, Final residual = 8.7592e-08, No Iterations 5
+GAMG:  Solving for Y_PbI2_g, Initial residual = 2.0367e-06, Final residual = 7.94399e-08, No Iterations 4
+GAMG:  Solving for Y_PbI2_g, Initial residual = 9.93273e-07, Final residual = 7.74973e-08, No Iterations 3
+GAMG:  Solving for Y_PbI2_g, Initial residual = 4.91915e-07, Final residual = 8.38449e-08, No Iterations 2
+GAMG:  Solving for Y_PbI2_g, Initial residual = 2.55917e-07, Final residual = 5.20764e-08, No Iterations 2
+GAMG:  Solving for Y_PbI2_g, Initial residual = 1.3666e-07, Final residual = 6.21839e-08, No Iterations 1
+GAMG:  Solving for Y_PbI2_g, Initial residual = 9.04609e-08, Final residual = 9.04609e-08, No Iterations 0
+scalarTransport: Y_PbI2_gTransport: Y_PbI2_g is converged.
 	initial-residual tolerance: 1e-07
 	outer iteration: 18
 
-Pb_g min/max = 3.4769e-34 8.90834e-07
-ExecutionTime = 17.18 s  ClockTime = 19 s
+Y_PbI2_g min/max = 3.4769e-34 8.90834e-07
+ExecutionTime = 17.24 s  ClockTime = 18 s
 
 Time = 0.028
 
-scalarTransport execute: Pb_g
-GAMG:  Solving for Pb_g, Initial residual = 0.0135219, Final residual = 7.10463e-08, No Iterations 26
-GAMG:  Solving for Pb_g, Initial residual = 0.00574094, Final residual = 9.67227e-08, No Iterations 23
-GAMG:  Solving for Pb_g, Initial residual = 0.00262964, Final residual = 9.2145e-08, No Iterations 21
-GAMG:  Solving for Pb_g, Initial residual = 0.00124183, Final residual = 8.95412e-08, No Iterations 19
-GAMG:  Solving for Pb_g, Initial residual = 0.000594368, Final residual = 8.87298e-08, No Iterations 17
-GAMG:  Solving for Pb_g, Initial residual = 0.000286237, Final residual = 8.96904e-08, No Iterations 15
-GAMG:  Solving for Pb_g, Initial residual = 0.000138234, Final residual = 9.20325e-08, No Iterations 13
-GAMG:  Solving for Pb_g, Initial residual = 6.68847e-05, Final residual = 9.57213e-08, No Iterations 11
-GAMG:  Solving for Pb_g, Initial residual = 3.23993e-05, Final residual = 6.85808e-08, No Iterations 10
-GAMG:  Solving for Pb_g, Initial residual = 1.57091e-05, Final residual = 7.44945e-08, No Iterations 8
-GAMG:  Solving for Pb_g, Initial residual = 7.62156e-06, Final residual = 8.99386e-08, No Iterations 6
-GAMG:  Solving for Pb_g, Initial residual = 3.69987e-06, Final residual = 7.61263e-08, No Iterations 5
-GAMG:  Solving for Pb_g, Initial residual = 1.79876e-06, Final residual = 6.8332e-08, No Iterations 4
-GAMG:  Solving for Pb_g, Initial residual = 8.78283e-07, Final residual = 6.643e-08, No Iterations 3
-GAMG:  Solving for Pb_g, Initial residual = 4.34933e-07, Final residual = 7.20182e-08, No Iterations 2
-GAMG:  Solving for Pb_g, Initial residual = 2.25523e-07, Final residual = 9.28207e-08, No Iterations 1
-GAMG:  Solving for Pb_g, Initial residual = 1.43853e-07, Final residual = 6.80855e-08, No Iterations 1
-GAMG:  Solving for Pb_g, Initial residual = 9.58601e-08, Final residual = 9.58601e-08, No Iterations 0
-scalarTransport: Pb_gTransport: Pb_g is converged.
+scalarTransport execute: Y_PbI2_g
+GAMG:  Solving for Y_PbI2_g, Initial residual = 0.0135219, Final residual = 7.10463e-08, No Iterations 26
+GAMG:  Solving for Y_PbI2_g, Initial residual = 0.00574094, Final residual = 9.67227e-08, No Iterations 23
+GAMG:  Solving for Y_PbI2_g, Initial residual = 0.00262964, Final residual = 9.2145e-08, No Iterations 21
+GAMG:  Solving for Y_PbI2_g, Initial residual = 0.00124183, Final residual = 8.95412e-08, No Iterations 19
+GAMG:  Solving for Y_PbI2_g, Initial residual = 0.000594368, Final residual = 8.87298e-08, No Iterations 17
+GAMG:  Solving for Y_PbI2_g, Initial residual = 0.000286237, Final residual = 8.96904e-08, No Iterations 15
+GAMG:  Solving for Y_PbI2_g, Initial residual = 0.000138234, Final residual = 9.20325e-08, No Iterations 13
+GAMG:  Solving for Y_PbI2_g, Initial residual = 6.68847e-05, Final residual = 9.57213e-08, No Iterations 11
+GAMG:  Solving for Y_PbI2_g, Initial residual = 3.23993e-05, Final residual = 6.85808e-08, No Iterations 10
+GAMG:  Solving for Y_PbI2_g, Initial residual = 1.57091e-05, Final residual = 7.44945e-08, No Iterations 8
+GAMG:  Solving for Y_PbI2_g, Initial residual = 7.62156e-06, Final residual = 8.99386e-08, No Iterations 6
+GAMG:  Solving for Y_PbI2_g, Initial residual = 3.69987e-06, Final residual = 7.61263e-08, No Iterations 5
+GAMG:  Solving for Y_PbI2_g, Initial residual = 1.79876e-06, Final residual = 6.8332e-08, No Iterations 4
+GAMG:  Solving for Y_PbI2_g, Initial residual = 8.78283e-07, Final residual = 6.643e-08, No Iterations 3
+GAMG:  Solving for Y_PbI2_g, Initial residual = 4.34933e-07, Final residual = 7.20182e-08, No Iterations 2
+GAMG:  Solving for Y_PbI2_g, Initial residual = 2.25523e-07, Final residual = 9.28207e-08, No Iterations 1
+GAMG:  Solving for Y_PbI2_g, Initial residual = 1.43853e-07, Final residual = 6.80855e-08, No Iterations 1
+GAMG:  Solving for Y_PbI2_g, Initial residual = 9.58601e-08, Final residual = 9.58601e-08, No Iterations 0
+scalarTransport: Y_PbI2_gTransport: Y_PbI2_g is converged.
 	initial-residual tolerance: 1e-07
 	outer iteration: 18
 
-Pb_g min/max = 4.79505e-34 9.09168e-07
-ExecutionTime = 19.55 s  ClockTime = 21 s
+Y_PbI2_g min/max = 4.79505e-34 9.09168e-07
+ExecutionTime = 19.62 s  ClockTime = 21 s
 
 Time = 0.032
 
-scalarTransport execute: Pb_g
-GAMG:  Solving for Pb_g, Initial residual = 0.0116505, Final residual = 7.62485e-08, No Iterations 25
-GAMG:  Solving for Pb_g, Initial residual = 0.00501026, Final residual = 7.33646e-08, No Iterations 23
-GAMG:  Solving for Pb_g, Initial residual = 0.00231131, Final residual = 7.26363e-08, No Iterations 21
-GAMG:  Solving for Pb_g, Initial residual = 0.00109646, Final residual = 7.3359e-08, No Iterations 19
-GAMG:  Solving for Pb_g, Initial residual = 0.000526544, Final residual = 7.49035e-08, No Iterations 17
-GAMG:  Solving for Pb_g, Initial residual = 0.000254227, Final residual = 7.67575e-08, No Iterations 15
-GAMG:  Solving for Pb_g, Initial residual = 0.000123039, Final residual = 7.89745e-08, No Iterations 13
-GAMG:  Solving for Pb_g, Initial residual = 5.96371e-05, Final residual = 8.20273e-08, No Iterations 11
-GAMG:  Solving for Pb_g, Initial residual = 2.89322e-05, Final residual = 8.72774e-08, No Iterations 9
-GAMG:  Solving for Pb_g, Initial residual = 1.40459e-05, Final residual = 9.9234e-08, No Iterations 7
-GAMG:  Solving for Pb_g, Initial residual = 6.82247e-06, Final residual = 7.92556e-08, No Iterations 6
-GAMG:  Solving for Pb_g, Initial residual = 3.31605e-06, Final residual = 6.63134e-08, No Iterations 5
-GAMG:  Solving for Pb_g, Initial residual = 1.61383e-06, Final residual = 5.93936e-08, No Iterations 4
-GAMG:  Solving for Pb_g, Initial residual = 7.88454e-07, Final residual = 5.78672e-08, No Iterations 3
-GAMG:  Solving for Pb_g, Initial residual = 3.90206e-07, Final residual = 6.29251e-08, No Iterations 2
-GAMG:  Solving for Pb_g, Initial residual = 2.01661e-07, Final residual = 8.14382e-08, No Iterations 1
-GAMG:  Solving for Pb_g, Initial residual = 1.27722e-07, Final residual = 5.97387e-08, No Iterations 1
-GAMG:  Solving for Pb_g, Initial residual = 8.46839e-08, Final residual = 8.46839e-08, No Iterations 0
-scalarTransport: Pb_gTransport: Pb_g is converged.
+scalarTransport execute: Y_PbI2_g
+GAMG:  Solving for Y_PbI2_g, Initial residual = 0.0116505, Final residual = 7.62485e-08, No Iterations 25
+GAMG:  Solving for Y_PbI2_g, Initial residual = 0.00501026, Final residual = 7.33646e-08, No Iterations 23
+GAMG:  Solving for Y_PbI2_g, Initial residual = 0.00231131, Final residual = 7.26363e-08, No Iterations 21
+GAMG:  Solving for Y_PbI2_g, Initial residual = 0.00109646, Final residual = 7.3359e-08, No Iterations 19
+GAMG:  Solving for Y_PbI2_g, Initial residual = 0.000526544, Final residual = 7.49035e-08, No Iterations 17
+GAMG:  Solving for Y_PbI2_g, Initial residual = 0.000254227, Final residual = 7.67575e-08, No Iterations 15
+GAMG:  Solving for Y_PbI2_g, Initial residual = 0.000123039, Final residual = 7.89745e-08, No Iterations 13
+GAMG:  Solving for Y_PbI2_g, Initial residual = 5.96371e-05, Final residual = 8.20273e-08, No Iterations 11
+GAMG:  Solving for Y_PbI2_g, Initial residual = 2.89322e-05, Final residual = 8.72774e-08, No Iterations 9
+GAMG:  Solving for Y_PbI2_g, Initial residual = 1.40459e-05, Final residual = 9.9234e-08, No Iterations 7
+GAMG:  Solving for Y_PbI2_g, Initial residual = 6.82247e-06, Final residual = 7.92556e-08, No Iterations 6
+GAMG:  Solving for Y_PbI2_g, Initial residual = 3.31605e-06, Final residual = 6.63134e-08, No Iterations 5
+GAMG:  Solving for Y_PbI2_g, Initial residual = 1.61383e-06, Final residual = 5.93936e-08, No Iterations 4
+GAMG:  Solving for Y_PbI2_g, Initial residual = 7.88454e-07, Final residual = 5.78672e-08, No Iterations 3
+GAMG:  Solving for Y_PbI2_g, Initial residual = 3.90206e-07, Final residual = 6.29251e-08, No Iterations 2
+GAMG:  Solving for Y_PbI2_g, Initial residual = 2.01661e-07, Final residual = 8.14382e-08, No Iterations 1
+GAMG:  Solving for Y_PbI2_g, Initial residual = 1.27722e-07, Final residual = 5.97387e-08, No Iterations 1
+GAMG:  Solving for Y_PbI2_g, Initial residual = 8.46839e-08, Final residual = 8.46839e-08, No Iterations 0
+scalarTransport: Y_PbI2_gTransport: Y_PbI2_g is converged.
 	initial-residual tolerance: 1e-07
 	outer iteration: 18
 
-Pb_g min/max = 6.21783e-34 9.2284e-07
-ExecutionTime = 21.91 s  ClockTime = 23 s
+Y_PbI2_g min/max = 6.21783e-34 9.2284e-07
+ExecutionTime = 21.98 s  ClockTime = 23 s
 
 Time = 0.036
 
-scalarTransport execute: Pb_g
-GAMG:  Solving for Pb_g, Initial residual = 0.0102721, Final residual = 8.77522e-08, No Iterations 24
-GAMG:  Solving for Pb_g, Initial residual = 0.00445745, Final residual = 8.88693e-08, No Iterations 22
-GAMG:  Solving for Pb_g, Initial residual = 0.00206676, Final residual = 9.06886e-08, No Iterations 20
-GAMG:  Solving for Pb_g, Initial residual = 0.000983673, Final residual = 9.28984e-08, No Iterations 18
-GAMG:  Solving for Pb_g, Initial residual = 0.000473532, Final residual = 9.51019e-08, No Iterations 16
-GAMG:  Solving for Pb_g, Initial residual = 0.000229071, Final residual = 9.76e-08, No Iterations 14
-GAMG:  Solving for Pb_g, Initial residual = 0.000111039, Final residual = 6.86777e-08, No Iterations 13
-GAMG:  Solving for Pb_g, Initial residual = 5.38918e-05, Final residual = 7.10445e-08, No Iterations 11
-GAMG:  Solving for Pb_g, Initial residual = 2.61747e-05, Final residual = 7.54408e-08, No Iterations 9
-GAMG:  Solving for Pb_g, Initial residual = 1.27197e-05, Final residual = 8.5742e-08, No Iterations 7
-GAMG:  Solving for Pb_g, Initial residual = 6.18368e-06, Final residual = 6.86393e-08, No Iterations 6
-GAMG:  Solving for Pb_g, Initial residual = 3.00784e-06, Final residual = 5.76469e-08, No Iterations 5
-GAMG:  Solving for Pb_g, Initial residual = 1.46468e-06, Final residual = 9.64543e-08, No Iterations 3
-GAMG:  Solving for Pb_g, Initial residual = 7.20463e-07, Final residual = 5.57007e-08, No Iterations 3
-GAMG:  Solving for Pb_g, Initial residual = 3.57678e-07, Final residual = 5.88858e-08, No Iterations 2
-GAMG:  Solving for Pb_g, Initial residual = 1.85558e-07, Final residual = 7.51902e-08, No Iterations 1
-GAMG:  Solving for Pb_g, Initial residual = 1.17583e-07, Final residual = 5.51494e-08, No Iterations 1
-GAMG:  Solving for Pb_g, Initial residual = 7.79906e-08, Final residual = 7.79906e-08, No Iterations 0
-scalarTransport: Pb_gTransport: Pb_g is converged.
+scalarTransport execute: Y_PbI2_g
+GAMG:  Solving for Y_PbI2_g, Initial residual = 0.0102721, Final residual = 8.77522e-08, No Iterations 24
+GAMG:  Solving for Y_PbI2_g, Initial residual = 0.00445745, Final residual = 8.88693e-08, No Iterations 22
+GAMG:  Solving for Y_PbI2_g, Initial residual = 0.00206676, Final residual = 9.06886e-08, No Iterations 20
+GAMG:  Solving for Y_PbI2_g, Initial residual = 0.000983673, Final residual = 9.28984e-08, No Iterations 18
+GAMG:  Solving for Y_PbI2_g, Initial residual = 0.000473532, Final residual = 9.51019e-08, No Iterations 16
+GAMG:  Solving for Y_PbI2_g, Initial residual = 0.000229071, Final residual = 9.76e-08, No Iterations 14
+GAMG:  Solving for Y_PbI2_g, Initial residual = 0.000111039, Final residual = 6.86777e-08, No Iterations 13
+GAMG:  Solving for Y_PbI2_g, Initial residual = 5.38918e-05, Final residual = 7.10445e-08, No Iterations 11
+GAMG:  Solving for Y_PbI2_g, Initial residual = 2.61747e-05, Final residual = 7.54408e-08, No Iterations 9
+GAMG:  Solving for Y_PbI2_g, Initial residual = 1.27197e-05, Final residual = 8.5742e-08, No Iterations 7
+GAMG:  Solving for Y_PbI2_g, Initial residual = 6.18368e-06, Final residual = 6.86393e-08, No Iterations 6
+GAMG:  Solving for Y_PbI2_g, Initial residual = 3.00784e-06, Final residual = 5.76469e-08, No Iterations 5
+GAMG:  Solving for Y_PbI2_g, Initial residual = 1.46468e-06, Final residual = 9.64543e-08, No Iterations 3
+GAMG:  Solving for Y_PbI2_g, Initial residual = 7.20463e-07, Final residual = 5.57007e-08, No Iterations 3
+GAMG:  Solving for Y_PbI2_g, Initial residual = 3.57678e-07, Final residual = 5.88858e-08, No Iterations 2
+GAMG:  Solving for Y_PbI2_g, Initial residual = 1.85558e-07, Final residual = 7.51902e-08, No Iterations 1
+GAMG:  Solving for Y_PbI2_g, Initial residual = 1.17583e-07, Final residual = 5.51494e-08, No Iterations 1
+GAMG:  Solving for Y_PbI2_g, Initial residual = 7.79906e-08, Final residual = 7.79906e-08, No Iterations 0
+scalarTransport: Y_PbI2_gTransport: Y_PbI2_g is converged.
 	initial-residual tolerance: 1e-07
 	outer iteration: 18
 
-Pb_g min/max = 7.74239e-34 9.33421e-07
-ExecutionTime = 24.18 s  ClockTime = 25 s
+Y_PbI2_g min/max = 7.74239e-34 9.33421e-07
+ExecutionTime = 24.28 s  ClockTime = 25 s
 
 Time = 0.04
 
-scalarTransport execute: Pb_g
-GAMG:  Solving for Pb_g, Initial residual = 0.00921202, Final residual = 7.49038e-08, No Iterations 24
-GAMG:  Solving for Pb_g, Initial residual = 0.00402468, Final residual = 7.748e-08, No Iterations 22
-GAMG:  Solving for Pb_g, Initial residual = 0.00187311, Final residual = 7.95466e-08, No Iterations 20
-GAMG:  Solving for Pb_g, Initial residual = 0.000893645, Final residual = 8.1538e-08, No Iterations 18
-GAMG:  Solving for Pb_g, Initial residual = 0.000430958, Final residual = 8.34892e-08, No Iterations 16
-GAMG:  Solving for Pb_g, Initial residual = 0.000208766, Final residual = 8.55151e-08, No Iterations 14
-GAMG:  Solving for Pb_g, Initial residual = 0.000101316, Final residual = 8.79227e-08, No Iterations 12
-GAMG:  Solving for Pb_g, Initial residual = 4.92216e-05, Final residual = 9.17914e-08, No Iterations 10
-GAMG:  Solving for Pb_g, Initial residual = 2.39268e-05, Final residual = 6.65979e-08, No Iterations 9
-GAMG:  Solving for Pb_g, Initial residual = 1.16365e-05, Final residual = 7.52352e-08, No Iterations 7
-GAMG:  Solving for Pb_g, Initial residual = 5.66088e-06, Final residual = 6.0236e-08, No Iterations 6
-GAMG:  Solving for Pb_g, Initial residual = 2.75518e-06, Final residual = 8.93464e-08, No Iterations 4
-GAMG:  Solving for Pb_g, Initial residual = 1.34373e-06, Final residual = 9.06199e-08, No Iterations 3
-GAMG:  Solving for Pb_g, Initial residual = 6.62742e-07, Final residual = 5.1691e-08, No Iterations 3
-GAMG:  Solving for Pb_g, Initial residual = 3.2922e-07, Final residual = 5.41516e-08, No Iterations 2
-GAMG:  Solving for Pb_g, Initial residual = 1.70642e-07, Final residual = 6.88326e-08, No Iterations 1
-GAMG:  Solving for Pb_g, Initial residual = 1.07864e-07, Final residual = 5.05345e-08, No Iterations 1
-GAMG:  Solving for Pb_g, Initial residual = 7.14478e-08, Final residual = 7.14478e-08, No Iterations 0
-scalarTransport: Pb_gTransport: Pb_g is converged.
+scalarTransport execute: Y_PbI2_g
+GAMG:  Solving for Y_PbI2_g, Initial residual = 0.00921202, Final residual = 7.49038e-08, No Iterations 24
+GAMG:  Solving for Y_PbI2_g, Initial residual = 0.00402468, Final residual = 7.748e-08, No Iterations 22
+GAMG:  Solving for Y_PbI2_g, Initial residual = 0.00187311, Final residual = 7.95466e-08, No Iterations 20
+GAMG:  Solving for Y_PbI2_g, Initial residual = 0.000893645, Final residual = 8.1538e-08, No Iterations 18
+GAMG:  Solving for Y_PbI2_g, Initial residual = 0.000430958, Final residual = 8.34892e-08, No Iterations 16
+GAMG:  Solving for Y_PbI2_g, Initial residual = 0.000208766, Final residual = 8.55151e-08, No Iterations 14
+GAMG:  Solving for Y_PbI2_g, Initial residual = 0.000101316, Final residual = 8.79227e-08, No Iterations 12
+GAMG:  Solving for Y_PbI2_g, Initial residual = 4.92216e-05, Final residual = 9.17914e-08, No Iterations 10
+GAMG:  Solving for Y_PbI2_g, Initial residual = 2.39268e-05, Final residual = 6.65979e-08, No Iterations 9
+GAMG:  Solving for Y_PbI2_g, Initial residual = 1.16365e-05, Final residual = 7.52352e-08, No Iterations 7
+GAMG:  Solving for Y_PbI2_g, Initial residual = 5.66088e-06, Final residual = 6.0236e-08, No Iterations 6
+GAMG:  Solving for Y_PbI2_g, Initial residual = 2.75518e-06, Final residual = 8.93464e-08, No Iterations 4
+GAMG:  Solving for Y_PbI2_g, Initial residual = 1.34373e-06, Final residual = 9.06199e-08, No Iterations 3
+GAMG:  Solving for Y_PbI2_g, Initial residual = 6.62742e-07, Final residual = 5.1691e-08, No Iterations 3
+GAMG:  Solving for Y_PbI2_g, Initial residual = 3.2922e-07, Final residual = 5.41516e-08, No Iterations 2
+GAMG:  Solving for Y_PbI2_g, Initial residual = 1.70642e-07, Final residual = 6.88326e-08, No Iterations 1
+GAMG:  Solving for Y_PbI2_g, Initial residual = 1.07864e-07, Final residual = 5.05345e-08, No Iterations 1
+GAMG:  Solving for Y_PbI2_g, Initial residual = 7.14478e-08, Final residual = 7.14478e-08, No Iterations 0
+scalarTransport: Y_PbI2_gTransport: Y_PbI2_g is converged.
 	initial-residual tolerance: 1e-07
 	outer iteration: 18
 
-Pb_g min/max = 9.35248e-34 9.41851e-07
-ExecutionTime = 26.45 s  ClockTime = 27 s
+Y_PbI2_g min/max = 9.35248e-34 9.41851e-07
+ExecutionTime = 26.54 s  ClockTime = 27 s
 
 ...
 ...
 
-Time = 15.967999999998685
+Time = 15.964
 
-scalarTransport execute: Pb_g
-GAMG:  Solving for Pb_g, Initial residual = 0.00200857, Final residual = 6.37635e-08, No Iterations 12
-GAMG:  Solving for Pb_g, Initial residual = 0.000432434, Final residual = 8.65507e-08, No Iterations 9
-GAMG:  Solving for Pb_g, Initial residual = 0.000101877, Final residual = 9.70139e-08, No Iterations 7
-GAMG:  Solving for Pb_g, Initial residual = 2.52759e-05, Final residual = 6.1197e-08, No Iterations 6
-GAMG:  Solving for Pb_g, Initial residual = 6.43426e-06, Final residual = 7.92465e-08, No Iterations 4
-GAMG:  Solving for Pb_g, Initial residual = 1.68413e-06, Final residual = 5.83978e-08, No Iterations 3
-GAMG:  Solving for Pb_g, Initial residual = 4.56973e-07, Final residual = 4.67175e-08, No Iterations 2
-GAMG:  Solving for Pb_g, Initial residual = 1.35834e-07, Final residual = 4.48369e-08, No Iterations 1
-GAMG:  Solving for Pb_g, Initial residual = 6.04171e-08, Final residual = 6.04171e-08, No Iterations 0
-scalarTransport: Pb_gTransport: Pb_g is converged.
+scalarTransport execute: Y_PbI2_g
+GAMG:  Solving for Y_PbI2_g, Initial residual = 0.00200778, Final residual = 6.3716e-08, No Iterations 12
+GAMG:  Solving for Y_PbI2_g, Initial residual = 0.000432272, Final residual = 8.6493e-08, No Iterations 9
+GAMG:  Solving for Y_PbI2_g, Initial residual = 0.00010184, Final residual = 9.69665e-08, No Iterations 7
+GAMG:  Solving for Y_PbI2_g, Initial residual = 2.52673e-05, Final residual = 6.1172e-08, No Iterations 6
+GAMG:  Solving for Y_PbI2_g, Initial residual = 6.43218e-06, Final residual = 7.92186e-08, No Iterations 4
+GAMG:  Solving for Y_PbI2_g, Initial residual = 1.68361e-06, Final residual = 5.83787e-08, No Iterations 3
+GAMG:  Solving for Y_PbI2_g, Initial residual = 4.56838e-07, Final residual = 4.67031e-08, No Iterations 2
+GAMG:  Solving for Y_PbI2_g, Initial residual = 1.35796e-07, Final residual = 4.48237e-08, No Iterations 1
+GAMG:  Solving for Y_PbI2_g, Initial residual = 6.04001e-08, Final residual = 6.04001e-08, No Iterations 0
+scalarTransport: Y_PbI2_gTransport: Y_PbI2_g is converged.
 	initial-residual tolerance: 1e-07
 	outer iteration: 9
 
-Pb_g min/max = 9.95233e-07 1e-06
-ExecutionTime = 2868.6 s  ClockTime = 2870 s
+Y_PbI2_g min/max = 9.95199e-07 1e-06
+ExecutionTime = 2864.63 s  ClockTime = 2867 s
 
-Time = 15.971999999998685
+Time = 15.968
 
-scalarTransport execute: Pb_g
-GAMG:  Solving for Pb_g, Initial residual = 0.00200936, Final residual = 6.3811e-08, No Iterations 12
-GAMG:  Solving for Pb_g, Initial residual = 0.000432596, Final residual = 8.66084e-08, No Iterations 9
-GAMG:  Solving for Pb_g, Initial residual = 0.000101913, Final residual = 9.70614e-08, No Iterations 7
-GAMG:  Solving for Pb_g, Initial residual = 2.52845e-05, Final residual = 6.12221e-08, No Iterations 6
-GAMG:  Solving for Pb_g, Initial residual = 6.43635e-06, Final residual = 7.92742e-08, No Iterations 4
-GAMG:  Solving for Pb_g, Initial residual = 1.68465e-06, Final residual = 5.84168e-08, No Iterations 3
-GAMG:  Solving for Pb_g, Initial residual = 4.57107e-07, Final residual = 4.67318e-08, No Iterations 2
-GAMG:  Solving for Pb_g, Initial residual = 1.35872e-07, Final residual = 4.48501e-08, No Iterations 1
-GAMG:  Solving for Pb_g, Initial residual = 6.04341e-08, Final residual = 6.04341e-08, No Iterations 0
-scalarTransport: Pb_gTransport: Pb_g is converged.
+scalarTransport execute: Y_PbI2_g
+GAMG:  Solving for Y_PbI2_g, Initial residual = 0.00200857, Final residual = 6.37635e-08, No Iterations 12
+GAMG:  Solving for Y_PbI2_g, Initial residual = 0.000432434, Final residual = 8.65507e-08, No Iterations 9
+GAMG:  Solving for Y_PbI2_g, Initial residual = 0.000101877, Final residual = 9.70139e-08, No Iterations 7
+GAMG:  Solving for Y_PbI2_g, Initial residual = 2.52759e-05, Final residual = 6.1197e-08, No Iterations 6
+GAMG:  Solving for Y_PbI2_g, Initial residual = 6.43426e-06, Final residual = 7.92465e-08, No Iterations 4
+GAMG:  Solving for Y_PbI2_g, Initial residual = 1.68413e-06, Final residual = 5.83978e-08, No Iterations 3
+GAMG:  Solving for Y_PbI2_g, Initial residual = 4.56973e-07, Final residual = 4.67175e-08, No Iterations 2
+GAMG:  Solving for Y_PbI2_g, Initial residual = 1.35834e-07, Final residual = 4.48369e-08, No Iterations 1
+GAMG:  Solving for Y_PbI2_g, Initial residual = 6.04171e-08, Final residual = 6.04171e-08, No Iterations 0
+scalarTransport: Y_PbI2_gTransport: Y_PbI2_g is converged.
 	initial-residual tolerance: 1e-07
 	outer iteration: 9
 
-Pb_g min/max = 9.95267e-07 1e-06
-ExecutionTime = 2869.31 s  ClockTime = 2871 s
+Y_PbI2_g min/max = 9.95233e-07 1e-06
+ExecutionTime = 2865.34 s  ClockTime = 2867 s
 
-Time = 15.975999999998685
+Time = 15.972
 
-scalarTransport execute: Pb_g
-GAMG:  Solving for Pb_g, Initial residual = 0.00201014, Final residual = 6.38585e-08, No Iterations 12
-GAMG:  Solving for Pb_g, Initial residual = 0.000432758, Final residual = 8.66661e-08, No Iterations 9
-GAMG:  Solving for Pb_g, Initial residual = 0.00010195, Final residual = 9.71088e-08, No Iterations 7
-GAMG:  Solving for Pb_g, Initial residual = 2.52931e-05, Final residual = 6.12471e-08, No Iterations 6
-GAMG:  Solving for Pb_g, Initial residual = 6.43843e-06, Final residual = 7.9302e-08, No Iterations 4
-GAMG:  Solving for Pb_g, Initial residual = 1.68517e-06, Final residual = 5.84359e-08, No Iterations 3
-GAMG:  Solving for Pb_g, Initial residual = 4.57241e-07, Final residual = 4.67462e-08, No Iterations 2
-GAMG:  Solving for Pb_g, Initial residual = 1.3591e-07, Final residual = 4.48632e-08, No Iterations 1
-GAMG:  Solving for Pb_g, Initial residual = 6.0451e-08, Final residual = 6.0451e-08, No Iterations 0
-scalarTransport: Pb_gTransport: Pb_g is converged.
+scalarTransport execute: Y_PbI2_g
+GAMG:  Solving for Y_PbI2_g, Initial residual = 0.00200936, Final residual = 6.3811e-08, No Iterations 12
+GAMG:  Solving for Y_PbI2_g, Initial residual = 0.000432596, Final residual = 8.66084e-08, No Iterations 9
+GAMG:  Solving for Y_PbI2_g, Initial residual = 0.000101913, Final residual = 9.70614e-08, No Iterations 7
+GAMG:  Solving for Y_PbI2_g, Initial residual = 2.52845e-05, Final residual = 6.12221e-08, No Iterations 6
+GAMG:  Solving for Y_PbI2_g, Initial residual = 6.43635e-06, Final residual = 7.92742e-08, No Iterations 4
+GAMG:  Solving for Y_PbI2_g, Initial residual = 1.68465e-06, Final residual = 5.84168e-08, No Iterations 3
+GAMG:  Solving for Y_PbI2_g, Initial residual = 4.57107e-07, Final residual = 4.67318e-08, No Iterations 2
+GAMG:  Solving for Y_PbI2_g, Initial residual = 1.35872e-07, Final residual = 4.48501e-08, No Iterations 1
+GAMG:  Solving for Y_PbI2_g, Initial residual = 6.04341e-08, Final residual = 6.04341e-08, No Iterations 0
+scalarTransport: Y_PbI2_gTransport: Y_PbI2_g is converged.
 	initial-residual tolerance: 1e-07
 	outer iteration: 9
 
-Pb_g min/max = 9.95301e-07 1e-06
-ExecutionTime = 2870.02 s  ClockTime = 2871 s
+Y_PbI2_g min/max = 9.95267e-07 1e-06
+ExecutionTime = 2866.04 s  ClockTime = 2868 s
 
-Time = 15.979999999998684
+Time = 15.976
 
-scalarTransport execute: Pb_g
-GAMG:  Solving for Pb_g, Initial residual = 0.00201093, Final residual = 6.3906e-08, No Iterations 12
-GAMG:  Solving for Pb_g, Initial residual = 0.00043292, Final residual = 8.67238e-08, No Iterations 9
-GAMG:  Solving for Pb_g, Initial residual = 0.000101986, Final residual = 9.71562e-08, No Iterations 7
-GAMG:  Solving for Pb_g, Initial residual = 2.53017e-05, Final residual = 6.12721e-08, No Iterations 6
-GAMG:  Solving for Pb_g, Initial residual = 6.44051e-06, Final residual = 7.93297e-08, No Iterations 4
-GAMG:  Solving for Pb_g, Initial residual = 1.68569e-06, Final residual = 5.84549e-08, No Iterations 3
-GAMG:  Solving for Pb_g, Initial residual = 4.57376e-07, Final residual = 4.67606e-08, No Iterations 2
-GAMG:  Solving for Pb_g, Initial residual = 1.35948e-07, Final residual = 4.48765e-08, No Iterations 1
-GAMG:  Solving for Pb_g, Initial residual = 6.0468e-08, Final residual = 6.0468e-08, No Iterations 0
-scalarTransport: Pb_gTransport: Pb_g is converged.
+scalarTransport execute: Y_PbI2_g
+GAMG:  Solving for Y_PbI2_g, Initial residual = 0.00201014, Final residual = 6.38585e-08, No Iterations 12
+GAMG:  Solving for Y_PbI2_g, Initial residual = 0.000432758, Final residual = 8.66661e-08, No Iterations 9
+GAMG:  Solving for Y_PbI2_g, Initial residual = 0.00010195, Final residual = 9.71088e-08, No Iterations 7
+GAMG:  Solving for Y_PbI2_g, Initial residual = 2.52931e-05, Final residual = 6.12471e-08, No Iterations 6
+GAMG:  Solving for Y_PbI2_g, Initial residual = 6.43843e-06, Final residual = 7.9302e-08, No Iterations 4
+GAMG:  Solving for Y_PbI2_g, Initial residual = 1.68517e-06, Final residual = 5.84359e-08, No Iterations 3
+GAMG:  Solving for Y_PbI2_g, Initial residual = 4.57241e-07, Final residual = 4.67462e-08, No Iterations 2
+GAMG:  Solving for Y_PbI2_g, Initial residual = 1.3591e-07, Final residual = 4.48632e-08, No Iterations 1
+GAMG:  Solving for Y_PbI2_g, Initial residual = 6.0451e-08, Final residual = 6.0451e-08, No Iterations 0
+scalarTransport: Y_PbI2_gTransport: Y_PbI2_g is converged.
 	initial-residual tolerance: 1e-07
 	outer iteration: 9
 
-Pb_g min/max = 9.95335e-07 1e-06
-ExecutionTime = 2870.74 s  ClockTime = 2872 s
+Y_PbI2_g min/max = 9.95301e-07 1e-06
+ExecutionTime = 2866.74 s  ClockTime = 2869 s
 
-Time = 15.983999999998684
+Time = 15.98
 
-scalarTransport execute: Pb_g
-GAMG:  Solving for Pb_g, Initial residual = 0.00201171, Final residual = 6.39535e-08, No Iterations 12
-GAMG:  Solving for Pb_g, Initial residual = 0.000433081, Final residual = 8.67815e-08, No Iterations 9
-GAMG:  Solving for Pb_g, Initial residual = 0.000102022, Final residual = 9.72036e-08, No Iterations 7
-GAMG:  Solving for Pb_g, Initial residual = 2.53103e-05, Final residual = 6.12971e-08, No Iterations 6
-GAMG:  Solving for Pb_g, Initial residual = 6.44259e-06, Final residual = 7.93574e-08, No Iterations 4
-GAMG:  Solving for Pb_g, Initial residual = 1.6862e-06, Final residual = 5.84739e-08, No Iterations 3
-GAMG:  Solving for Pb_g, Initial residual = 4.5751e-07, Final residual = 4.67749e-08, No Iterations 2
-GAMG:  Solving for Pb_g, Initial residual = 1.35986e-07, Final residual = 4.48896e-08, No Iterations 1
-GAMG:  Solving for Pb_g, Initial residual = 6.04849e-08, Final residual = 6.04849e-08, No Iterations 0
-scalarTransport: Pb_gTransport: Pb_g is converged.
+scalarTransport execute: Y_PbI2_g
+GAMG:  Solving for Y_PbI2_g, Initial residual = 0.00201093, Final residual = 6.3906e-08, No Iterations 12
+GAMG:  Solving for Y_PbI2_g, Initial residual = 0.00043292, Final residual = 8.67238e-08, No Iterations 9
+GAMG:  Solving for Y_PbI2_g, Initial residual = 0.000101986, Final residual = 9.71562e-08, No Iterations 7
+GAMG:  Solving for Y_PbI2_g, Initial residual = 2.53017e-05, Final residual = 6.12721e-08, No Iterations 6
+GAMG:  Solving for Y_PbI2_g, Initial residual = 6.44051e-06, Final residual = 7.93297e-08, No Iterations 4
+GAMG:  Solving for Y_PbI2_g, Initial residual = 1.68569e-06, Final residual = 5.84549e-08, No Iterations 3
+GAMG:  Solving for Y_PbI2_g, Initial residual = 4.57376e-07, Final residual = 4.67606e-08, No Iterations 2
+GAMG:  Solving for Y_PbI2_g, Initial residual = 1.35948e-07, Final residual = 4.48765e-08, No Iterations 1
+GAMG:  Solving for Y_PbI2_g, Initial residual = 6.0468e-08, Final residual = 6.0468e-08, No Iterations 0
+scalarTransport: Y_PbI2_gTransport: Y_PbI2_g is converged.
 	initial-residual tolerance: 1e-07
 	outer iteration: 9
 
-Pb_g min/max = 9.95368e-07 1e-06
-ExecutionTime = 2871.44 s  ClockTime = 2873 s
+Y_PbI2_g min/max = 9.95335e-07 1e-06
+ExecutionTime = 2867.47 s  ClockTime = 2869 s
 
-Time = 15.987999999998683
+Time = 15.984
 
-scalarTransport execute: Pb_g
-GAMG:  Solving for Pb_g, Initial residual = 0.0020125, Final residual = 6.4001e-08, No Iterations 12
-GAMG:  Solving for Pb_g, Initial residual = 0.000433243, Final residual = 8.68391e-08, No Iterations 9
-GAMG:  Solving for Pb_g, Initial residual = 0.000102058, Final residual = 9.7251e-08, No Iterations 7
-GAMG:  Solving for Pb_g, Initial residual = 2.53189e-05, Final residual = 6.13221e-08, No Iterations 6
-GAMG:  Solving for Pb_g, Initial residual = 6.44467e-06, Final residual = 7.93852e-08, No Iterations 4
-GAMG:  Solving for Pb_g, Initial residual = 1.68672e-06, Final residual = 5.8493e-08, No Iterations 3
-GAMG:  Solving for Pb_g, Initial residual = 4.57644e-07, Final residual = 4.67892e-08, No Iterations 2
-GAMG:  Solving for Pb_g, Initial residual = 1.36024e-07, Final residual = 4.49028e-08, No Iterations 1
-GAMG:  Solving for Pb_g, Initial residual = 6.05019e-08, Final residual = 6.05019e-08, No Iterations 0
-scalarTransport: Pb_gTransport: Pb_g is converged.
+scalarTransport execute: Y_PbI2_g
+GAMG:  Solving for Y_PbI2_g, Initial residual = 0.00201171, Final residual = 6.39535e-08, No Iterations 12
+GAMG:  Solving for Y_PbI2_g, Initial residual = 0.000433081, Final residual = 8.67815e-08, No Iterations 9
+GAMG:  Solving for Y_PbI2_g, Initial residual = 0.000102022, Final residual = 9.72036e-08, No Iterations 7
+GAMG:  Solving for Y_PbI2_g, Initial residual = 2.53103e-05, Final residual = 6.12971e-08, No Iterations 6
+GAMG:  Solving for Y_PbI2_g, Initial residual = 6.44259e-06, Final residual = 7.93574e-08, No Iterations 4
+GAMG:  Solving for Y_PbI2_g, Initial residual = 1.6862e-06, Final residual = 5.84739e-08, No Iterations 3
+GAMG:  Solving for Y_PbI2_g, Initial residual = 4.5751e-07, Final residual = 4.67749e-08, No Iterations 2
+GAMG:  Solving for Y_PbI2_g, Initial residual = 1.35986e-07, Final residual = 4.48896e-08, No Iterations 1
+GAMG:  Solving for Y_PbI2_g, Initial residual = 6.04849e-08, Final residual = 6.04849e-08, No Iterations 0
+scalarTransport: Y_PbI2_gTransport: Y_PbI2_g is converged.
 	initial-residual tolerance: 1e-07
 	outer iteration: 9
 
-Pb_g min/max = 9.95402e-07 1e-06
-ExecutionTime = 2872.16 s  ClockTime = 2873 s
+Y_PbI2_g min/max = 9.95368e-07 1e-06
+ExecutionTime = 2868.17 s  ClockTime = 2870 s
 
-Time = 15.991999999998683
+Time = 15.988
 
-scalarTransport execute: Pb_g
-GAMG:  Solving for Pb_g, Initial residual = 0.00201328, Final residual = 6.40485e-08, No Iterations 12
-GAMG:  Solving for Pb_g, Initial residual = 0.000433404, Final residual = 8.68967e-08, No Iterations 9
-GAMG:  Solving for Pb_g, Initial residual = 0.000102095, Final residual = 9.72984e-08, No Iterations 7
-GAMG:  Solving for Pb_g, Initial residual = 2.53275e-05, Final residual = 6.13471e-08, No Iterations 6
-GAMG:  Solving for Pb_g, Initial residual = 6.44675e-06, Final residual = 7.94129e-08, No Iterations 4
-GAMG:  Solving for Pb_g, Initial residual = 1.68724e-06, Final residual = 5.8512e-08, No Iterations 3
-GAMG:  Solving for Pb_g, Initial residual = 4.57778e-07, Final residual = 4.68035e-08, No Iterations 2
-GAMG:  Solving for Pb_g, Initial residual = 1.36062e-07, Final residual = 4.49159e-08, No Iterations 1
-GAMG:  Solving for Pb_g, Initial residual = 6.05188e-08, Final residual = 6.05188e-08, No Iterations 0
-scalarTransport: Pb_gTransport: Pb_g is converged.
+scalarTransport execute: Y_PbI2_g
+GAMG:  Solving for Y_PbI2_g, Initial residual = 0.0020125, Final residual = 6.4001e-08, No Iterations 12
+GAMG:  Solving for Y_PbI2_g, Initial residual = 0.000433243, Final residual = 8.68391e-08, No Iterations 9
+GAMG:  Solving for Y_PbI2_g, Initial residual = 0.000102058, Final residual = 9.7251e-08, No Iterations 7
+GAMG:  Solving for Y_PbI2_g, Initial residual = 2.53189e-05, Final residual = 6.13221e-08, No Iterations 6
+GAMG:  Solving for Y_PbI2_g, Initial residual = 6.44467e-06, Final residual = 7.93852e-08, No Iterations 4
+GAMG:  Solving for Y_PbI2_g, Initial residual = 1.68672e-06, Final residual = 5.8493e-08, No Iterations 3
+GAMG:  Solving for Y_PbI2_g, Initial residual = 4.57644e-07, Final residual = 4.67892e-08, No Iterations 2
+GAMG:  Solving for Y_PbI2_g, Initial residual = 1.36024e-07, Final residual = 4.49028e-08, No Iterations 1
+GAMG:  Solving for Y_PbI2_g, Initial residual = 6.05019e-08, Final residual = 6.05019e-08, No Iterations 0
+scalarTransport: Y_PbI2_gTransport: Y_PbI2_g is converged.
 	initial-residual tolerance: 1e-07
 	outer iteration: 9
 
-Pb_g min/max = 9.95435e-07 1e-06
-ExecutionTime = 2872.86 s  ClockTime = 2874 s
+Y_PbI2_g min/max = 9.95402e-07 1e-06
+ExecutionTime = 2868.88 s  ClockTime = 2871 s
 
-Time = 15.995999999998682
+Time = 15.992
 
-scalarTransport execute: Pb_g
-GAMG:  Solving for Pb_g, Initial residual = 0.00201406, Final residual = 6.4096e-08, No Iterations 12
-GAMG:  Solving for Pb_g, Initial residual = 0.000433566, Final residual = 8.69543e-08, No Iterations 9
-GAMG:  Solving for Pb_g, Initial residual = 0.000102131, Final residual = 9.73458e-08, No Iterations 7
-GAMG:  Solving for Pb_g, Initial residual = 2.5336e-05, Final residual = 6.13721e-08, No Iterations 6
-GAMG:  Solving for Pb_g, Initial residual = 6.44883e-06, Final residual = 7.94406e-08, No Iterations 4
-GAMG:  Solving for Pb_g, Initial residual = 1.68776e-06, Final residual = 5.8531e-08, No Iterations 3
-GAMG:  Solving for Pb_g, Initial residual = 4.57911e-07, Final residual = 4.68178e-08, No Iterations 2
-GAMG:  Solving for Pb_g, Initial residual = 1.361e-07, Final residual = 4.49291e-08, No Iterations 1
-GAMG:  Solving for Pb_g, Initial residual = 6.05357e-08, Final residual = 6.05357e-08, No Iterations 0
-scalarTransport: Pb_gTransport: Pb_g is converged.
+scalarTransport execute: Y_PbI2_g
+GAMG:  Solving for Y_PbI2_g, Initial residual = 0.00201328, Final residual = 6.40485e-08, No Iterations 12
+GAMG:  Solving for Y_PbI2_g, Initial residual = 0.000433404, Final residual = 8.68967e-08, No Iterations 9
+GAMG:  Solving for Y_PbI2_g, Initial residual = 0.000102095, Final residual = 9.72984e-08, No Iterations 7
+GAMG:  Solving for Y_PbI2_g, Initial residual = 2.53275e-05, Final residual = 6.13471e-08, No Iterations 6
+GAMG:  Solving for Y_PbI2_g, Initial residual = 6.44675e-06, Final residual = 7.94129e-08, No Iterations 4
+GAMG:  Solving for Y_PbI2_g, Initial residual = 1.68724e-06, Final residual = 5.8512e-08, No Iterations 3
+GAMG:  Solving for Y_PbI2_g, Initial residual = 4.57778e-07, Final residual = 4.68035e-08, No Iterations 2
+GAMG:  Solving for Y_PbI2_g, Initial residual = 1.36062e-07, Final residual = 4.49159e-08, No Iterations 1
+GAMG:  Solving for Y_PbI2_g, Initial residual = 6.05188e-08, Final residual = 6.05188e-08, No Iterations 0
+scalarTransport: Y_PbI2_gTransport: Y_PbI2_g is converged.
 	initial-residual tolerance: 1e-07
 	outer iteration: 9
 
-Pb_g min/max = 9.95467e-07 1e-06
-ExecutionTime = 2873.56 s  ClockTime = 2875 s
+Y_PbI2_g min/max = 9.95435e-07 1e-06
+ExecutionTime = 2869.58 s  ClockTime = 2871 s
 
-Time = 15.999999999998682
+Time = 15.996
 
-scalarTransport execute: Pb_g
-GAMG:  Solving for Pb_g, Initial residual = 0.00201485, Final residual = 6.41435e-08, No Iterations 12
-GAMG:  Solving for Pb_g, Initial residual = 0.000433727, Final residual = 8.70119e-08, No Iterations 9
-GAMG:  Solving for Pb_g, Initial residual = 0.000102167, Final residual = 9.73932e-08, No Iterations 7
-GAMG:  Solving for Pb_g, Initial residual = 2.53446e-05, Final residual = 6.13971e-08, No Iterations 6
-GAMG:  Solving for Pb_g, Initial residual = 6.4509e-06, Final residual = 7.94683e-08, No Iterations 4
-GAMG:  Solving for Pb_g, Initial residual = 1.68828e-06, Final residual = 5.855e-08, No Iterations 3
-GAMG:  Solving for Pb_g, Initial residual = 4.58045e-07, Final residual = 4.68321e-08, No Iterations 2
-GAMG:  Solving for Pb_g, Initial residual = 1.36138e-07, Final residual = 4.49421e-08, No Iterations 1
-GAMG:  Solving for Pb_g, Initial residual = 6.05526e-08, Final residual = 6.05526e-08, No Iterations 0
-scalarTransport: Pb_gTransport: Pb_g is converged.
+scalarTransport execute: Y_PbI2_g
+GAMG:  Solving for Y_PbI2_g, Initial residual = 0.00201406, Final residual = 6.4096e-08, No Iterations 12
+GAMG:  Solving for Y_PbI2_g, Initial residual = 0.000433566, Final residual = 8.69543e-08, No Iterations 9
+GAMG:  Solving for Y_PbI2_g, Initial residual = 0.000102131, Final residual = 9.73458e-08, No Iterations 7
+GAMG:  Solving for Y_PbI2_g, Initial residual = 2.5336e-05, Final residual = 6.13721e-08, No Iterations 6
+GAMG:  Solving for Y_PbI2_g, Initial residual = 6.44883e-06, Final residual = 7.94406e-08, No Iterations 4
+GAMG:  Solving for Y_PbI2_g, Initial residual = 1.68776e-06, Final residual = 5.8531e-08, No Iterations 3
+GAMG:  Solving for Y_PbI2_g, Initial residual = 4.57911e-07, Final residual = 4.68178e-08, No Iterations 2
+GAMG:  Solving for Y_PbI2_g, Initial residual = 1.361e-07, Final residual = 4.49291e-08, No Iterations 1
+GAMG:  Solving for Y_PbI2_g, Initial residual = 6.05357e-08, Final residual = 6.05357e-08, No Iterations 0
+scalarTransport: Y_PbI2_gTransport: Y_PbI2_g is converged.
 	initial-residual tolerance: 1e-07
 	outer iteration: 9
 
-Pb_g min/max = 9.955e-07 1e-06
-scalarTransport write: Pb_gTransport
-	Pb_g
+Y_PbI2_g min/max = 9.95467e-07 1e-06
+ExecutionTime = 2870.3 s  ClockTime = 2872 s
 
-ExecutionTime = 2874.27 s  ClockTime = 2875 s
+Time = 16
+
+scalarTransport execute: Y_PbI2_g
+GAMG:  Solving for Y_PbI2_g, Initial residual = 0.00201485, Final residual = 6.41435e-08, No Iterations 12
+GAMG:  Solving for Y_PbI2_g, Initial residual = 0.000433727, Final residual = 8.70119e-08, No Iterations 9
+GAMG:  Solving for Y_PbI2_g, Initial residual = 0.000102167, Final residual = 9.73932e-08, No Iterations 7
+GAMG:  Solving for Y_PbI2_g, Initial residual = 2.53446e-05, Final residual = 6.13971e-08, No Iterations 6
+GAMG:  Solving for Y_PbI2_g, Initial residual = 6.4509e-06, Final residual = 7.94683e-08, No Iterations 4
+GAMG:  Solving for Y_PbI2_g, Initial residual = 1.68828e-06, Final residual = 5.855e-08, No Iterations 3
+GAMG:  Solving for Y_PbI2_g, Initial residual = 4.58045e-07, Final residual = 4.68321e-08, No Iterations 2
+GAMG:  Solving for Y_PbI2_g, Initial residual = 1.36138e-07, Final residual = 4.49421e-08, No Iterations 1
+GAMG:  Solving for Y_PbI2_g, Initial residual = 6.05526e-08, Final residual = 6.05526e-08, No Iterations 0
+scalarTransport: Y_PbI2_gTransport: Y_PbI2_g is converged.
+	initial-residual tolerance: 1e-07
+	outer iteration: 9
+
+Y_PbI2_g min/max = 9.955e-07 1e-06
+scalarTransport write: Y_PbI2_gTransport
+	Y_PbI2_g
+
+Wrote c_Pb_g [mol/m3]
+ExecutionTime = 2871.02 s  ClockTime = 2873 s
 
 End
