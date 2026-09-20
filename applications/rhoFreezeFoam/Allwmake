@@ -1,0 +1,12 @@
+#!/bin/bash
+set -euo pipefail
+cd -- "$(dirname -- "$0")"
+if ! command -v wmake >/dev/null 2>&1; then
+    echo 'Load your OpenFOAM v2606 environment before building.' >&2
+    exit 1
+fi
+case "${WM_PROJECT_VERSION:-}" in
+    2606|v2606) ;;
+    *) echo 'This prototype targets OpenCFD OpenFOAM v2606.' >&2; exit 1 ;;
+esac
+wmake
