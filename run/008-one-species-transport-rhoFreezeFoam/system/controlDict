@@ -39,65 +39,6 @@ runTimeModifiable true;
 
 functions {
 
-    writeTransportProperties {
-
-        type            coded;
-        libs            ("libutilityFunctionObjects.so");
-        name            writeTransportProperties;
-
-        writeControl    writeTime;
-
-        codeInclude
-        #{
-            #include "fvCFD.H"
-            #include "fluidThermo.H"
-        #};
-
-        codeOptions
-        #{
-            -I$(LIB_SRC)/thermophysicalModels/basic/lnInclude  \
-            -I$(LIB_SRC)/thermophysicalModels/specie/lnInclude  \
-            -I$(LIB_SRC)/transportModels/compressible/lnInclude
-        #};
-
-        codeLibs
-        #{
-            -lfluidThermophysicalModels  \
-            -lspecie
-        #};
-
-        codeWrite
-        #{
-            const fluidThermo& thermo =
-                mesh().lookupObject<fluidThermo>("thermophysicalProperties");
-
-            volScalarField muField (
-                IOobject (
-                    "mu",
-                    mesh().time().timeName(),
-                    mesh(),
-                    IOobject::NO_READ,
-                    IOobject::NO_WRITE
-                ),
-                thermo.mu()
-            );
-
-            volScalarField kappaField (
-                IOobject (
-                    "kappa",
-                    mesh().time().timeName(),
-                    mesh(),
-                    IOobject::NO_READ,
-                    IOobject::NO_WRITE
-                ),
-                thermo.kappa()
-            );
-
-            muField.write();
-            kappaField.write();
-        #};
-    }
-
     Pb_gTransport {
         type            scalarTransport;
         libs            ("libsolverFunctionObjects.so");
@@ -110,14 +51,9 @@ functions {
 
         schemesField    Pb_g;
 
-        /* Is it limited between 0 and 1 ? */
-        bounded01       no;
         resetOnStartUp  no;
 
         tolerance       1.0e-7;
         nCorr           47;
-
-        writeControl    writeTime;
-        writeInterval   1;
     }
 }
