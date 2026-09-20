@@ -7,13 +7,13 @@
 \*---------------------------------------------------------------------------*/
 Build  : _481094f-20260618 OPENFOAM=2606 version=2606
 Arch   : "LSB;label=32;scalar=64"
-Exec   : rhoFreezeFoam
+Exec   : rhoFixedFlowFoam
 Date   : Sep 20 2026
 Time   : 15:09:32
 Host   : PC18046
 PID    : 178987
 I/O    : uncollated
-Case   : /home/niceno/Development/OpenFOAM/LESTO/run/008-one-species-transport-rhoFreezeFoam
+Case   : /home/niceno/Development/OpenFOAM/LESTO/run/008-one-species-transport-rhoFixedFlowFoam
 nProcs : 1
 trapFpe: Floating point exception trapping enabled (FOAM_SIGFPE).
 memory pool : not available
@@ -40,8 +40,8 @@ Selecting thermodynamics package
     energy          sensibleInternalEnergy;
 }
 
-Using dynamicCode for patch WALL on field T at line 42 in "/home/niceno/Development/OpenFOAM/LESTO/run/008-one-species-transport-rhoFreezeFoam/0/T/boundaryField/WALL"
-Using dynamicCode for patch INLET on field U at line 33 in "/home/niceno/Development/OpenFOAM/LESTO/run/008-one-species-transport-rhoFreezeFoam/0/U/boundaryField/INLET"
+Using dynamicCode for patch WALL on field T at line 42 in "/home/niceno/Development/OpenFOAM/LESTO/run/008-one-species-transport-rhoFixedFlowFoam/0/T/boundaryField/WALL"
+Using dynamicCode for patch INLET on field U at line 33 in "/home/niceno/Development/OpenFOAM/LESTO/run/008-one-species-transport-rhoFixedFlowFoam/0/U/boundaryField/INLET"
 Frozen fields: U, p, e, T, rho, phi, mu, kappa
 Only Y_PbI2_g is advanced. D is in kg/(m s), not m2/s.
 No SIMPLE/PIMPLE, pressure, momentum or energy solve.

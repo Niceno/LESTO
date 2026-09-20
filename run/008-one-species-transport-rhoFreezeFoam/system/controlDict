@@ -39,21 +39,21 @@ runTimeModifiable true;
 
 functions {
 
-    Y_PbI2_gTransport {
-        type            scalarTransport;
-        libs            ("libsolverFunctionObjects.so");
+  Y_PbI2_gTransport {
+    type            scalarTransport;
+    libs            ("libsolverFunctionObjects.so");
 
-        field           Y_PbI2_g;
-        phi             phi;
-        rho             rho;
+    field           Y_PbI2_g;
+    phi             phi;
+    rho             rho;
 
-        D               1e-5;
+    D               1e-5;
 
-        schemesField    Y_PbI2_g;
+    schemesField    Y_PbI2_g;
 
-        resetOnStartUp  no;
+    resetOnStartUp  no;
 
-        tolerance       1.0e-7;
-        nCorr           47;
-    }
+    tolerance       1.0e-7;
+    nCorr           47;
+  }
 }

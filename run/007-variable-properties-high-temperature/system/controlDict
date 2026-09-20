@@ -39,62 +39,62 @@ runTimeModifiable true;
 
 functions {
 
-    writeTransportProperties {
+  writeTransportProperties {
 
-        type            coded;
-        libs            ("libutilityFunctionObjects.so");
-        name            writeTransportProperties;
+    type            coded;
+    libs            ("libutilityFunctionObjects.so");
+    name            writeTransportProperties;
 
-        writeControl    writeTime;
+    writeControl    writeTime;
 
-        codeInclude
-        #{
-            #include "fvCFD.H"
-            #include "fluidThermo.H"
-        #};
+    codeInclude
+    #{
+      #include "fvCFD.H"
+      #include "fluidThermo.H"
+    #};
 
-        codeOptions
-        #{
-            -I$(LIB_SRC)/thermophysicalModels/basic/lnInclude  \
-            -I$(LIB_SRC)/thermophysicalModels/specie/lnInclude  \
-            -I$(LIB_SRC)/transportModels/compressible/lnInclude
-        #};
+    codeOptions
+    #{
+      -I$(LIB_SRC)/thermophysicalModels/basic/lnInclude  \
+      -I$(LIB_SRC)/thermophysicalModels/specie/lnInclude  \
+      -I$(LIB_SRC)/transportModels/compressible/lnInclude
+    #};
 
-        codeLibs
-        #{
-            -lfluidThermophysicalModels  \
-            -lspecie
-        #};
+    codeLibs
+    #{
+      -lfluidThermophysicalModels  \
+      -lspecie
+    #};
 
-        codeWrite
-        #{
-            const fluidThermo& thermo =
-                mesh().lookupObject<fluidThermo>("thermophysicalProperties");
+    codeWrite
+    #{
+      const fluidThermo& thermo =
+        mesh().lookupObject<fluidThermo>("thermophysicalProperties");
 
-            volScalarField muField (
-                IOobject (
-                    "mu",
-                    mesh().time().timeName(),
-                    mesh(),
-                    IOobject::NO_READ,
-                    IOobject::NO_WRITE
-                ),
-                thermo.mu()
-            );
+      volScalarField muField (
+        IOobject (
+          "mu",
+          mesh().time().timeName(),
+          mesh(),
+          IOobject::NO_READ,
+          IOobject::NO_WRITE
+        ),
+        thermo.mu()
+      );
 
-            volScalarField kappaField (
-                IOobject (
-                    "kappa",
-                    mesh().time().timeName(),
-                    mesh(),
-                    IOobject::NO_READ,
-                    IOobject::NO_WRITE
-                ),
-                thermo.kappa()
-            );
+      volScalarField kappaField (
+        IOobject (
+          "kappa",
+          mesh().time().timeName(),
+          mesh(),
+          IOobject::NO_READ,
+          IOobject::NO_WRITE
+        ),
+        thermo.kappa()
+      );
 
-            muField.write();
-            kappaField.write();
-        #};
-    }
+      muField.write();
+      kappaField.write();
+    #};
+  }
 }

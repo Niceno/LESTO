@@ -15,38 +15,38 @@ FoamFile{version 2.0;  format ascii;  class dictionary;  object fvSchemes;}
 
 ddtSchemes {
 
-    default         steadyState;
+  default         steadyState;
 }
 
 gradSchemes {
 
-    default         Gauss linear;
+  default         Gauss linear;
 }
 
 divSchemes {
 
-    default         none;
+  default         none;
 
-    div(phi,U)      bounded Gauss linearUpwind grad(U);
+  div(phi,U)      bounded Gauss linearUpwind grad(U);
 
-    div(phi,e)      bounded Gauss upwind;
+  div(phi,e)      bounded Gauss upwind;
 
-    div(phi,Ekp)    bounded Gauss upwind;
+  div(phi,Ekp)    bounded Gauss upwind;
 
-    div(((rho*nuEff)*dev2(T(grad(U))))) Gauss linear;
+  div(((rho*nuEff)*dev2(T(grad(U))))) Gauss linear;
 }
 
 laplacianSchemes {
 
-    default         Gauss linear corrected;
+  default         Gauss linear corrected;
 }
 
 interpolationSchemes {
 
-    default         linear;
+  default         linear;
 }
 
 snGradSchemes {
 
-    default         corrected;
+  default         corrected;
 }

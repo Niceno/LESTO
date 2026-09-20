@@ -1,48 +1,39 @@
-FoamFile
-{
-    format      ascii;
-    class       volScalarField;
-    object      T;
-}
+FoamFile {format ascii;  class volScalarField;  object T;}
 
 dimensions      [0 0 0 1 0 0 0];
 
 // Temporary value; internal field is overwritten by setExprFields
 internalField   uniform 1000;
 
-boundaryField
-{
-    INLET
-    {
-        type    fixedValue;
-        value   uniform 1000;
-    }
+boundaryField {
 
-    OUTLET
-    {
-        type    zeroGradient;
-    }
+  INLET {
+    type    fixedValue;
+    value   uniform 1000;
+  }
 
-    WALL
-    {
-        type    codedFixedValue;
-        value   uniform 1000;
-        name    linearWallTemperature;
+  OUTLET {
+    type    zeroGradient;
+  }
 
-        code
-        #{
-            const vectorField& Cf = patch().Cf();
+  WALL {
+    type    codedFixedValue;
+    value   uniform 1000;
+    name    linearWallTemperature;
 
-            forAll(Cf, facei)
-            {
-                const scalar x = Cf[facei].x();
+    code
+    #{
+      const vectorField& Cf = patch().Cf();
 
-                /*-------------------------+
-                |  x = 0.0   =>  T = 1000  |
-                |  x = 0.69  =>  T =  300  |
-                +------------------------*/
-                operator[](facei) = 1000.0 - 700.0*x/0.69;
-            }
-        #};
-    }
+      forAll(Cf, facei) {
+        const scalar x = Cf[facei].x();
+
+        /*-------------------------+
+        |  x = 0.0   =>  T = 1000  |
+        |  x = 0.69  =>  T =  300  |
+        +------------------------*/
+        operator[](facei) = 1000.0 - 700.0*x/0.69;
+      }
+    #};
+  }
 }

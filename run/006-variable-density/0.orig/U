@@ -1,49 +1,41 @@
-FoamFile
-{
-    version     2.0;
-    format      ascii;
-    class       volVectorField;
-    object      U;
-}
+FoamFile {version 2.0;  format ascii;  class volVectorField;  object U;}
 
 dimensions      [0 1 -1 0 0 0 0];
 
 internalField   uniform (0.095 0 0);
 
-boundaryField
-{
-    INLET
-    {
-        type    codedFixedValue;
-        value   uniform (0.095 0 0);
-        name    parabolicInlet;
+boundaryField {
 
-        code
-        #{
-            const vectorField& Cf = patch().Cf();
+  INLET {
+    type    codedFixedValue;
+    value   uniform (0.095 0 0);
+    name    parabolicInlet;
 
-            const scalar R    = 0.0024;
-            const scalar Umax = 0.19;
+    code
+    #{
+      const vectorField& Cf = patch().Cf();
 
-            forAll(Cf, facei)
-            {
-                const scalar y = Cf[facei].y();
-                const scalar z = Cf[facei].z();
-                const scalar r2 = y*y + z*z;
+      const scalar R    = 0.0024;
+      const scalar Umax = 0.19;
 
-                operator[](facei) =
-                    vector(Umax*(1.0 - r2/(R*R)), 0, 0);
-            }
-        #};
-    }
+      forAll(Cf, facei)
+      {
+        const scalar y = Cf[facei].y();
+        const scalar z = Cf[facei].z();
+        const scalar r2 = y*y + z*z;
 
-    OUTLET
-    {
-        type    zeroGradient;
-    }
+        operator[](facei) =
+          vector(Umax*(1.0 - r2/(R*R)), 0, 0);
+      }
+    #};
+  }
 
-    WALL
-    {
-        type    noSlip;
-    }
+  OUTLET {
+    type    zeroGradient;
+  }
+
+  WALL {
+    type    noSlip;
+  }
 }
+

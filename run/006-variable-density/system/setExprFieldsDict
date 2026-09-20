@@ -1,23 +1,16 @@
-FoamFile
-{
-    version     2.0;
-    format      ascii;
-    class       dictionary;
-    object      setExprFieldsDict;
-}
+FoamFile{version 2.0;  format ascii;  class dictionary;  object setExprFieldsDict;}
 
-expressions
-(
-    parabolicVelocity
-    {
-        field       U;
-        expression
-        "vector(0.19*(1 - (sqr(pos().y()) + sqr(pos().z()))/sqr(0.0024)), 0, 0)";
-    }
+expressions (
 
-    linearTemperature
-    {
-        field       T;
-        expression  "400 - (100/0.69)*pos().x()";
-    }
+  parabolicVelocity {
+    field       U;
+    expression
+    "vector(0.19*(1 - (sqr(pos().y()) + sqr(pos().z()))/sqr(0.0024)), 0, 0)";
+  }
+
+  linearTemperature {
+    field       T;
+    expression  "400 - (100/0.69)*pos().x()";
+  }
 );
+

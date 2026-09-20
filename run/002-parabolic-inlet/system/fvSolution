@@ -14,38 +14,38 @@ FoamFile{version 2.0;  format ascii; class dictionary; object fvSolution;}
 
 solvers {
 
-    p {
-        solver          GAMG;
-        tolerance       1e-7;
-        relTol          0.05;
-        smoother        GaussSeidel;
-    }
+  p {
+    solver          GAMG;
+    tolerance       1e-7;
+    relTol          0.05;
+    smoother        GaussSeidel;
+  }
 
-    U {
-        solver          smoothSolver;
-        smoother        symGaussSeidel;
-        tolerance       1e-7;
-        relTol          0.05;
-    }
+  U {
+    solver          smoothSolver;
+    smoother        symGaussSeidel;
+    tolerance       1e-7;
+    relTol          0.05;
+  }
 }
 
 SIMPLE {
 
-    nNonOrthogonalCorrectors 0;
+  nNonOrthogonalCorrectors 0;
 
-    residualControl {
-        p               1e-5;
-        U               1e-5;
-    }
+  residualControl {
+    p               1e-5;
+    U               1e-5;
+  }
 }
 
 relaxationFactors {
 
-    fields {
-        p               0.3;
-    }
+  fields {
+    p               0.3;
+  }
 
-    equations {
-        U               0.5;
-    }
+  equations {
+    U               0.5;
+  }
 }

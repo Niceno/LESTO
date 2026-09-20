@@ -10,32 +10,32 @@ FoamFile {format ascii;  class dictionary;  object thermophysicalProperties;}
 
 thermoType {
 
-    type            heRhoThermo;
-    mixture         pureMixture;
-    transport       const;
-    thermo          hConst;
-    equationOfState rhoConst;
-    specie          specie;
-    energy          sensibleInternalEnergy;
+  type            heRhoThermo;
+  mixture         pureMixture;
+  transport       const;
+  thermo          hConst;
+  equationOfState rhoConst;
+  specie          specie;
+  energy          sensibleInternalEnergy;
 }
 
 mixture {
 
-    specie {
-        molWeight   4.0026;
-    }
+  specie {
+    molWeight   4.0026;
+  }
 
-    equationOfState {
-        rho         0.166;
-    }
+  equationOfState {
+    rho         0.166;
+  }
 
-    thermodynamics {
-        Cp          5193;
-        Hf          0;
-    }
+  thermodynamics {
+    Cp          5193;
+    Hf          0;
+  }
 
-    transport {
-        mu          2.70e-5;
-        Pr          0.916;
-    }
+  transport {
+    mu          2.70e-5;
+    Pr          0.916;
+  }
 }

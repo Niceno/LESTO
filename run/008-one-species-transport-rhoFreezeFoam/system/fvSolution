@@ -14,19 +14,19 @@ FoamFile{version 2.0;  format ascii; class dictionary; object fvSolution;}
 
 solvers {
 
-    Y_PbI2_g {
-        solver          GAMG;
-        tolerance       1e-7;
-        relTol          0;
-        smoother        GaussSeidel;
+  Y_PbI2_g {
+    solver          GAMG;
+    tolerance       1e-7;
+    relTol          0;
+    smoother        GaussSeidel;
 
-        directSolveCoarsest   yes;
-    }
+    directSolveCoarsest   yes;
+  }
 }
 
 relaxationFactors {
 
-    equations {
-        Y_PbI2_g            0.995;
-    }
+  equations {
+    Y_PbI2_g            0.995;
+  }
 }
