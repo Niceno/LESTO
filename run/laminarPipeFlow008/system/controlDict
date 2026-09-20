@@ -14,18 +14,18 @@ system/controlDict
 FoamFile{version 2.0;  format ascii;  class dictionary; object controlDict;}
 /*----------------------------------------------------------------------------*/
 
-application     rhoSimpleFoam;
+application     rhoFreezeFoam;
 
 startFrom       startTime;
 startTime       0;
 
 stopAt          endTime;
-endTime         2000;
+endTime         16.0;            /* flow through time is ~ 7.3 s */
 
-deltaT          1;
+deltaT          0.004;           /* results in CFL ~ 0.47 */
 
 writeControl    timeStep;
-writeInterval   100;
+writeInterval   50;
 
 purgeWrite      0;
 
@@ -33,7 +33,7 @@ writeFormat     binary;
 writeCompression off;
 
 timeFormat      general;
-timePrecision   6;
+timePrecision   12;
 
 runTimeModifiable true;
 
@@ -96,5 +96,28 @@ functions {
             muField.write();
             kappaField.write();
         #};
+    }
+
+    Pb_gTransport {
+        type            scalarTransport;
+        libs            ("libsolverFunctionObjects.so");
+
+        field           Pb_g;
+        phi             phi;
+        rho             rho;
+
+        D               1e-5;
+
+        schemesField    Pb_g;
+
+        /* Is it limited between 0 and 1 ? */
+        bounded01       no;
+        resetOnStartUp  no;
+
+        tolerance       1.0e-7;
+        nCorr           47;
+
+        writeControl    writeTime;
+        writeInterval   1;
     }
 }

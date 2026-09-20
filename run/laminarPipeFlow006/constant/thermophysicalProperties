@@ -1,12 +1,15 @@
-FoamFile
-{
-    format      ascii;
-    class       dictionary;
-    object      thermophysicalProperties;
-}
+/*------------------------------------------------------------------------------
 
-thermoType
-{
+constant/thermophysicalProperties
+
+  - physical properties
+
+------------------------------------------------------------------------------*/
+FoamFile {format ascii;  class dictionary;  object thermophysicalProperties;}
+/*----------------------------------------------------------------------------*/
+
+thermoType {
+
     type            hePsiThermo;
     mixture         pureMixture;
     transport       const;
@@ -16,21 +19,18 @@ thermoType
     energy          sensibleInternalEnergy;
 }
 
-mixture
-{
-    specie
-    {
+mixture {
+
+    specie {
         molWeight   4.0026;
     }
 
-    thermodynamics
-    {
+    thermodynamics {
         Cp          5193;
         Hf          0;
     }
 
-    transport
-    {
+    transport {
         mu          2.70e-5;
         Pr          0.916;
     }

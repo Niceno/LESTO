@@ -34,6 +34,15 @@ solvers {
         tolerance       1e-7;
         relTol          0.05;
     }
+
+    Pb_g {
+        solver          GAMG;
+        tolerance       1e-7;
+        relTol          0;
+        smoother        GaussSeidel;
+
+        directSolveCoarsest   yes;
+    }
 }
 
 SIMPLE {
@@ -56,5 +65,6 @@ relaxationFactors {
     equations {
         U               0.5;
         e               0.7;
+        Pb_g            0.995;
     }
 }

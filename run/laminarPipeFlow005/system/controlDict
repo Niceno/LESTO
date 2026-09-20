@@ -1,10 +1,18 @@
-FoamFile
-{
-    version     2.0;
-    format      ascii;
-    class       dictionary;
-    object      controlDict;
-}
+/*------------------------------------------------------------------------------
+
+system/controlDict
+
+  - select solver
+  - start and stop of calculation
+  - time step size
+  - saving frequency
+  - output format, precision, compression and time naming
+  - allows run-time changes
+  - extra functions
+
+------------------------------------------------------------------------------*/
+FoamFile{version 2.0;  format ascii;  class dictionary; object controlDict;}
+/*----------------------------------------------------------------------------*/
 
 application     rhoSimpleFoam;
 

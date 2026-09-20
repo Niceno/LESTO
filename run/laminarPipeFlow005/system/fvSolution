@@ -1,31 +1,34 @@
-FoamFile
-{
-    version     2.0;
-    format      ascii;
-    class       dictionary;
-    object      fvSolution;
-}
+/*------------------------------------------------------------------------------
 
-solvers
-{
-    p
-    {
+system/fvSolution
+
+  - select linear solvers
+  - solver tolerances
+  - SIMPLE/PIMPLE/PISO controls
+  - convergence criteria
+  - under-relaxation factors
+
+------------------------------------------------------------------------------*/
+FoamFile{version 2.0;  format ascii; class dictionary; object fvSolution;}
+/*----------------------------------------------------------------------------*/
+
+solvers {
+
+    p {
         solver          GAMG;
         tolerance       1e-7;
         relTol          0.05;
         smoother        GaussSeidel;
     }
 
-    U
-    {
+    U {
         solver          smoothSolver;
         smoother        symGaussSeidel;
         tolerance       1e-7;
         relTol          0.05;
     }
 
-    e
-    {
+    e {
         solver          smoothSolver;
         smoother        symGaussSeidel;
         tolerance       1e-7;
@@ -33,27 +36,24 @@ solvers
     }
 }
 
-SIMPLE
-{
+SIMPLE {
+
     nNonOrthogonalCorrectors 0;
 
-    residualControl
-    {
+    residualControl {
         p               1e-3;
         U               1e-4;
         e               1e-3;
     }
 }
 
-relaxationFactors
-{
-    fields
-    {
+relaxationFactors {
+
+    fields {
         p               0.3;
     }
 
-    equations
-    {
+    equations {
         U               0.5;
         e               0.7;
     }
