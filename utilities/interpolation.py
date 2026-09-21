@@ -5,7 +5,7 @@ from scipy.interpolate import CubicSpline
 def spline_interpolation(x):
 
     x_data = np.array([
-        0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 
+        0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9,
         1.0, 1.1, 1.3, 1.5, 1.6, 1.65, 1.75, 1.85, 1.95,
         2.1, 2.3, 2.5, 2.7, 2.9, 3.3, 3.7, 3.9, 4.0,
         4.2, 4.4, 4.6, 4.8, 5.0, 7.0, 9.0, 20.0,
@@ -22,8 +22,8 @@ def spline_interpolation(x):
 
     log_y_data = np.log(y_data)
     spline_log = CubicSpline(x_data, log_y_data)
-    log_y_spline = spline_log(x)         
-    y = np.exp(log_y_spline)          
+    log_y_spline = spline_log(x)
+    y = np.exp(log_y_spline)
 
     return y
 
@@ -112,7 +112,7 @@ def calculate_properties(alpha, N):
     N     -> number of valence electrons
     return: tuple (sigma in Ang, eps/kb in K)
     """
-    
+
     # Constants
     B         = 1.11e-59 # (erg*cm^6)
     beta      = 0.62     # (-)
@@ -121,18 +121,18 @@ def calculate_properties(alpha, N):
     N0        = 8        # (-), valid for spherucally symmetric models
     kb        = 1.38e-16 # (erg/k)
     Ang_to_cm = 1e-8     # (Ang/cm)
-    
+
     # Calculation
-     
+
     disp_energy  = -B * (N * alpha**3)**beta # (erg*cm^6)
-    alpha       *= Ang_to_cm**3 
+    alpha       *= Ang_to_cm**3
     disp_energy *= 1/Ang_to_cm**6
-    
+
     k            = np.log10(N0)/np.log10(N)
     coeff        = C * np.exp(4.57 * gamma * (1 - k))
     sigma        = ((alpha / coeff)**(1/gamma/k) / N)**(1/4)
-    
+
     eps_k        = -disp_energy / 4 / sigma**6 / kb
-    
+
     return (sigma, eps_k)
 
