@@ -1,0 +1,59 @@
+/*------------------------------------------------------------------------------
+
+system/controlDict
+
+  - select solver
+  - start and stop of calculation
+  - time step size
+  - saving frequency
+  - output format, precision, compression and time naming
+  - allows run-time changes
+  - extra functions
+
+------------------------------------------------------------------------------*/
+FoamFile{version 2.0;  format ascii;  class dictionary; object controlDict;}
+/*----------------------------------------------------------------------------*/
+
+application       rhoFixedFlowFoam;
+
+startFrom         startTime;
+startTime         0;
+
+stopAt            endTime;
+endTime           16.0;            /* flow through time is ~ 7.3 s */
+
+deltaT            0.004;           /* results in CFL ~ 0.47 */
+
+writeControl      timeStep;
+writeInterval     100;
+
+purgeWrite        0;
+
+writeFormat       binary;
+writeCompression  off;
+
+timeFormat        general;
+timePrecision     6;
+
+runTimeModifiable true;
+
+functions {
+
+  Y_PbI2_gTransport {
+    type            scalarTransport;
+    libs            ("libsolverFunctionObjects.so");
+
+    field           Y_PbI2_g;
+    phi             phi;
+    rho             rho;
+
+    diffusivityModel PbI2He; // Physical D(T,p), calculated at startup
+
+    schemesField    Y_PbI2_g;
+
+    resetOnStartUp  no;
+
+    tolerance       1.0e-7;
+    nCorr           47;
+  }
+}

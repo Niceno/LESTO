@@ -1,0 +1,11 @@
+/*------------------------------------------------------------------------------
+
+constant/momentumTransport
+
+  - laminar / turbulence model
+
+------------------------------------------------------------------------------*/
+FoamFile {format ascii;  class dictionary;  object momentumTransport;}
+
+simulationType  laminar;
+

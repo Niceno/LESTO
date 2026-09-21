@@ -1,0 +1,11 @@
+/*------------------------------------------------------------------------------
+
+constant/speciesTransportProperties
+
+  - pressure unit for species transport
+
+------------------------------------------------------------------------------*/
+FoamFile {format ascii;  class dictionary;  object speciesTransportProperties;}
+
+pressureUnit bar;  /* not sure about all that atm / bar confusion */
+

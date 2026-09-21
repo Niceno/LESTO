@@ -1,0 +1,32 @@
+/*------------------------------------------------------------------------------
+
+system/fvSolution
+
+  - select linear solvers
+  - solver tolerances
+  - SIMPLE/PIMPLE/PISO controls
+  - convergence criteria
+  - under-relaxation factors
+
+------------------------------------------------------------------------------*/
+FoamFile{version 2.0;  format ascii; class dictionary; object fvSolution;}
+/*----------------------------------------------------------------------------*/
+
+solvers {
+
+  Y_PbI2_g {
+    solver          GAMG;
+    tolerance       1e-7;
+    relTol          0;
+    smoother        GaussSeidel;
+
+    directSolveCoarsest   yes;
+  }
+}
+
+relaxationFactors {
+
+  equations {
+    Y_PbI2_g            0.995;
+  }
+}
