@@ -1,15 +1,60 @@
-/*---------------------------------------------------------------------------*\
-  rhoFixedFlowFoam -- fixed carrier flow, transient scalar transport, OF v2606.
+/*------------------------------------------------------------------------------
 
-  Derived from the initialization and program structure of rhoSimpleFoam:
-  Copyright (C) 2011-2017 OpenFOAM Foundation.
-  Distributed under GNU GPL version 3 or (at your option) any later version.
-  https://www.gnu.org/licenses/gpl-3.0.html
+rhoFixedFlowFoam -- fixed carrier flow, transient scalar transport, OF v2606.
 
-  Constant D retains the installed OpenCFD scalarTransport implementation.
-  PbI2He diffusivity uses an explicit density-weighted species equation.
-  Y_PbI2_g is a mass fraction; c_PbI2_g is derived output in mol/m3.
-\*---------------------------------------------------------------------------*/
+Derived from the initialization and program structure of rhoSimpleFoam:
+Copyright (C) 2011-2017 OpenFOAM Foundation.
+Distributed under GNU GPL version 3 or (at your option) any later version.
+https://www.gnu.org/licenses/gpl-3.0.html
+
+PURPOSE
+
+rhoFixedFlowFoam advances gaseous PbI2 on an already converged carrier flow.
+The carrier fields U, p, T/e, rho and phi are read from disk and remain fixed;
+no momentum, pressure, continuity or energy equation is solved.
+
+The solver supports two species-diffusion routes:
+
+  1. constant diffusion coefficient (like in case 008...)
+     Uses OpenFOAM's standard scalarTransport function object.
+
+  2. PbI2He (introduced with case 009...)
+     Computes D_PbI2_g(T,p) once from the frozen carrier fields, forms
+     rhoD_PbI2_g = rho*D_PbI2_g, and solves the density-weighted species
+     equation explicitly.
+
+In both cases Y_PbI2_g is a mass fraction which is a dimensionless quantity.
+At output times the solver also writes c_PbI2_g = rho*Y_PbI2_g/MPbI2 in
+mol/m3 for post-processing.
+
+PROGRAM FLOW
+
+  - create case/time database and mesh
+  - read the frozen thermodynamic and carrier-flow fields
+  - select constant or variable diffusivity
+  - prepare the species field and numerical controls
+
+  - while physical time advances {
+      solve only Y_PbI2_g
+      write requested fields
+    }
+
+OPENFOAM STYLE
+
+The program follows the usual OpenFOAM solver structure.  Typical OF objects
+used in this program include:
+  - runTime manages physical time and output;
+  - mesh is the finite-volume mesh and object database;
+  - IOobject describes how fields are read and written;
+  - volScalarField, volVectorField and surfaceScalarField store cell/face data;
+  - fluidThermo provides the thermodynamic state;
+  - Info/WarningInFunction/FatalErrorInFunction are OpenFOAM's standard
+    reporting streams.
+
+The included .H files are code fragments inserted directly at the #include
+locations, following common OpenFOAM solver practice.
+
+------------------------------------------------------------------------------*/
 
 #include "fvCFD.H"
 #include "fluidThermo.H"
@@ -27,32 +72,60 @@ int main(int argc, char *argv[]) {
   #include "createTime.H"
   #include "createMesh.H"
 
-  // Drive the existing scalar function explicitly, once per physical step.
-  // Otherwise Time::run() would also execute it through the function list.
-  // Other controlDict function objects are not executed by this prototype.
+  /*-----------------------------------------------------------------------
+  OpenFOAM normally lets runTime execute function objects automatically.
+  Here the scalar transport is called explicitly at a precise point in each
+  physical time step, so automatic execution is disabled.
+  -----------------------------------------------------------------------*/
   runTime.functionObjects().off();
 
-  Info<< "Reading frozen thermophysical state" << nl;
+  /*--------------------------------------------------------------------------
+  fluidThermo is OpenFOAM's thermodynamic model object.  The New(mesh) factory
+  reads thermophysicalProperties and constructs the model selected there.
+  autoPtr is OpenFOAM's owning smart pointer.
+
+  Please note that "he" is OpenFOAM's enthalpy (h) or energy (e) variable.
+  -------------------------------------------------------------------------*/
+  Info << "Reading frozen thermophysical state" << nl;
   autoPtr<fluidThermo> pThermo(fluidThermo::New(mesh));
   fluidThermo& thermo = pThermo();
   thermo.validate(args.executable(), "e");
   thermo.he().writeOpt() = IOobject::AUTO_WRITE;
 
-  // Unlike the parent solver, require the SAVED density and corrected mass
-  // flux: silently reconstructing phi from U would change the carrier flow.
+  /*---------------------------------------------------------------------------
+  Read the frozen carrier fields.  IOobject specifies the field name, the time
+  directory, the mesh database, and the read/write policy.  MUST_READ means the
+  saved field must exist; AUTO_WRITE lets runTime.write() write it later.
+
+  The saved, pressure-corrected mass flux phi is required explicitly.
+  Reconstructing phi from U would no longer reproduce the converged carrier
+  solution.
+  -------------------------------------------------------------------------*/
   volScalarField rho (
-    IOobject("rho", runTime.timeName(), mesh,
-                 IOobject::MUST_READ, IOobject::AUTO_WRITE), mesh
+    IOobject("rho",
+              runTime.timeName(),
+              mesh,
+              IOobject::MUST_READ,
+              IOobject::AUTO_WRITE),
+    mesh
   );
 
   volVectorField U (
-    IOobject("U", runTime.timeName(), mesh,
-                 IOobject::MUST_READ, IOobject::AUTO_WRITE), mesh
+    IOobject("U",
+              runTime.timeName(),
+              mesh,
+              IOobject::MUST_READ,
+              IOobject::AUTO_WRITE),
+    mesh
   );
 
   surfaceScalarField phi (
-    IOobject("phi", runTime.timeName(), mesh,
-                 IOobject::MUST_READ, IOobject::AUTO_WRITE), mesh
+    IOobject("phi",
+              runTime.timeName(),
+              mesh,
+              IOobject::MUST_READ,
+              IOobject::AUTO_WRITE),
+    mesh
   );
 
   if (rho.dimensions() != dimDensity || phi.dimensions() != dimMass/dimTime) {
@@ -68,17 +141,34 @@ int main(int argc, char *argv[]) {
 
   rho.oldTime();
 
-  // These properties are evaluated once and remain frozen as well.
+  /*-----------------------------------------------------------------------
+  Evaluate viscosity and thermal conductivity once from the frozen thermo
+  state.  They are OpenFOAM volume-scalar fields and are marked AUTO_WRITE,
+  but are never updated because thermo.correct() is never called.
+  -----------------------------------------------------------------------*/
   volScalarField mu (
-    IOobject("mu", runTime.timeName(), mesh,
-                 IOobject::NO_READ, IOobject::AUTO_WRITE), thermo.mu()
+    IOobject("mu",
+             runTime.timeName(),
+             mesh,
+             IOobject::NO_READ,
+             IOobject::AUTO_WRITE),
+    thermo.mu()
   );
 
   volScalarField kappa (
-    IOobject("kappa", runTime.timeName(), mesh,
-                 IOobject::NO_READ, IOobject::AUTO_WRITE), thermo.kappa()
+    IOobject("kappa",
+             runTime.timeName(),
+             mesh,
+             IOobject::NO_READ,
+             IOobject::AUTO_WRITE),
+    thermo.kappa()
   );
 
+  /*--------------------------------------------------------------------------
+  OpenFOAM dictionaries are runtime configuration objects.  Read the species
+  controls from functions/Y_PbI2_gTransport in system/controlDict and use them
+  to select the constant-D or PbI2-He variable-D route.
+  --------------------------------------------------------------------------*/
   const dictionary& scalarDict = runTime.controlDict()
     .subDict("functions").subDict("Y_PbI2_gTransport");
   const word diffusionModel = scalarDict.getOrDefault<word> (
@@ -106,7 +196,12 @@ int main(int argc, char *argv[]) {
       << exit(FatalError);
   }
 
-  // Preserve the existing constant-D route exactly for case 008.
+  /*--------------------------------------------------------------------------
+  These autoPtr objects are created only when needed.  The constant-D branch
+  owns an OpenFOAM scalarTransport object.  The variable-D branch instead owns
+  the species field plus molecularD and rhoD fields used by our explicit
+  transport equation.
+  --------------------------------------------------------------------------*/
   autoPtr<functionObjects::scalarTransport> transport;
   autoPtr<volScalarField> species;
   autoPtr<volScalarField> molecularD;
@@ -120,10 +215,18 @@ int main(int argc, char *argv[]) {
         << exit(FatalError);
     }
     species.reset(new volScalarField (
-      IOobject("Y_PbI2_g", runTime.timeName(), mesh,
-                     IOobject::MUST_READ, IOobject::AUTO_WRITE), mesh
+      IOobject("Y_PbI2_g",
+               runTime.timeName(),
+               mesh,
+               IOobject::MUST_READ,
+               IOobject::AUTO_WRITE),
+      mesh
     ));
 
+    /*--------------------------------------------------------------------
+    Insert the setup code which evaluates D_PbI2_g(T,p) over all cells and
+    boundary faces and creates rhoD_PbI2_g = rho*D_PbI2_g.
+    --------------------------------------------------------------------*/
     #include "createVariableDiffusivity.H"
 
   } else {
@@ -153,8 +256,11 @@ int main(int argc, char *argv[]) {
   }
   PbI2.oldTime();
 
-  // Molar mass of PbI2: 207.2 + 2*126.90447 = 461.00894 g/mol.
-  // Use kg/mol here so c_PbI2_g is in mol/m3, not kmol/m3.
+  /*-------------------------------------------------------------------------
+  Molar mass of PbI2: 207.2 + 2*126.90447 = 461.00894 g/mol.
+  Use kg/mol here so c_PbI2_g is produced in mol/m3 rather than kmol/m3.
+  dimensionedScalar carries both the numerical value and OpenFOAM dimensions.
+  -------------------------------------------------------------------------*/
   const dimensionedScalar MPbI2 (
     "MPbI2", dimensionSet(1, 0, 0, 0, -1, 0, 0), 0.46100894
   );
@@ -170,11 +276,17 @@ int main(int argc, char *argv[]) {
 
     Info<< "Time = " << runTime.timeName() << nl << endl;
 
-    // No UEqn, EEqn, pEqn, thermo.correct or turbulence.correct here.
+    /*-------------------------------------------------------------------------
+    This is the essential difference from rhoSimpleFoam/rhoPimpleFoam: the
+    physical-time loop contains no carrier-flow equations or thermo correction.
+    Only the species field is advanced.
+    -------------------------------------------------------------------------*/
     if (variableD) {
       #include "solveVariableSpecies.H"
+
     } else {
       transport->execute();
+
     }
     Info<< "Y_PbI2_g min/max = " << gMin(PbI2.primitiveField())
       << " " << gMax(PbI2.primitiveField()) << nl;
@@ -183,12 +295,17 @@ int main(int argc, char *argv[]) {
     if (runTime.writeTime()) {
       if (transport.valid()) transport->write();
 
-      // Algebraic output only: includes cell and patch values.
-      // Recompute from the current mass fraction at each write time.
+      /*--------------------------------------------------------------------
+      c_PbI2_g is a derived output field, not an independently transported
+      unknown.  It is reconstructed algebraically from rho and the current
+      mass fraction whenever output is requested, including boundary values.
+      --------------------------------------------------------------------*/
       volScalarField cPbI2 (
-        IOobject (
-          "c_PbI2_g", runTime.timeName(), mesh,
-          IOobject::NO_READ, IOobject::NO_WRITE
+        IOobject ("c_PbI2_g",
+                  runTime.timeName(),
+                  mesh,
+                  IOobject::NO_READ,
+                  IOobject::NO_WRITE
         ),
         rho*PbI2/MPbI2
       );
