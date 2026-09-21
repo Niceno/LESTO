@@ -1,8 +1,8 @@
-FoamFile {format ascii;  class volScalarField;  object p;}
+FoamFile{format ascii;  class volScalarField;  object p;}
 
 dimensions      [1 -1 -2 0 0 0 0];
 
-internalField   uniform 101325;
+internalField   uniform 101325;  /* that is 1.0 atm */
 
 boundaryField {
 

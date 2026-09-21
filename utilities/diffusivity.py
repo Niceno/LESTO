@@ -18,7 +18,11 @@ from interpolation import get_properties, calculate_properties
 T       = np.linspace(250, 1250, 10)     # Temperature interval
 T_unit  = 'K'                            # Temperature unit
 
-p       = 1                              # Pressure (bar)
+# Pressure (atm).  Our NED paper states that Eq. (2), a correlation
+# for diffusivity, needs p in atm.  But, the OF simulations are
+# performed at 1.01325 bar, which is 1 atm.  Thus, this script shows
+# diffusivity exactly how we need it in OF CFD simulations.
+p = 1
 
 # Species name
 name_1  = 'He'

@@ -2,10 +2,10 @@
 
 constant/speciesTransportProperties
 
-  - pressure unit for species transport
+  - pressure unit for diffusivity calculation in rhoFixedFlowFoam
 
 ------------------------------------------------------------------------------*/
 FoamFile {format ascii;  class dictionary;  object speciesTransportProperties;}
 
-pressureUnit bar;  /* not sure about all that atm / bar confusion */
+pressureUnit atm;
 

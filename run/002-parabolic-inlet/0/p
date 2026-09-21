@@ -1,29 +1,21 @@
-FoamFile
-{
-    format      ascii;
-    class       volScalarField;
-    object      p;
-}
+FoamFile{format ascii;  class volScalarField;  object p;}
 
 dimensions      [0 2 -2 0 0 0 0];
 
 internalField   uniform 0;
 
-boundaryField
-{
-    INLET
-    {
-        type    zeroGradient;
-    }
+boundaryField {
 
-    OUTLET
-    {
-        type    fixedValue;
-        value   uniform 0;
-    }
+  INLET {
+    type    zeroGradient;
+  }
 
-    WALL
-    {
-        type    zeroGradient;
-    }
+  OUTLET {
+    type    fixedValue;
+    value   uniform 0;
+  }
+
+  WALL {
+    type    zeroGradient;
+  }
 }
