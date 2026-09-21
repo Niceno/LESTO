@@ -6,15 +6,16 @@
   Distributed under GNU GPL version 3 or (at your option) any later version.
   https://www.gnu.org/licenses/gpl-3.0.html
 
-  The species equation is the installed OpenCFD scalarTransport implementation.
-  This first version deliberately retains case 008's dimensionless Y_PbI2_g and
-  density-weighted D convention. It is NOT yet a mol/m3 chemistry solver.
+  Constant D retains the installed OpenCFD scalarTransport implementation.
+  PbI2He diffusivity uses an explicit density-weighted species equation.
+  Y_PbI2_g is a mass fraction; c_PbI2_g is derived output in mol/m3.
 \*---------------------------------------------------------------------------*/
 
 #include "fvCFD.H"
 #include "fluidThermo.H"
 #include "scalarTransport.H"
 #include "functionObjectList.H"
+#include "PbI2HeDiffusivity.H"
 
 int main(int argc, char *argv[]) {
     argList::addNote (
@@ -74,24 +75,64 @@ int main(int argc, char *argv[]) {
 
     const dictionary& scalarDict = runTime.controlDict()
         .subDict("functions").subDict("Y_PbI2_gTransport");
+    const word diffusionModel = scalarDict.getOrDefault<word>
+    (
+        "diffusivityModel", "constant"
+    );
+    const bool variableD = diffusionModel == "PbI2He";
+    if (diffusionModel != "constant" && !variableD) {
+        FatalErrorInFunction << "Unknown diffusivityModel: " << diffusionModel
+            << ". Choose constant or PbI2He." << exit(FatalError);
+    }
     if (
         scalarDict.get<word>("field") != "Y_PbI2_g"
      || scalarDict.getOrDefault<word>("phi", "phi") != "phi"
      || scalarDict.getOrDefault<word>("rho", "rho") != "rho"
      || scalarDict.getOrDefault<word>("phase", "none") != "none"
      || scalarDict.getOrDefault<bool>("resetOnStartUp", false)
-     || !scalarDict.found("D")
-     || scalarDict.get<scalar>("D") < 0
+     || (!variableD && (!scalarDict.found("D")
+                         || scalarDict.get<scalar>("D") < 0))
     ) {
         FatalErrorInFunction
             << "This prototype requires field Y_PbI2_g, phi, rho, no phase, "
-            << "resetOnStartUp no, and an explicit nonnegative D."
+            << "resetOnStartUp no, and nonnegative D for the constant model."
             << exit(FatalError);
     }
 
-    functionObjects::scalarTransport transport (
-        "Y_PbI2_gTransport", runTime, scalarDict
+    // Preserve the existing constant-D route exactly for case 008.
+    autoPtr<functionObjects::scalarTransport> transport;
+    autoPtr<volScalarField> species;
+    autoPtr<volScalarField> molecularD;
+    autoPtr<volScalarField> rhoD;
+    if (variableD) {
+        if (scalarDict.found("D") || scalarDict.found("fvOptions")) {
+            FatalErrorInFunction
+                << "PbI2He uses speciesTransportProperties: remove D. "
+                << "fvOptions are not supported by this variable-D branch yet."
+                << exit(FatalError);
+        }
+        species.reset(new volScalarField
+        (
+            IOobject("Y_PbI2_g", runTime.timeName(), mesh,
+                     IOobject::MUST_READ, IOobject::AUTO_WRITE), mesh
+        ));
+        #include "createVariableDiffusivity.H"
+    } else {
+        transport.reset(new functionObjects::scalarTransport
+        (
+            "Y_PbI2_gTransport", runTime, scalarDict
+        ));
+    }
+    const word schemesField = scalarDict.getOrDefault<word>
+    (
+        "schemesField", "Y_PbI2_g"
     );
+    const label nCorr = scalarDict.getOrDefault<label>("nCorr", 0);
+    const scalar tolerance = scalarDict.getOrDefault<scalar>("tolerance", 1);
+    if (nCorr < 0 || !std::isfinite(tolerance) || tolerance < 0) {
+        FatalErrorInFunction << "Require nCorr >= 0 and finite tolerance >= 0."
+            << exit(FatalError);
+    }
     const volScalarField& PbI2 = mesh.lookupObject<volScalarField>("Y_PbI2_g");
     if (PbI2.dimensions() != dimless) {
         FatalErrorInFunction
@@ -108,7 +149,8 @@ int main(int argc, char *argv[]) {
     );
 
     Info<< "Frozen fields: U, p, e, T, rho, phi, mu, kappa" << nl
-        << "Only Y_PbI2_g is advanced. D is in kg/(m s), not m2/s." << nl
+        << "Only Y_PbI2_g is advanced. Diffusivity model: " << diffusionModel << nl
+        << "Equation diffusion coefficient has units kg/(m s)." << nl
         << "No SIMPLE/PIMPLE, pressure, momentum or energy solve." << nl
         << "Scalar controls are read at startup; restart to change them." << nl
         << "Starting physical time loop" << endl;
@@ -116,13 +158,17 @@ int main(int argc, char *argv[]) {
     while (runTime.loop()) {
         Info<< "Time = " << runTime.timeName() << nl << endl;
         // No UEqn, EEqn, pEqn, thermo.correct or turbulence.correct here.
-        transport.execute();
+        if (variableD) {
+            #include "solveVariableSpecies.H"
+        } else {
+            transport->execute();
+        }
         Info<< "Y_PbI2_g min/max = " << gMin(PbI2.primitiveField())
             << " " << gMax(PbI2.primitiveField()) << nl;
 
         runTime.write();
         if (runTime.writeTime()) {
-            transport.write();
+            if (transport.valid()) transport->write();
 
             // Algebraic output only: includes cell and patch values.
             // Recompute from the current mass fraction at each write time.
