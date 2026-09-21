@@ -4,46 +4,46 @@ from scipy.interpolate import CubicSpline
 
 def spline_interpolation(x):
 
-    x_data = np.array([
-        0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9,
-        1.0, 1.1, 1.3, 1.5, 1.6, 1.65, 1.75, 1.85, 1.95,
-        2.1, 2.3, 2.5, 2.7, 2.9, 3.3, 3.7, 3.9, 4.0,
-        4.2, 4.4, 4.6, 4.8, 5.0, 7.0, 9.0, 20.0,
-        60.0, 100.0, 300.0
-        ])
+  x_data = np.array([
+    0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9,
+    1.0, 1.1, 1.3, 1.5, 1.6, 1.65, 1.75, 1.85, 1.95,
+    2.1, 2.3, 2.5, 2.7, 2.9, 3.3, 3.7, 3.9, 4.0,
+    4.2, 4.4, 4.6, 4.8, 5.0, 7.0, 9.0, 20.0,
+    60.0, 100.0, 300.0
+    ])
 
-    y_data = np.array([
-        2.662, 2.318, 2.066, 1.877, 1.729, 1.612, 1.517,
-        1.439, 1.375, 1.273, 1.198, 1.167, 1.153, 1.128, 1.105, 1.084,
-        1.057, 1.026, 0.9996, 0.977, 0.9576, 0.9256, 0.8998, 0.8888, 0.8836,
-        0.874, 0.8652, 0.8568, 0.8492, 0.8422, 0.7896, 0.7556, 0.664,
-        0.5596, 0.513, 0.436
-        ])
+  y_data = np.array([
+    2.662, 2.318, 2.066, 1.877, 1.729, 1.612, 1.517,
+    1.439, 1.375, 1.273, 1.198, 1.167, 1.153, 1.128, 1.105, 1.084,
+    1.057, 1.026, 0.9996, 0.977, 0.9576, 0.9256, 0.8998, 0.8888, 0.8836,
+    0.874, 0.8652, 0.8568, 0.8492, 0.8422, 0.7896, 0.7556, 0.664,
+    0.5596, 0.513, 0.436
+    ])
 
-    log_y_data = np.log(y_data)
-    spline_log = CubicSpline(x_data, log_y_data)
-    log_y_spline = spline_log(x)
-    y = np.exp(log_y_spline)
+  log_y_data = np.log(y_data)
+  spline_log = CubicSpline(x_data, log_y_data)
+  log_y_spline = spline_log(x)
+  y = np.exp(log_y_spline)
 
-    return y
+  return y
 
 _species_data = {}
 
 def _store(species_keys, sigma, eps_k, molar_mass):
-    """
-    Helper to store the same data under multiple keys (e.g. symbol + name).
-    species_keys: list/tuple of strings (symbol, name, etc.)
-    sigma: in Å
-    eps_k: in K
-    molar_mass: in g/mol
-    """
-    record = {
-        "sigma": sigma,
-        "eps_k": eps_k,
-        "M": molar_mass
-    }
-    for key in species_keys:
-        _species_data[key.lower()] = record
+  """
+  Helper to store the same data under multiple keys (e.g. symbol + name).
+  species_keys: list/tuple of strings (symbol, name, etc.)
+  sigma: in Å
+  eps_k: in K
+  molar_mass: in g/mol
+  """
+  record = {
+    "sigma": sigma,
+    "eps_k": eps_k,
+    "M": molar_mass
+  }
+  for key in species_keys:
+    _species_data[key.lower()] = record
 
 
 _store(["Ar"      , "Argon"               ], 3.542 , 93.3 ,  39.9480)
@@ -95,44 +95,44 @@ _store(["O2"      , "Oxygen"              ], 3.467 , 106.7,  31.9980)
 _store(["SO2"     , "Sulfur dioxide"      ], 4.1129, 335.4,  64.0600)
 
 def get_properties(name_or_symbol):
-    """
-    param name or symbolmolar mass in g/mol
-    return: tuple (molar mass in g/mol, sigma in Ang, eps/kb in K)
-    raises ValueError if species is not found
-    """
-    key = name_or_symbol.strip().lower()
-    if key not in _species_data:
-        raise ValueError(f"Species '{name_or_symbol}' not found in the table.")
-    rec = _species_data[key]
-    return (rec["M"], rec["sigma"], rec["eps_k"])
+  """
+  param name or symbolmolar mass in g/mol
+  return: tuple (molar mass in g/mol, sigma in Ang, eps/kb in K)
+  raises ValueError if species is not found
+  """
+  key = name_or_symbol.strip().lower()
+  if key not in _species_data:
+    raise ValueError(f"Species '{name_or_symbol}' not found in the table.")
+  rec = _species_data[key]
+  return (rec["M"], rec["sigma"], rec["eps_k"])
 
 def calculate_properties(alpha, N):
-    """
-    alpha -> polarizability in Ang^3
-    N     -> number of valence electrons
-    return: tuple (sigma in Ang, eps/kb in K)
-    """
+  """
+  alpha -> polarizability in Ang^3
+  N     -> number of valence electrons
+  return: tuple (sigma in Ang, eps/kb in K)
+  """
 
-    # Constants
-    B         = 1.11e-59 # (erg*cm^6)
-    beta      = 0.62     # (-)
-    C         = 2.65e-29 # (cm^3)
-    gamma     = 1.56     # (-)
-    N0        = 8        # (-), valid for spherucally symmetric models
-    kb        = 1.38e-16 # (erg/k)
-    Ang_to_cm = 1e-8     # (Ang/cm)
+  # Constants
+  B         = 1.11e-59 # (erg*cm^6)
+  beta      = 0.62     # (-)
+  C         = 2.65e-29 # (cm^3)
+  gamma     = 1.56     # (-)
+  N0        = 8        # (-), valid for spherucally symmetric models
+  kb        = 1.38e-16 # (erg/k)
+  Ang_to_cm = 1e-8     # (Ang/cm)
 
-    # Calculation
+  # Calculation
 
-    disp_energy  = -B * (N * alpha**3)**beta # (erg*cm^6)
-    alpha       *= Ang_to_cm**3
-    disp_energy *= 1/Ang_to_cm**6
+  disp_energy  = -B * (N * alpha**3)**beta # (erg*cm^6)
+  alpha       *= Ang_to_cm**3
+  disp_energy *= 1/Ang_to_cm**6
 
-    k            = np.log10(N0)/np.log10(N)
-    coeff        = C * np.exp(4.57 * gamma * (1 - k))
-    sigma        = ((alpha / coeff)**(1/gamma/k) / N)**(1/4)
+  k            = np.log10(N0)/np.log10(N)
+  coeff        = C * np.exp(4.57 * gamma * (1 - k))
+  sigma        = ((alpha / coeff)**(1/gamma/k) / N)**(1/4)
 
-    eps_k        = -disp_energy / 4 / sigma**6 / kb
+  eps_k        = -disp_energy / 4 / sigma**6 / kb
 
-    return (sigma, eps_k)
+  return (sigma, eps_k)
 

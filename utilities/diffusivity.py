@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.ticker import AutoMinorLocator
@@ -48,19 +50,19 @@ M_2     = 461   # molar mass (uma)
 
 # T conversion to [K]
 if T_unit != 'K':
-    if T_unit == 'C':
-        T += 273.15
+  if T_unit == 'C':
+    T += 273.15
 
 # Properties extapolation
 if table_1:
-    M_1, sigma_1, eps_1 = get_properties(name_1)
+  M_1, sigma_1, eps_1 = get_properties(name_1)
 else:
-    sigma_1, eps_1 = calculate_properties(alpha_1, N_1)
+  sigma_1, eps_1 = calculate_properties(alpha_1, N_1)
 
 if table_2:
-    M_2, sigma_2, eps_2 = get_properties(name_2)
+  M_2, sigma_2, eps_2 = get_properties(name_2)
 else:
-    sigma_2, eps_2 = calculate_properties(alpha_2, N_2)
+  sigma_2, eps_2 = calculate_properties(alpha_2, N_2)
 
 sigma = 0.5*(sigma_1 + sigma_2)          # mean sigma
 coef = (np.sqrt(eps_1) * np.sqrt(eps_2)) # eps of the component
