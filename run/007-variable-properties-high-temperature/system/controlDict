@@ -14,26 +14,26 @@ system/controlDict
 FoamFile{version 2.0;  format ascii;  class dictionary; object controlDict;}
 /*----------------------------------------------------------------------------*/
 
-application     rhoSimpleFoam;
+application       rhoSimpleFoam;
 
-startFrom       startTime;
-startTime       0;
+startFrom         startTime;
+startTime         0;
 
-stopAt          endTime;
-endTime         2000;
+stopAt            endTime;
+endTime           2000;
 
-deltaT          1;
+deltaT            1;
 
-writeControl    timeStep;
-writeInterval   100;
+writeControl      timeStep;
+writeInterval     100;
 
-purgeWrite      0;
+purgeWrite        0;
 
-writeFormat     binary;
-writeCompression off;
+writeFormat       binary;
+writeCompression  off;
 
-timeFormat      general;
-timePrecision   6;
+timeFormat        general;
+timePrecision     6;
 
 runTimeModifiable true;
 
