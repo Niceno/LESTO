@@ -1,7 +1,8 @@
-# Case 010 — Solid-species accumulation
+# Case 010 — Solid-species accumulation with mock thermochemistry
 
 This case continues the multi-species structure of case 009 and introduces the
-first solid species.
+first solid species together with a single thermochemistry interface intended
+to mimic a future GEMS call.
 
 The frozen helium carrier flow and the two gaseous species remain unchanged:
 
@@ -23,26 +24,34 @@ with
 
 The solid species has no convection and no diffusion. It is advanced only by
 
-    ddt(rho,Y_PbI2_s) = S
+    ddt(rho,Y_PbI2_s) = S_PbI2_s.
 
-using a prescribed uniform source
+The source terms are evaluated by `evaluateThermochemistry()` once in every
+cell and physical time step, after the gaseous species have been advanced. The
+routine receives the local `T`, absolute `p`, the complete species-name list
+and the current local species values, and returns one source for every species.
 
-    S = 1e-6 kg/(m3 s).
+At present this routine is only a mock-up of a future GEMS call. It returns zero
+for all species except `PbI2_s`, for which
 
-Because the equation contains only a transient term and a local source, cells
-are uncoupled and the equation is solved directly with OpenFOAM's `diagonal`
-solver.
+    S_PbI2_s = S0 * (Thot - T)/(Thot - Tcold)
 
-Starting from `Y_PbI2_s = 0` and with frozen density, the expected internal
-solution is
+with local test constants
 
-    Y_PbI2_s = S * t / rho.
+    S0    = 1e-6 kg/(m3 s)
+    Thot  = 1000 K
+    Tcold = 300 K.
 
-The solid mass fraction therefore grows linearly in time. Its spatial variation
-comes only from the frozen density field.
+Pressure and species values are passed to the routine but are not used yet.
+They are already part of the interface so that future thermochemistry can
+couple all species without restructuring the CFD solver.
 
-The gaseous-species equations are unchanged from case 009 and their residual
+Because the solid equation contains only a transient term and a local source,
+cells are uncoupled and the equation is solved directly with OpenFOAM's
+`diagonal` solver.
+
+The gaseous-species equations remain unchanged from case 009 and their residual
 histories are expected to remain unchanged.
 
-The solid source is currently applied in every cell. It is not yet restricted
-to near-wall cells, and no chemistry or gas-to-solid coupling is included.
+The solid source is still applied in every cell. It is not yet restricted to
+near-wall cells, and no gas-to-solid mass coupling is included yet.

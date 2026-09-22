@@ -16,9 +16,12 @@ equation is solved.
 
 Solid species may also be listed.  Their Y_<speciesName> fields are read,
 registered and written.  At this development step a solid species is advanced
-only by a prescribed volumetric source; it has no convection or diffusion.
-The source model is selected per solid species and is evaluated again at every
-physical time step.
+only by a volumetric source; it has no convection or diffusion.
+
+The source terms are supplied by one thermochemistry routine which receives the
+local temperature, pressure and all species values.  The present implementation
+is only a mock-up of a future GEMS call and is evaluated at every physical time
+step.
 
 For every gaseous species i, the solver reads the mass-fraction field
 Y_<speciesName> and solves
@@ -47,13 +50,12 @@ PROGRAM FLOW
   - create Y_i for every species and rhoD_i for gaseous species
 
   At the present solid-species development step, a solid Y_i field is advanced
-  only by ddt(rho,Y_i) = source.  The source is evaluated at every physical
-  time step.  No rhoD_i is created for a solid species.
+  only by ddt(rho,Y_i) = source.  No rhoD_i is created for a solid species.
 
   - while physical time advances {
-      for every species {
-        solve the gas transport equation or the solid accumulation equation
-      }
+      solve all gaseous species
+      evaluate thermochemistry once in every cell
+      solve all solid species using the returned source terms
       write requested fields
     }
 
@@ -79,6 +81,7 @@ locations, following common OpenFOAM solver practice.
 #include "fvCFD.H"
 #include "fluidThermo.H"
 #include "PbI2HeDiffusivity.H"
+#include "evaluateThermochemistry.H"
 
 int main(int argc, char *argv[]) {
 
@@ -178,14 +181,12 @@ int main(int argc, char *argv[]) {
   /*--------------------------------------------------------------------------
   speciesTransportProperties contains the species list and one sub-dictionary
   for each species.  Gaseous species select a diffusivity model and transport
-  properties; solid species specify their accumulation-source model.
-  --------------------------------------------------------------------------*/
+  properties.  Solid species appear in the same list but do not select or use a
+  diffusivity model.
 
-  /*
-  Solid species appear in the same list.  They do not select or use a
-  diffusivity model; at this stage they use either a prescribed constant source
-  or a simple temperature-dependent source.
-  */
+  Their source terms are supplied later by evaluateThermochemistry(), which is
+  deliberately kept separate from the transport solver.
+  --------------------------------------------------------------------------*/
   IOdictionary speciesProperties (
     IOobject("speciesTransportProperties",
               runTime.constant(),
@@ -233,20 +234,18 @@ int main(int argc, char *argv[]) {
   /*
   For a solid species only species[i] is populated.  Its rhoD and molecularD
   entries remain null because the solid equation has no diffusion term.
-  solidSourceModel[i] selects the source model.  solidSource[i] stores S0 in
-  kg/(m3 s); solidThot[i] and solidTcold[i] are used by the temperatureLinear
-  model.
+
+  speciesSource[i] stores the thermochemistry source for species i in
+  kg/(m3 s).  The source fields are updated once per physical time step after
+  the gaseous species have been advanced.
   */
-  PtrList <volScalarField> species         (speciesNames.size());
-  PtrList <volScalarField> rhoD            (speciesNames.size());
-  PtrList <volScalarField> molecularD      (speciesNames.size());
-  List <scalar>            molarMass       (speciesNames.size(), -1.0);
-  List <word>              diffusionModel  (speciesNames.size());
-  List <word>              state           (speciesNames.size());
-  List <word>              solidSourceModel(speciesNames.size());
-  List <scalar>            solidSource     (speciesNames.size(), 0.0);
-  List <scalar>            solidThot       (speciesNames.size(), 0.0);
-  List <scalar>            solidTcold      (speciesNames.size(), 0.0);
+  PtrList <volScalarField> species        (speciesNames.size());
+  PtrList <volScalarField> rhoD           (speciesNames.size());
+  PtrList <volScalarField> molecularD     (speciesNames.size());
+  PtrList <volScalarField> speciesSource  (speciesNames.size());
+  List <scalar>            molarMass      (speciesNames.size(), -1.0);
+  List <word>              diffusionModel (speciesNames.size());
+  List <word>              state          (speciesNames.size());
 
   forAll(speciesNames, speciesi) {
 
@@ -268,56 +267,10 @@ int main(int argc, char *argv[]) {
     }
 
     /*--------------------------------------------------------------------
-    A solid species has no diffusivity.  Its accumulation source is selected
-    independently.  The source is evaluated later, inside the physical-time
-    loop, so future source models may depend on evolving transported fields.
+    A solid species has no diffusivity.  Its source is not configured here;
+    evaluateThermochemistry() determines the source from the complete local
+    thermochemical state during the physical-time loop.
     --------------------------------------------------------------------*/
-    if (state[speciesi] == "solid") {
-      solidSourceModel[speciesi] = speciesDict.getOrDefault<word> (
-        "sourceModel", "constant"
-      );
-
-      if (solidSourceModel[speciesi] != "constant"
-        && solidSourceModel[speciesi] != "temperatureLinear") {
-        FatalErrorInFunction << "Unknown sourceModel "
-          << solidSourceModel[speciesi] << " for solid species " << speciesName
-          << ". Choose constant or temperatureLinear." << exit(FatalError);
-      }
-
-      solidSource[speciesi] = speciesDict.get<scalar>("source");
-
-      if (!std::isfinite(solidSource[speciesi]) || solidSource[speciesi] < 0) {
-        FatalErrorInFunction << "Species " << speciesName
-          << " requires a finite solid source >= 0. Got "
-          << solidSource[speciesi] << exit(FatalError);
-      }
-
-      if (solidSourceModel[speciesi] == "temperatureLinear") {
-        solidThot[speciesi] = speciesDict.get<scalar>("Thot");
-        solidTcold[speciesi] = speciesDict.get<scalar>("Tcold");
-
-        if (!std::isfinite(solidThot[speciesi])
-          || !std::isfinite(solidTcold[speciesi])
-          || solidThot[speciesi] <= solidTcold[speciesi]) {
-          FatalErrorInFunction << "Species " << speciesName
-            << " requires finite Thot > Tcold for sourceModel "
-            << "temperatureLinear. Got Thot=" << solidThot[speciesi]
-            << ", Tcold=" << solidTcold[speciesi] << exit(FatalError);
-        }
-
-        Info<< "Species " << speciesName
-          << ": state = solid, sourceModel = temperatureLinear, S0 = "
-          << solidSource[speciesi] << " kg/(m3 s), Thot = "
-          << solidThot[speciesi] << " K, Tcold = "
-          << solidTcold[speciesi] << " K" << nl;
-
-      } else {
-        Info<< "Species " << speciesName
-          << ": state = solid, sourceModel = constant, source = "
-          << solidSource[speciesi] << " kg/(m3 s)" << nl;
-      }
-    }
-
     /*
     Read and register the species field for both allowed states.  AUTO_WRITE
     ensures that an unchanged solid field is still written at output times.
@@ -338,6 +291,24 @@ int main(int argc, char *argv[]) {
       FatalErrorInFunction << fieldName << " must be dimensionless."
         << exit(FatalError);
     }
+
+    /*----------------------------------------------------------------------
+    Create a source field for every species.  At present only solid-source
+    fields are used by an equation, but keeping the list generic mirrors the
+    interface expected from a future coupled thermochemistry calculation.
+    ----------------------------------------------------------------------*/
+    speciesSource.set (
+      speciesi,
+      new volScalarField (
+        IOobject("source_" + speciesName,
+                 runTime.timeName(),
+                 mesh,
+                 IOobject::NO_READ,
+                 IOobject::NO_WRITE),
+        mesh,
+        dimensionedScalar("zeroSource", dimDensity/dimTime, 0)
+      )
+    );
 
     if (state[speciesi] == "gas") {
 
@@ -436,22 +407,59 @@ int main(int argc, char *argv[]) {
     Info<< "Time = " << runTime.timeName() << nl << endl;
 
     /*-------------------------------------------------------------------------
-    The carrier flow remains frozen.  The same transport equation is assembled
-    and solved independently for every gaseous species in the run-time list.
-    Since the species are presently uncoupled, solving tracer after PbI2_g does
-    not alter the PbI2_g equation or its residual history.
+    The carrier flow remains frozen.  First advance all gaseous species exactly
+    as before.  They are presently uncoupled from thermochemistry source terms,
+    so their residual histories remain unchanged.
     -------------------------------------------------------------------------*/
     forAll(species, speciesi) {
       if (state[speciesi] == "gas") {
         #include "solveGasSpecies.H"
-      } else {
-        #include "solveSolidSpecies.H"
+      }
+    }
+
+    /*-------------------------------------------------------------------------
+    Evaluate the complete thermochemistry state once in every cell after the
+    gaseous species have been advanced.  The routine receives T, p, all species
+    names and all current species values, and returns one volumetric source for
+    every species.
+
+    The present routine is deliberately a simple mock-up.  Its interface is the
+    part intended to survive when the implementation is eventually replaced by
+    a GEMS call.
+    -------------------------------------------------------------------------*/
+    const volScalarField& T = thermo.T();
+    const volScalarField& p = thermo.p();
+
+    scalarField localSpecies(speciesNames.size(), 0.0);
+    scalarField localSources(speciesNames.size(), 0.0);
+
+    forAll(T, celli) {
+
+      forAll(speciesNames, speciesi) {
+        localSpecies[speciesi] = species[speciesi][celli];
       }
 
-      /*----------------------------------------------------------------------
-      Solid fields have no convection or diffusion.  Their accumulation source
-      is evaluated inside solveSolidSpecies.H at every physical time step.
-      ----------------------------------------------------------------------*/
+      evaluateThermochemistry (
+        T[celli],
+        p[celli],
+        speciesNames,
+        localSpecies,
+        localSources
+      );
+
+      forAll(speciesNames, speciesi) {
+        speciesSource[speciesi][celli] = localSources[speciesi];
+      }
+    }
+
+    /*-------------------------------------------------------------------------
+    Solid species have no convection or diffusion.  They are advanced only by
+    the source returned by the thermochemistry routine above.
+    -------------------------------------------------------------------------*/
+    forAll(species, speciesi) {
+      if (state[speciesi] == "solid") {
+        #include "solveSolidSpecies.H"
+      }
     }
 
     runTime.write();
