@@ -14,6 +14,11 @@ converged carrier flow.  The carrier fields U, p, T/e, rho and phi are read
 from disk and remain fixed; no momentum, pressure, continuity or energy
 equation is solved.
 
+Solid species may also be listed.  Their Y_<speciesName> fields are read,
+registered and written.  At this development step a solid species is advanced
+only by a prescribed uniform volumetric source; it has no convection or
+diffusion.
+
 For every gaseous species i, the solver reads the mass-fraction field
 Y_<speciesName> and solves
 
@@ -37,12 +42,15 @@ PROGRAM FLOW
 
   - create case/time database and mesh
   - read the frozen thermodynamic and carrier-flow fields
-  - read the list of gaseous species and their properties
-  - create Y_i and rhoD_i for every species
+  - read the species list and their properties
+  - create Y_i for every species and rhoD_i for gaseous species
+
+  At the present solid-species development step, a solid Y_i field is advanced
+  only by ddt(rho,Y_i) = source.  No rhoD_i is created for a solid species.
 
   - while physical time advances {
       for every species {
-        solve Y_i
+        solve the gas transport equation or the solid accumulation equation
       }
       write requested fields
     }
@@ -73,7 +81,7 @@ locations, following common OpenFOAM solver practice.
 int main(int argc, char *argv[]) {
 
   argList::addNote (
-    "Transient transport of gaseous species on a frozen rhoSimpleFoam solution."
+    "Transient species transport on a frozen rhoSimpleFoam solution."
   );
 
   #include "setRootCaseLists.H"
@@ -166,10 +174,15 @@ int main(int argc, char *argv[]) {
   );
 
   /*--------------------------------------------------------------------------
-  speciesTransportProperties contains the list of transported gaseous species
-  and one sub-dictionary for each species.  Each species independently selects
-  its diffusivity model and its physical transport properties.
+  speciesTransportProperties contains the species list and one sub-dictionary
+  for each species.  Gaseous species select a diffusivity model and transport
+  properties; solid species specify their accumulation source.
   --------------------------------------------------------------------------*/
+
+  /*
+  Solid species appear in the same list.  They do not select or use a
+  diffusivity model; at this stage they use only a prescribed uniform source.
+  */
   IOdictionary speciesProperties (
     IOobject("speciesTransportProperties",
               runTime.constant(),
@@ -213,30 +226,60 @@ int main(int argc, char *argv[]) {
                 as PbI2He; unused PtrList entries remain null.
   molarMass[i] is negative when no molar-concentration output is requested.
   -------------------------------------------------------------------------*/
-  PtrList<volScalarField> species(speciesNames.size());
-  PtrList<volScalarField> rhoD(speciesNames.size());
-  PtrList<volScalarField> molecularD(speciesNames.size());
-  List<scalar> molarMass(speciesNames.size(), -1.0);
-  List<word> diffusionModel(speciesNames.size());
+
+  /*
+  For a solid species only species[i] is populated.  Its rhoD and molecularD
+  entries remain null because the solid equation has no diffusion term.
+  solidSource[i] stores the prescribed volumetric source [kg/(m3 s)].
+  */
+  PtrList <volScalarField> species       (speciesNames.size());
+  PtrList <volScalarField> rhoD          (speciesNames.size());
+  PtrList <volScalarField> molecularD    (speciesNames.size());
+  List <scalar>            molarMass     (speciesNames.size(), -1.0);
+  List <word>              diffusionModel(speciesNames.size());
+  List <word>              state         (speciesNames.size());
+  List <scalar>            solidSource   (speciesNames.size(), 0.0);
 
   forAll(speciesNames, speciesi) {
 
-    const word& speciesName = speciesNames[speciesi];
-    const word fieldName("Y_" + speciesName);
-    const word rhoDName("rhoD_" + speciesName);
-    const dictionary& speciesDict = speciesProperties.subDict(speciesName);
+    const word &       speciesName = speciesNames[speciesi];
+    const word         fieldName("Y_" + speciesName);
+    const word         rhoDName("rhoD_" + speciesName);
+    const dictionary & speciesDict = speciesProperties.subDict(speciesName);
+    state[speciesi]                = speciesDict.get<word>("state");
 
-    diffusionModel[speciesi] = speciesDict.getOrDefault<word> (
-      "diffusivityModel", "constant"
-    );
-
-    if (diffusionModel[speciesi] != "constant"
-      && diffusionModel[speciesi] != "PbI2He") {
-      FatalErrorInFunction << "Unknown diffusivityModel "
-        << diffusionModel[speciesi] << " for species " << speciesName
-        << ". Choose constant or PbI2He." << exit(FatalError);
+    /*----------------------
+    Check for allowed states
+    ----------------------*/
+    if (state[speciesi] != "gas" && state[speciesi] != "solid") {
+      FatalErrorInFunction
+        << "Unknown state " << state[speciesi]
+        << " for species " << speciesName
+        << ". Choose gas or solid."
+        << exit(FatalError);
     }
 
+    /*---------------------------------------------------------------
+    A solid species has no diffusivity.  For this test step it is advanced
+    only by a prescribed uniform volumetric source [kg/(m3 s)].
+    ---------------------------------------------------------------*/
+    if (state[speciesi] == "solid") {
+      solidSource[speciesi] = speciesDict.get<scalar>("source");
+
+      if (!std::isfinite(solidSource[speciesi])) {
+        FatalErrorInFunction << "Species " << speciesName
+          << " requires a finite solid source. Got " << solidSource[speciesi]
+          << exit(FatalError);
+      }
+
+      Info<< "Species " << speciesName << ": state = solid, source = "
+        << solidSource[speciesi] << " kg/(m3 s)" << nl;
+    }
+
+    /*
+    Read and register the species field for both allowed states.  AUTO_WRITE
+    ensures that an unchanged solid field is still written at output times.
+    */
     species.set (
       speciesi,
       new volScalarField (
@@ -254,63 +297,79 @@ int main(int argc, char *argv[]) {
         << exit(FatalError);
     }
 
-    if (diffusionModel[speciesi] == "constant") {
+    if (state[speciesi] == "gas") {
 
-      const scalar D = speciesDict.get<scalar>("D");
-      if (!std::isfinite(D) || D < 0) {
-        FatalErrorInFunction << "Species " << speciesName
-          << " requires finite D >= 0. Got " << D << exit(FatalError);
-      }
-
-      /*------------------------------------------------------------------------
-      dimensionedScalar carries both the numerical value and the OpenFOAM
-      dimensions.  D is the molecular diffusivity [m2/s]; multiplying by rho
-      creates the equation coefficient rhoD [kg/(m s)].
-      ------------------------------------------------------------------------*/
-      const dimensionedScalar constantD (
-        "D", dimViscosity, D
+      diffusionModel[speciesi] = speciesDict.getOrDefault<word> (
+        "diffusivityModel", "constant"
       );
 
-      rhoD.set (
-        speciesi,
-        new volScalarField (
-          IOobject(rhoDName,
-                   runTime.timeName(),
-                   mesh,
-                   IOobject::NO_READ,
-                   IOobject::AUTO_WRITE),
-          rho*constantD
-        )
-      );
-
-      Info<< "Species " << speciesName << ": field " << fieldName
-        << ", diffusivityModel = constant, D = " << D << " m2/s" << nl;
-
-    } else {
-
-      if (speciesName != "PbI2_g") {
-        FatalErrorInFunction << "The PbI2He model is specific to PbI2_g, not "
-          << speciesName << "." << exit(FatalError);
+      if (diffusionModel[speciesi] != "constant"
+        && diffusionModel[speciesi] != "PbI2He") {
+        FatalErrorInFunction << "Unknown diffusivityModel "
+          << diffusionModel[speciesi] << " for species " << speciesName
+          << ". Choose constant or PbI2He." << exit(FatalError);
       }
 
-      if (speciesDict.found("D")) {
-        FatalErrorInFunction << "Species " << speciesName
-          << " uses diffusivityModel PbI2He: remove constant D."
-          << exit(FatalError);
+      if (diffusionModel[speciesi] == "constant") {
+
+        const scalar D = speciesDict.get<scalar>("D");
+        if (!std::isfinite(D) || D < 0) {
+          FatalErrorInFunction << "Species " << speciesName
+            << " requires finite D >= 0. Got " << D << exit(FatalError);
+        }
+
+        /*------------------------------------------------------------------------
+        dimensionedScalar carries both the numerical value and the OpenFOAM
+        dimensions.  D is the molecular diffusivity [m2/s]; multiplying by rho
+        creates the equation coefficient rhoD [kg/(m s)].
+        ------------------------------------------------------------------------*/
+        const dimensionedScalar constantD (
+          "D", dimViscosity, D
+        );
+
+        rhoD.set (
+          speciesi,
+          new volScalarField (
+            IOobject(rhoDName,
+                     runTime.timeName(),
+                     mesh,
+                     IOobject::NO_READ,
+                     IOobject::AUTO_WRITE),
+            rho*constantD
+          )
+        );
+
+        Info<< "Species " << speciesName << ": field " << fieldName
+          << ", diffusivityModel = constant, D = " << D << " m2/s" << nl;
+
+      } else {
+
+        if (speciesName != "PbI2_g") {
+          FatalErrorInFunction << "The PbI2He model is specific to PbI2_g, not "
+            << speciesName << "." << exit(FatalError);
+        }
+
+        if (speciesDict.found("D")) {
+          FatalErrorInFunction << "Species " << speciesName
+            << " uses diffusivityModel PbI2He: remove constant D."
+            << exit(FatalError);
+        }
+
+        /*------------------------------------------------------------------------
+        Insert the setup code which evaluates the same PbI2-He correlation used
+        by the original single-species case 009.  It creates D_PbI2_g(T,p) and
+        rhoD_PbI2_g = rho*D_PbI2_g once from the frozen carrier fields.
+        ------------------------------------------------------------------------*/
+        #include "createVariableDiffusivity.H"
       }
 
-      /*------------------------------------------------------------------------
-      Insert the setup code which evaluates the same PbI2-He correlation used
-      by the original single-species case 009.  It creates D_PbI2_g(T,p) and
-      rhoD_PbI2_g = rho*D_PbI2_g once from the frozen carrier fields.
-      ------------------------------------------------------------------------*/
-      #include "createVariableDiffusivity.H"
     }
 
     /*------------------------------------------------------------------------
-    Store the starting mass fraction as the old-time field used by the Euler
-    transient term.  For PbI2_g this is the same operation as in the original
-    single-species case 009.
+    Store the starting species field as the old-time field used by the Euler
+    transient term.  This is required by both the gas transport equation and
+    the solid accumulation equation.  For PbI2_g this remains the same operation
+    as in the original single-species case 009.
     ------------------------------------------------------------------------*/
     species[speciesi].oldTime();
 
@@ -325,7 +384,7 @@ int main(int argc, char *argv[]) {
   }
 
   Info<< "Frozen fields: U, p, e, T, rho, phi, mu, kappa" << nl
-    << "Transported gaseous species: " << speciesNames << nl
+    << "Configured species: " << speciesNames << nl
     << "No SIMPLE/PIMPLE, pressure, momentum or energy solve." << nl
     << "Species controls are read at startup; restart to change them." << nl
     << "Starting physical time loop" << endl;
@@ -341,7 +400,16 @@ int main(int argc, char *argv[]) {
     not alter the PbI2_g equation or its residual history.
     -------------------------------------------------------------------------*/
     forAll(species, speciesi) {
-      #include "solveGasSpecies.H"
+      if (state[speciesi] == "gas") {
+        #include "solveGasSpecies.H"
+      } else {
+        #include "solveSolidSpecies.H"
+      }
+
+      /*
+      Solid fields have no convection or diffusion.  At this stage they are
+      advanced only by the prescribed uniform accumulation source.
+      */
     }
 
     runTime.write();

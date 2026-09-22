@@ -16,12 +16,12 @@ species
 );
 
 PbI2_g {
-
-  D               1e-5;          /* molecular diffusivity [m2/s] */
-  molarMass       0.46100894;    /* kg/mol; enables c_PbI2_g output */
+  state      gas;         /* can be gas or solid */
+  D          1.0e-5;      /* molecular diffusivity [m2/s] */
+  molarMass  0.46100894;  /* kg/mol; enables c_PbI2_g output */
 }
 
 tracer {
-
-  D               1e-5;          /* same D as PbI2_g for validation */
+  state      gas;         /* can be gas or solid */
+  D          1e-5;        /* same D as PbI2_g for validation */
 }
