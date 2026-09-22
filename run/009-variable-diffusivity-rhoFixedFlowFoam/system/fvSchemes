@@ -28,6 +28,7 @@ divSchemes {
   default         none;
 
   div(phi,Y_PbI2_g)   Gauss upwind;
+  div(phi,Y_tracer)   Gauss upwind;
 }
 
 laplacianSchemes {

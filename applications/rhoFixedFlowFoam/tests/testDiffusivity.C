@@ -8,7 +8,7 @@
 int main() {
 
   // Independent reference values from Francesco's original Python equations,
-  // using alpha=17.23, N=16 and the He table, p=1 in the script convention.
+  // using alpha=17.23, N=16 and the He table, p=1 atm in the script convention.
   const double temperatures[] = {250, 300, 400, 600, 800, 1000, 1250};
   const double reference[] = {
     2.212906e-5, 3.073716e-5, 5.164654e-5, 1.0611711e-4,

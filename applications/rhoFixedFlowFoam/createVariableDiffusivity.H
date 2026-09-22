@@ -4,23 +4,26 @@ createVariableDiffusivity.H
 
 PURPOSE
 
-Setup code for the variable PbI2-He diffusivity branch of rhoFixedFlowFoam.
-It is included once, before the physical-time loop.
+Setup code for the PbI2-He variable-diffusivity model of rhoFixedFlowFoam.
+It is included once for PbI2_g before the physical-time loop.
 
 The file:
 
-  - reads constant/speciesTransportProperties;
+  - reads the pressure-unit convention from speciesTransportProperties;
   - obtains the frozen temperature and pressure fields from fluidThermo;
   - evaluates D_PbI2_g(T,p) in every cell and boundary face;
   - creates rhoD_PbI2_g = rho*D_PbI2_g for the species equation;
   - reports the temperature range and diffusivity range.
+
+The calculation deliberately follows the original single-species case-009
+implementation so that generalising the solver to several species does not
+change the PbI2 transport equation or its diffusivity values.
 
 Because the carrier flow is fixed, these diffusivity fields are calculated
 only once at solver start and remain unchanged during the transient run.
 
 OPENFOAM OBJECTS USED HERE
 
-  - IOdictionary reads a standard OpenFOAM dictionary from disk.
   - IOobject specifies where an OpenFOAM object lives and whether it must be
     read or written.
   - volScalarField is a scalar field stored in mesh cells with boundary
@@ -30,19 +33,12 @@ OPENFOAM OBJECTS USED HERE
 
 ------------------------------------------------------------------------------*/
 
-/*-----------------------------------------------------------------
-Read the species-transport dictionary from the constant directory.
-MUST_READ makes the solver stop immediately if the file is missing.
------------------------------------------------------------------*/
-IOdictionary properties (
-  IOobject("speciesTransportProperties",
-           runTime.constant(),
-           mesh,
-           IOobject::MUST_READ,
-           IOobject::NO_WRITE)
-);
-
-const word pressureUnit = properties.get<word>("pressureUnit");
+/*-------------------------------------------------------------------------
+Convert the OpenFOAM pressure, stored in Pa, to the numerical pressure unit
+expected by the diffusivity correlation.  For the present case the selected
+unit is atm, hence pressureScale = 101325 Pa/atm.
+-------------------------------------------------------------------------*/
+const word pressureUnit = speciesProperties.get<word>("pressureUnit");
 if (pressureUnit != "bar" && pressureUnit != "atm") {
   FatalErrorInFunction << "pressureUnit must be bar or atm."
     << exit(FatalError);
@@ -61,14 +57,15 @@ if (T.dimensions() != dimTemperature || p.dimensions() != dimPressure) {
     << exit(FatalError);
 }
 
-/*---------------------------------------------------------------------------
-Create the molecular diffusivity field D_PbI2_g.  NO_READ means there is no
-input file for D; AUTO_WRITE makes it available in output time directories.
-The zero expression based on T gives the field the required dimensions while
-retaining OpenFOAM constraint patch types such as processor/cyclic patches.
----------------------------------------------------------------------------*/
-molecularD.reset(new volScalarField (
-    IOobject("D_PbI2_g",
+/*-----------------------------------------------------------------------------
+Create the molecular diffusivity field D_PbI2_g.  The expression is kept the
+same as in the original case-009 implementation.  It provides the required m2/s
+dimensions and preserves constraint patch types such as processor/cyclic.
+-----------------------------------------------------------------------------*/
+molecularD.set (
+  speciesi,
+  new volScalarField (
+    IOobject("D_" + speciesName,
              runTime.timeName(),
              mesh,
              IOobject::NO_READ,
@@ -113,8 +110,10 @@ range over which Francesco plotted and checked it.
 --------------------------------------------------------------------------*/
 scalar minT = GREAT;
 scalar maxT = -GREAT;
+
 forAll(T, celli) {
-  molecularD()[celli] = evaluateD(T[celli], p[celli], rho[celli]);
+  molecularD[speciesi][celli] =
+    evaluateD(T[celli], p[celli], rho[celli]);
   minT = min(minT, T[celli]);
   maxT = max(maxT, T[celli]);
 }
@@ -122,8 +121,9 @@ forAll(T, celli) {
 forAll(T.boundaryField(), patchi) {
   forAll(T.boundaryField()[patchi], facei) {
     const scalar temperature = T.boundaryField()[patchi][facei];
-    molecularD().boundaryFieldRef()[patchi][facei] = evaluateD (
-      temperature, p.boundaryField()[patchi][facei],
+    molecularD[speciesi].boundaryFieldRef()[patchi][facei] = evaluateD (
+      temperature,
+      p.boundaryField()[patchi][facei],
       rho.boundaryField()[patchi][facei]
     );
     minT = min(minT, temperature);
@@ -144,24 +144,27 @@ if (minT < 250 || maxT > 1250) {
     << "The fit is being extrapolated; values are not clamped." << nl;
 }
 
-/*---------------------------------------------------------------------------
+/*--------------------------------------------------------------------------
 The transported variable is a mass fraction.  Its diffusion term therefore
-uses the density-weighted coefficient rho*D, with units kg/(m s).  Store this
-as rhoD_PbI2_g for direct use by solveVariableSpecies.H.
----------------------------------------------------------------------------*/
-rhoD.reset(new volScalarField (
-  IOobject("rhoD_PbI2_g",
-           runTime.timeName(),
-           mesh,
-           IOobject::NO_READ,
-           IOobject::AUTO_WRITE),
-  rho*molecularD()
+uses the density-weighted coefficient rho*D, with units kg/(m s).  The field
+name remains rhoD_PbI2_g, exactly as in the original case 009.
+--------------------------------------------------------------------------*/
+rhoD.set (
+  speciesi,
+  new volScalarField (
+    IOobject(rhoDName,
+             runTime.timeName(),
+             mesh,
+             IOobject::NO_READ,
+             IOobject::AUTO_WRITE),
+    rho*molecularD[speciesi]
   )
 );
 
-Info<< "PbI2He diffusivity evaluated once using local T and absolute p."
+Info<< "Species " << speciesName
+  << ": diffusivityModel = PbI2He; evaluated once using local T and absolute p."
   << nl << "Correlation pressure unit: " << pressureUnit
   << " (" << pressureScale << " Pa)" << nl
-  << "D_PbI2_g internal min/max [m2/s]: "
-  << gMin(molecularD().primitiveField()) << " "
-  << gMax(molecularD().primitiveField()) << nl;
+  << "D_" << speciesName << " internal min/max [m2/s]: "
+  << gMin(molecularD[speciesi].primitiveField()) << " "
+  << gMax(molecularD[speciesi].primitiveField()) << nl;

@@ -1,47 +1,32 @@
-# Case 008 — Transient scalar transport on frozen carrier flow
+# Case 008 — Multiple gaseous species on frozen carrier flow
 
 This case continues from the converged steady helium solution of case 007,
-but uses the new `rhoFreezeFoam` solver to solve transport of a scalar.
+but uses `rhoFixedFlowFoam` to solve transient transport of a list of passive
+gaseous species.
 
-Case 007 provides the carrier-flow fields:
+Case 007 provides the frozen carrier-flow fields `U`, `p`, temperature/internal
+energy, `rho` and mass flux `phi`. No momentum, pressure, continuity or energy
+equation is solved in this case.
 
-- velocity `U`
-- pressure `p`
-- temperature / internal energy
-- density `rho`
-- mass flux `phi`
+The transported gaseous species are listed in
+`constant/speciesTransportProperties`. Each species is represented by a
+mass-fraction field `Y_<speciesName>` and obeys
 
-These fields are read from the final steady solution and remain frozen
-throughout the calculation.
+    ddt(rho,Y_i) + div(phi,Y_i) - laplacian(rho*D_i,Y_i) = 0
 
-`rhoFreezeFoam` does not solve momentum, pressure, continuity or energy.
-There is no SIMPLE or PIMPLE loop. Only the scalar field `Y_PbI2_g` is advanced
-in physical time.
+Case 008 currently contains two species:
 
-The scalar equation is
+    PbI2_g
+    tracer
 
-    ddt(rho,Y_PbI2_g) + div(phi,Y_PbI2_g) - laplacian(D,Y_PbI2_g) = 0
+Both use the same constant diffusivity `D = 1e-5 m2/s` and identical initial
+and boundary conditions. Therefore `Y_PbI2_g` and `Y_tracer` should remain
+numerically identical. This provides a direct check of the new multi-species
+loop before species-specific diffusivity models are introduced.
 
-where `phi` is the frozen mass flux from case 007.
+`PbI2_g` also defines its molar mass, so the solver writes the derived field
+`c_PbI2_g = rho*Y_PbI2_g/MPbI2` in mol/m3 at scheduled output times.
 
-`Y_PbI2_g` represents the dimensionless gaseous PbI2 mass fraction (kg PbI2 / kg
-mixture). Its inlet value of `1e-6` means 1 ppm by mass. This rename does
-not change any values or convert them to mol/m3. The present diffusion
-coefficient is still a test value; physical species diffusivities and
-deposition models will be introduced in later cases.
-
-This case therefore marks the transition from:
-
-    steady carrier-flow calculation
-
-to
-
-    transient species transport on a frozen carrier flow.
-
-## Molar concentration output
-
-At scheduled write times, `c_PbI2_g = rho * Y_PbI2_g / MPbI2` is written
-for ParaView in mol/m3. `MPbI2 = 0.46100894 kg/mol`, using
-207.2 + 2*126.90447 g/mol. No `0/c_PbI2_g` input is needed.
-The inlet remains 1e-6 (1 ppm by mass of PbI2). D remains the test
-coefficient; no solid PbI2 inventory or deposition is implemented yet.
+This case therefore changes the species treatment from one hard-wired scalar
+to a run-time list of gaseous species, while retaining constant diffusivity and
+no chemistry, deposition or solid-species accumulation.

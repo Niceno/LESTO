@@ -1,6 +1,6 @@
 /*------------------------------------------------------------------------------
 
-rhoFixedFlowFoam -- fixed carrier flow, transient scalar transport, OF v2606.
+rhoFixedFlowFoam -- fixed carrier flow, transient species transport, OF v2606.
 
 Derived from the initialization and program structure of rhoSimpleFoam:
 Copyright (C) 2011-2017 OpenFOAM Foundation.
@@ -9,33 +9,41 @@ https://www.gnu.org/licenses/gpl-3.0.html
 
 PURPOSE
 
-rhoFixedFlowFoam advances gaseous PbI2 on an already converged carrier flow.
-The carrier fields U, p, T/e, rho and phi are read from disk and remain fixed;
-no momentum, pressure, continuity or energy equation is solved.
+rhoFixedFlowFoam advances a list of passive gaseous species on an already
+converged carrier flow.  The carrier fields U, p, T/e, rho and phi are read
+from disk and remain fixed; no momentum, pressure, continuity or energy
+equation is solved.
 
-The solver supports two species-diffusion routes:
+For every gaseous species i, the solver reads the mass-fraction field
+Y_<speciesName> and solves
 
-  1. constant diffusion coefficient (like in case 008...)
-     Uses OpenFOAM's standard scalarTransport function object.
+  ddt(rho,Y_i) + div(phi,Y_i) - laplacian(rhoD_i,Y_i) = 0,
 
-  2. PbI2He (introduced with case 009...)
-     Computes D_PbI2_g(T,p) once from the frozen carrier fields, forms
-     rhoD_PbI2_g = rho*D_PbI2_g, and solves the density-weighted species
-     equation explicitly.
+where rhoD_i = rho*D_i.  The molecular diffusivity D_i is selected separately
+for each species in constant/speciesTransportProperties.  The currently
+supported models are:
 
-In both cases Y_PbI2_g is a mass fraction which is a dimensionless quantity.
-At output times the solver also writes c_PbI2_g = rho*Y_PbI2_g/MPbI2 in
-mol/m3 for post-processing.
+  - constant : a constant molecular diffusivity D_i in m2/s;
+  - PbI2He   : the temperature- and pressure-dependent PbI2-in-He correlation.
+
+The species themselves are listed at run time.  One species is therefore just
+a list containing one entry; adding another passive gaseous species does not
+require another solver.
+
+If a species dictionary also contains molarMass in kg/mol, the solver writes
+the derived molar concentration c_<speciesName> = rho*Y_i/M_i in mol/m3.
 
 PROGRAM FLOW
 
   - create case/time database and mesh
   - read the frozen thermodynamic and carrier-flow fields
-  - select constant or variable diffusivity
-  - prepare the species field and numerical controls
+  - read the list of gaseous species and their properties
+  - create Y_i and rhoD_i for every species
 
   - while physical time advances {
-      solve only Y_PbI2_g
+      for every species {
+        solve Y_i
+      }
       write requested fields
     }
 
@@ -46,7 +54,9 @@ used in this program include:
   - runTime manages physical time and output;
   - mesh is the finite-volume mesh and object database;
   - IOobject describes how fields are read and written;
+  - IOdictionary reads OpenFOAM dictionaries from disk;
   - volScalarField, volVectorField and surfaceScalarField store cell/face data;
+  - PtrList stores a run-time-sized list of OpenFOAM objects;
   - fluidThermo provides the thermodynamic state;
   - Info/WarningInFunction/FatalErrorInFunction are OpenFOAM's standard
     reporting streams.
@@ -58,26 +68,17 @@ locations, following common OpenFOAM solver practice.
 
 #include "fvCFD.H"
 #include "fluidThermo.H"
-#include "scalarTransport.H"
-#include "functionObjectList.H"
 #include "PbI2HeDiffusivity.H"
 
 int main(int argc, char *argv[]) {
 
   argList::addNote (
-    "Transient Y_PbI2_g transport on a frozen rhoSimpleFoam solution."
+    "Transient transport of gaseous species on a frozen rhoSimpleFoam solution."
   );
 
   #include "setRootCaseLists.H"
   #include "createTime.H"
   #include "createMesh.H"
-
-  /*-----------------------------------------------------------------------
-  OpenFOAM normally lets runTime execute function objects automatically.
-  Here the scalar transport is called explicitly at a precise point in each
-  physical time step, so automatic execution is disabled.
-  -----------------------------------------------------------------------*/
-  runTime.functionObjects().off();
 
   /*--------------------------------------------------------------------------
   fluidThermo is OpenFOAM's thermodynamic model object.  The New(mesh) factory
@@ -85,7 +86,7 @@ int main(int argc, char *argv[]) {
   autoPtr is OpenFOAM's owning smart pointer.
 
   Please note that "he" is OpenFOAM's enthalpy (h) or energy (e) variable.
-  -------------------------------------------------------------------------*/
+  --------------------------------------------------------------------------*/
   Info << "Reading frozen thermophysical state" << nl;
   autoPtr<fluidThermo> pThermo(fluidThermo::New(mesh));
   fluidThermo& thermo = pThermo();
@@ -100,7 +101,7 @@ int main(int argc, char *argv[]) {
   The saved, pressure-corrected mass flux phi is required explicitly.
   Reconstructing phi from U would no longer reproduce the converged carrier
   solution.
-  -------------------------------------------------------------------------*/
+  ---------------------------------------------------------------------------*/
   volScalarField rho (
     IOobject("rho",
               runTime.timeName(),
@@ -141,135 +142,192 @@ int main(int argc, char *argv[]) {
 
   rho.oldTime();
 
-  /*-----------------------------------------------------------------------
+  /*----------------------------------------------------------------------
   Evaluate viscosity and thermal conductivity once from the frozen thermo
-  state.  They are OpenFOAM volume-scalar fields and are marked AUTO_WRITE,
-  but are never updated because thermo.correct() is never called.
-  -----------------------------------------------------------------------*/
+  state.  They are volume-scalar fields and are marked AUTO_WRITE, but are
+  never updated because thermo.correct() is never called.
+  ----------------------------------------------------------------------*/
   volScalarField mu (
     IOobject("mu",
-             runTime.timeName(),
-             mesh,
-             IOobject::NO_READ,
-             IOobject::AUTO_WRITE),
+              runTime.timeName(),
+              mesh,
+              IOobject::NO_READ,
+              IOobject::AUTO_WRITE),
     thermo.mu()
   );
 
   volScalarField kappa (
     IOobject("kappa",
-             runTime.timeName(),
-             mesh,
-             IOobject::NO_READ,
-             IOobject::AUTO_WRITE),
+              runTime.timeName(),
+              mesh,
+              IOobject::NO_READ,
+              IOobject::AUTO_WRITE),
     thermo.kappa()
   );
 
   /*--------------------------------------------------------------------------
-  OpenFOAM dictionaries are runtime configuration objects.  Read the species
-  controls from functions/Y_PbI2_gTransport in system/controlDict and use them
-  to select the constant-D or PbI2-He variable-D route.
+  speciesTransportProperties contains the list of transported gaseous species
+  and one sub-dictionary for each species.  Each species independently selects
+  its diffusivity model and its physical transport properties.
   --------------------------------------------------------------------------*/
-  const dictionary& scalarDict = runTime.controlDict()
-    .subDict("functions").subDict("Y_PbI2_gTransport");
-  const word diffusionModel = scalarDict.getOrDefault<word> (
-    "diffusivityModel", "constant"
+  IOdictionary speciesProperties (
+    IOobject("speciesTransportProperties",
+              runTime.constant(),
+              mesh,
+              IOobject::MUST_READ,
+              IOobject::NO_WRITE)
   );
 
-  const bool variableD = diffusionModel == "PbI2He";
-  if (diffusionModel != "constant" && !variableD) {
-    FatalErrorInFunction << "Unknown diffusivityModel: " << diffusionModel
-      << ". Choose constant or PbI2He." << exit(FatalError);
-  }
+  const wordList speciesNames(speciesProperties.lookup("species"));
 
-  if (
-    scalarDict.get<word>("field") != "Y_PbI2_g"
-     || scalarDict.getOrDefault<word>("phi", "phi") != "phi"
-     || scalarDict.getOrDefault<word>("rho", "rho") != "rho"
-     || scalarDict.getOrDefault<word>("phase", "none") != "none"
-     || scalarDict.getOrDefault<bool>("resetOnStartUp", false)
-     || (!variableD && (!scalarDict.found("D")
-                         || scalarDict.get<scalar>("D") < 0))
-  ) {
-    FatalErrorInFunction
-      << "This prototype requires field Y_PbI2_g, phi, rho, no phase, "
-      << "resetOnStartUp no, and nonnegative D for the constant model."
+  if (speciesNames.size() == 0) {
+    FatalErrorInFunction << "The species list must contain at least one species."
       << exit(FatalError);
   }
 
   /*--------------------------------------------------------------------------
-  These autoPtr objects are created only when needed.  The constant-D branch
-  owns an OpenFOAM scalarTransport object.  The variable-D branch instead owns
-  the species field plus molecularD and rhoD fields used by our explicit
-  transport equation.
+  Numerical controls shared by all gaseous species are kept in controlDict.
+  The linear-solver and under-relaxation settings remain field-specific in
+  fvSolution, while convection schemes remain field-specific in fvSchemes.
   --------------------------------------------------------------------------*/
-  autoPtr<functionObjects::scalarTransport> transport;
-  autoPtr<volScalarField> species;
-  autoPtr<volScalarField> molecularD;
-  autoPtr<volScalarField> rhoD;
+  const dictionary& transportControls =
+    runTime.controlDict().subDict("speciesTransport");
 
-  if (variableD) {
-    if (scalarDict.found("D") || scalarDict.found("fvOptions")) {
-      FatalErrorInFunction
-        << "PbI2He uses speciesTransportProperties: remove D. "
-        << "fvOptions are not supported by this variable-D branch yet."
-        << exit(FatalError);
-    }
-    species.reset(new volScalarField (
-      IOobject("Y_PbI2_g",
-               runTime.timeName(),
-               mesh,
-               IOobject::MUST_READ,
-               IOobject::AUTO_WRITE),
-      mesh
-    ));
+  const label nCorr = transportControls.getOrDefault<label>("nCorr", 0);
+  const scalar tolerance =
+    transportControls.getOrDefault<scalar>("tolerance", 1);
 
-    /*--------------------------------------------------------------------
-    Insert the setup code which evaluates D_PbI2_g(T,p) over all cells and
-    boundary faces and creates rhoD_PbI2_g = rho*D_PbI2_g.
-    --------------------------------------------------------------------*/
-    #include "createVariableDiffusivity.H"
-
-  } else {
-
-    transport.reset(new functionObjects::scalarTransport (
-      "Y_PbI2_gTransport", runTime, scalarDict
-    ));
-  }
-
-  const word schemesField = scalarDict.getOrDefault<word> (
-    "schemesField", "Y_PbI2_g"
-  );
-
-  const label nCorr = scalarDict.getOrDefault<label>("nCorr", 0);
-  const scalar tolerance = scalarDict.getOrDefault<scalar>("tolerance", 1);
   if (nCorr < 0 || !std::isfinite(tolerance) || tolerance < 0) {
     FatalErrorInFunction << "Require nCorr >= 0 and finite tolerance >= 0."
       << exit(FatalError);
   }
 
-  const volScalarField& PbI2 = mesh.lookupObject<volScalarField>("Y_PbI2_g");
-  if (PbI2.dimensions() != dimless) {
-    FatalErrorInFunction
-      << "This case-008 prototype preserves dimensionless Y_PbI2_g. "
-      << "Molar concentration requires a separate conversion."
-      << exit(FatalError);
-  }
-  PbI2.oldTime();
-
   /*-------------------------------------------------------------------------
-  Molar mass of PbI2: 207.2 + 2*126.90447 = 461.00894 g/mol.
-  Use kg/mol here so c_PbI2_g is produced in mol/m3 rather than kmol/m3.
-  dimensionedScalar carries both the numerical value and OpenFOAM dimensions.
+  PtrList is OpenFOAM's owning list of objects.  The number of fields is not
+  known when the solver is compiled; it is determined by the species list in
+  speciesTransportProperties when the case starts.
+
+  species[i]   stores Y_<speciesName>.
+  rhoD[i]      stores rho*D_i, the coefficient used in the diffusion term.
+  molecularD[i] is used only by models which create a spatial D_i field, such
+                as PbI2He; unused PtrList entries remain null.
+  molarMass[i] is negative when no molar-concentration output is requested.
   -------------------------------------------------------------------------*/
-  const dimensionedScalar MPbI2 (
-    "MPbI2", dimensionSet(1, 0, 0, 0, -1, 0, 0), 0.46100894
-  );
+  PtrList<volScalarField> species(speciesNames.size());
+  PtrList<volScalarField> rhoD(speciesNames.size());
+  PtrList<volScalarField> molecularD(speciesNames.size());
+  List<scalar> molarMass(speciesNames.size(), -1.0);
+  List<word> diffusionModel(speciesNames.size());
+
+  forAll(speciesNames, speciesi) {
+
+    const word& speciesName = speciesNames[speciesi];
+    const word fieldName("Y_" + speciesName);
+    const word rhoDName("rhoD_" + speciesName);
+    const dictionary& speciesDict = speciesProperties.subDict(speciesName);
+
+    diffusionModel[speciesi] = speciesDict.getOrDefault<word> (
+      "diffusivityModel", "constant"
+    );
+
+    if (diffusionModel[speciesi] != "constant"
+      && diffusionModel[speciesi] != "PbI2He") {
+      FatalErrorInFunction << "Unknown diffusivityModel "
+        << diffusionModel[speciesi] << " for species " << speciesName
+        << ". Choose constant or PbI2He." << exit(FatalError);
+    }
+
+    species.set (
+      speciesi,
+      new volScalarField (
+        IOobject(fieldName,
+                 runTime.timeName(),
+                 mesh,
+                 IOobject::MUST_READ,
+                 IOobject::AUTO_WRITE),
+        mesh
+      )
+    );
+
+    if (species[speciesi].dimensions() != dimless) {
+      FatalErrorInFunction << fieldName << " must be dimensionless."
+        << exit(FatalError);
+    }
+
+    if (diffusionModel[speciesi] == "constant") {
+
+      const scalar D = speciesDict.get<scalar>("D");
+      if (!std::isfinite(D) || D < 0) {
+        FatalErrorInFunction << "Species " << speciesName
+          << " requires finite D >= 0. Got " << D << exit(FatalError);
+      }
+
+      /*------------------------------------------------------------------------
+      dimensionedScalar carries both the numerical value and the OpenFOAM
+      dimensions.  D is the molecular diffusivity [m2/s]; multiplying by rho
+      creates the equation coefficient rhoD [kg/(m s)].
+      ------------------------------------------------------------------------*/
+      const dimensionedScalar constantD (
+        "D", dimViscosity, D
+      );
+
+      rhoD.set (
+        speciesi,
+        new volScalarField (
+          IOobject(rhoDName,
+                   runTime.timeName(),
+                   mesh,
+                   IOobject::NO_READ,
+                   IOobject::AUTO_WRITE),
+          rho*constantD
+        )
+      );
+
+      Info<< "Species " << speciesName << ": field " << fieldName
+        << ", diffusivityModel = constant, D = " << D << " m2/s" << nl;
+
+    } else {
+
+      if (speciesName != "PbI2_g") {
+        FatalErrorInFunction << "The PbI2He model is specific to PbI2_g, not "
+          << speciesName << "." << exit(FatalError);
+      }
+
+      if (speciesDict.found("D")) {
+        FatalErrorInFunction << "Species " << speciesName
+          << " uses diffusivityModel PbI2He: remove constant D."
+          << exit(FatalError);
+      }
+
+      /*------------------------------------------------------------------------
+      Insert the setup code which evaluates the same PbI2-He correlation used
+      by the original single-species case 009.  It creates D_PbI2_g(T,p) and
+      rhoD_PbI2_g = rho*D_PbI2_g once from the frozen carrier fields.
+      ------------------------------------------------------------------------*/
+      #include "createVariableDiffusivity.H"
+    }
+
+    /*------------------------------------------------------------------------
+    Store the starting mass fraction as the old-time field used by the Euler
+    transient term.  For PbI2_g this is the same operation as in the original
+    single-species case 009.
+    ------------------------------------------------------------------------*/
+    species[speciesi].oldTime();
+
+    if (speciesDict.found("molarMass")) {
+      molarMass[speciesi] = speciesDict.get<scalar>("molarMass");
+      if (!std::isfinite(molarMass[speciesi]) || molarMass[speciesi] <= 0) {
+        FatalErrorInFunction << "Species " << speciesName
+          << " requires molarMass > 0 when specified. Got "
+          << molarMass[speciesi] << exit(FatalError);
+      }
+    }
+  }
 
   Info<< "Frozen fields: U, p, e, T, rho, phi, mu, kappa" << nl
-    << "Only Y_PbI2_g is advanced. Diffusivity model: " << diffusionModel << nl
-    << "Equation diffusion coefficient has units kg/(m s)." << nl
+    << "Transported gaseous species: " << speciesNames << nl
     << "No SIMPLE/PIMPLE, pressure, momentum or energy solve." << nl
-    << "Scalar controls are read at startup; restart to change them." << nl
+    << "Species controls are read at startup; restart to change them." << nl
     << "Starting physical time loop" << endl;
 
   while (runTime.loop()) {
@@ -277,41 +335,46 @@ int main(int argc, char *argv[]) {
     Info<< "Time = " << runTime.timeName() << nl << endl;
 
     /*-------------------------------------------------------------------------
-    This is the essential difference from rhoSimpleFoam/rhoPimpleFoam: the
-    physical-time loop contains no carrier-flow equations or thermo correction.
-    Only the species field is advanced.
+    The carrier flow remains frozen.  The same transport equation is assembled
+    and solved independently for every gaseous species in the run-time list.
+    Since the species are presently uncoupled, solving tracer after PbI2_g does
+    not alter the PbI2_g equation or its residual history.
     -------------------------------------------------------------------------*/
-    if (variableD) {
-      #include "solveVariableSpecies.H"
-
-    } else {
-      transport->execute();
-
+    forAll(species, speciesi) {
+      #include "solveGasSpecies.H"
     }
-    Info<< "Y_PbI2_g min/max = " << gMin(PbI2.primitiveField())
-      << " " << gMax(PbI2.primitiveField()) << nl;
 
     runTime.write();
-    if (runTime.writeTime()) {
-      if (transport.valid()) transport->write();
 
-      /*--------------------------------------------------------------------
-      c_PbI2_g is a derived output field, not an independently transported
-      unknown.  It is reconstructed algebraically from rho and the current
-      mass fraction whenever output is requested, including boundary values.
-      --------------------------------------------------------------------*/
-      volScalarField cPbI2 (
-        IOobject ("c_PbI2_g",
-                  runTime.timeName(),
-                  mesh,
-                  IOobject::NO_READ,
-                  IOobject::NO_WRITE
-        ),
-        rho*PbI2/MPbI2
-      );
-      cPbI2.write();
-      Info<< "Wrote c_PbI2_g [mol/m3]" << nl;
+    if (runTime.writeTime()) {
+
+      /*----------------------------------------------------------------------
+      Molar concentration is a derived output only.  It is written for species
+      that define molarMass in speciesTransportProperties.
+      ----------------------------------------------------------------------*/
+      forAll(species, speciesi) {
+        if (molarMass[speciesi] > 0) {
+          const dimensionedScalar Mi (
+            "Mi", dimensionSet(1, 0, 0, 0, -1, 0, 0), molarMass[speciesi]
+          );
+
+          const word concentrationName("c_" + speciesNames[speciesi]);
+
+          volScalarField concentration (
+            IOobject(concentrationName,
+                     runTime.timeName(),
+                     mesh,
+                     IOobject::NO_READ,
+                     IOobject::NO_WRITE),
+            rho*species[speciesi]/Mi
+          );
+
+          concentration.write();
+          Info<< "Wrote " << concentration.name() << " [mol/m3]" << nl;
+        }
+      }
     }
+
     runTime.printExecutionTime(Info);
   }
 

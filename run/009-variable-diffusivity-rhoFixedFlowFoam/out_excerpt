@@ -8,10 +8,10 @@
 Build  : _481094f-20260618 OPENFOAM=2606 version=2606
 Arch   : "LSB;label=32;scalar=64"
 Exec   : rhoFixedFlowFoam
-Date   : Sep 21 2026
-Time   : 19:40:13
+Date   : Sep 22 2026
+Time   : 09:37:45
 Host   : PC18046
-PID    : 1041
+PID    : 3818
 I/O    : uncollated
 Case   : /home/niceno/Development/LESTO/run/009-variable-diffusivity-rhoFixedFlowFoam
 nProcs : 1
@@ -42,14 +42,14 @@ Selecting thermodynamics package
 
 Using dynamicCode for patch WALL on field T at line 42 in "/home/niceno/Development/LESTO/run/009-variable-diffusivity-rhoFixedFlowFoam/0/T/boundaryField/WALL"
 Using dynamicCode for patch INLET on field U at line 33 in "/home/niceno/Development/LESTO/run/009-variable-diffusivity-rhoFixedFlowFoam/0/U/boundaryField/INLET"
-PbI2He diffusivity evaluated once using local T and absolute p.
+Species PbI2_g: diffusivityModel = PbI2He; evaluated once using local T and absolute p.
 Correlation pressure unit: atm (101325 Pa)
 D_PbI2_g internal min/max [m2/s]: 3.089e-05 0.000253574
+Species tracer: field Y_tracer, diffusivityModel = constant, D = 1e-05 m2/s
 Frozen fields: U, p, e, T, rho, phi, mu, kappa
-Only Y_PbI2_g is advanced. Diffusivity model: PbI2He
-Equation diffusion coefficient has units kg/(m s).
+Transported gaseous species: 2(PbI2_g tracer)
 No SIMPLE/PIMPLE, pressure, momentum or energy solve.
-Scalar controls are read at startup; restart to change them.
+Species controls are read at startup; restart to change them.
 Starting physical time loop
 Time = 0.004
 
@@ -78,7 +78,17 @@ GAMG:  Solving for Y_PbI2_g, Initial residual = 1.26054e-07, Final residual = 6.
 GAMG:  Solving for Y_PbI2_g, Initial residual = 9.05345e-08, Final residual = 9.05345e-08, No Iterations 0
 Y_PbI2_g is converged: initial residual 9.05345e-08 < 1e-07; outer iteration 23
 Y_PbI2_g min/max = 1.09119e-39 4.73222e-07
-ExecutionTime = 4.22 s  ClockTime = 4 s
+GAMG:  Solving for Y_tracer, Initial residual = 1, Final residual = 5.65506e-08, No Iterations 14
+GAMG:  Solving for Y_tracer, Initial residual = 0.00756181, Final residual = 7.79342e-08, No Iterations 8
+GAMG:  Solving for Y_tracer, Initial residual = 0.000404342, Final residual = 6.40811e-08, No Iterations 5
+GAMG:  Solving for Y_tracer, Initial residual = 3.6044e-05, Final residual = 7.11715e-08, No Iterations 3
+GAMG:  Solving for Y_tracer, Initial residual = 4.91368e-06, Final residual = 6.33604e-08, No Iterations 2
+GAMG:  Solving for Y_tracer, Initial residual = 8.67627e-07, Final residual = 8.80123e-08, No Iterations 1
+GAMG:  Solving for Y_tracer, Initial residual = 2.15241e-07, Final residual = 2.34602e-08, No Iterations 1
+GAMG:  Solving for Y_tracer, Initial residual = 5.57451e-08, Final residual = 5.57451e-08, No Iterations 0
+Y_tracer is converged: initial residual 5.57451e-08 < 1e-07; outer iteration 8
+Y_tracer min/max = -4.98776e-29 3.24909e-07
+ExecutionTime = 4.93 s  ClockTime = 5 s
 
 Time = 0.008
 
@@ -106,7 +116,17 @@ GAMG:  Solving for Y_PbI2_g, Initial residual = 1.31097e-07, Final residual = 6.
 GAMG:  Solving for Y_PbI2_g, Initial residual = 9.30608e-08, Final residual = 9.30608e-08, No Iterations 0
 Y_PbI2_g is converged: initial residual 9.30608e-08 < 1e-07; outer iteration 22
 Y_PbI2_g min/max = 3.62961e-39 6.7973e-07
-ExecutionTime = 7.76 s  ClockTime = 7 s
+GAMG:  Solving for Y_tracer, Initial residual = 0.154111, Final residual = 8.12464e-08, No Iterations 11
+GAMG:  Solving for Y_tracer, Initial residual = 0.00385111, Final residual = 8.0899e-08, No Iterations 7
+GAMG:  Solving for Y_tracer, Initial residual = 0.000213401, Final residual = 9.25383e-08, No Iterations 4
+GAMG:  Solving for Y_tracer, Initial residual = 1.8725e-05, Final residual = 3.84377e-08, No Iterations 3
+GAMG:  Solving for Y_tracer, Initial residual = 2.52056e-06, Final residual = 3.38544e-08, No Iterations 2
+GAMG:  Solving for Y_tracer, Initial residual = 4.40099e-07, Final residual = 4.5071e-08, No Iterations 1
+GAMG:  Solving for Y_tracer, Initial residual = 1.09577e-07, Final residual = 1.22247e-08, No Iterations 1
+GAMG:  Solving for Y_tracer, Initial residual = 2.84288e-08, Final residual = 2.84288e-08, No Iterations 0
+Y_tracer is converged: initial residual 2.84288e-08 < 1e-07; outer iteration 8
+Y_tracer min/max = -3.31759e-29 5.39644e-07
+ExecutionTime = 8.99 s  ClockTime = 9 s
 
 Time = 0.012
 
@@ -134,7 +154,16 @@ GAMG:  Solving for Y_PbI2_g, Initial residual = 1.05796e-07, Final residual = 5.
 GAMG:  Solving for Y_PbI2_g, Initial residual = 7.55231e-08, Final residual = 7.55231e-08, No Iterations 0
 Y_PbI2_g is converged: initial residual 7.55231e-08 < 1e-07; outer iteration 22
 Y_PbI2_g min/max = 6.88208e-39 7.81948e-07
-ExecutionTime = 11.1 s  ClockTime = 11 s
+GAMG:  Solving for Y_tracer, Initial residual = 0.0828604, Final residual = 8.59394e-08, No Iterations 10
+GAMG:  Solving for Y_tracer, Initial residual = 0.00260239, Final residual = 5.09084e-08, No Iterations 7
+GAMG:  Solving for Y_tracer, Initial residual = 0.000148608, Final residual = 6.13798e-08, No Iterations 4
+GAMG:  Solving for Y_tracer, Initial residual = 1.28218e-05, Final residual = 2.67504e-08, No Iterations 3
+GAMG:  Solving for Y_tracer, Initial residual = 1.70792e-06, Final residual = 2.35132e-08, No Iterations 2
+GAMG:  Solving for Y_tracer, Initial residual = 2.95817e-07, Final residual = 3.03927e-08, No Iterations 1
+GAMG:  Solving for Y_tracer, Initial residual = 7.35508e-08, Final residual = 7.35508e-08, No Iterations 0
+Y_tracer is converged: initial residual 7.35508e-08 < 1e-07; outer iteration 7
+Y_tracer min/max = -1.02692e-30 6.82795e-07
+ExecutionTime = 12.88 s  ClockTime = 13 s
 
 Time = 0.016
 
@@ -161,7 +190,16 @@ GAMG:  Solving for Y_PbI2_g, Initial residual = 1.40918e-07, Final residual = 6.
 GAMG:  Solving for Y_PbI2_g, Initial residual = 9.84024e-08, Final residual = 9.84024e-08, No Iterations 0
 Y_PbI2_g is converged: initial residual 9.84024e-08 < 1e-07; outer iteration 21
 Y_PbI2_g min/max = 1.24146e-38 8.38696e-07
-ExecutionTime = 14.23 s  ClockTime = 14 s
+GAMG:  Solving for Y_tracer, Initial residual = 0.0564556, Final residual = 5.14929e-08, No Iterations 10
+GAMG:  Solving for Y_tracer, Initial residual = 0.00197282, Final residual = 8.1441e-08, No Iterations 6
+GAMG:  Solving for Y_tracer, Initial residual = 0.000115067, Final residual = 4.85746e-08, No Iterations 4
+GAMG:  Solving for Y_tracer, Initial residual = 9.87419e-06, Final residual = 2.12237e-08, No Iterations 3
+GAMG:  Solving for Y_tracer, Initial residual = 1.30042e-06, Final residual = 1.82612e-08, No Iterations 2
+GAMG:  Solving for Y_tracer, Initial residual = 2.24311e-07, Final residual = 2.30719e-08, No Iterations 1
+GAMG:  Solving for Y_tracer, Initial residual = 5.55993e-08, Final residual = 5.55993e-08, No Iterations 0
+Y_tracer is converged: initial residual 5.55993e-08 < 1e-07; outer iteration 7
+Y_tracer min/max = -8.60625e-31 7.79046e-07
+ExecutionTime = 16.65 s  ClockTime = 17 s
 
 Time = 0.02
 
@@ -188,7 +226,16 @@ GAMG:  Solving for Y_PbI2_g, Initial residual = 1.21729e-07, Final residual = 5.
 GAMG:  Solving for Y_PbI2_g, Initial residual = 8.49141e-08, Final residual = 8.49141e-08, No Iterations 0
 Y_PbI2_g is converged: initial residual 8.49141e-08 < 1e-07; outer iteration 21
 Y_PbI2_g min/max = 1.88575e-38 8.73514e-07
-ExecutionTime = 17.2 s  ClockTime = 17 s
+GAMG:  Solving for Y_tracer, Initial residual = 0.0427532, Final residual = 7.39204e-08, No Iterations 9
+GAMG:  Solving for Y_tracer, Initial residual = 0.00159454, Final residual = 6.38657e-08, No Iterations 6
+GAMG:  Solving for Y_tracer, Initial residual = 9.426e-05, Final residual = 4.03945e-08, No Iterations 4
+GAMG:  Solving for Y_tracer, Initial residual = 8.13608e-06, Final residual = 1.76598e-08, No Iterations 3
+GAMG:  Solving for Y_tracer, Initial residual = 1.06128e-06, Final residual = 1.49623e-08, No Iterations 2
+GAMG:  Solving for Y_tracer, Initial residual = 1.8188e-07, Final residual = 1.86305e-08, No Iterations 1
+GAMG:  Solving for Y_tracer, Initial residual = 4.48422e-08, Final residual = 4.48422e-08, No Iterations 0
+Y_tracer is converged: initial residual 4.48422e-08 < 1e-07; outer iteration 7
+Y_tracer min/max = -2.49888e-31 8.44321e-07
+ExecutionTime = 20.16 s  ClockTime = 20 s
 
 Time = 0.024
 
@@ -215,7 +262,16 @@ GAMG:  Solving for Y_PbI2_g, Initial residual = 1.10047e-07, Final residual = 5.
 GAMG:  Solving for Y_PbI2_g, Initial residual = 7.69234e-08, Final residual = 7.69234e-08, No Iterations 0
 Y_PbI2_g is converged: initial residual 7.69234e-08 < 1e-07; outer iteration 21
 Y_PbI2_g min/max = 2.60503e-38 8.9673e-07
-ExecutionTime = 20.11 s  ClockTime = 20 s
+GAMG:  Solving for Y_tracer, Initial residual = 0.0343879, Final residual = 5.24742e-08, No Iterations 9
+GAMG:  Solving for Y_tracer, Initial residual = 0.00133832, Final residual = 5.3086e-08, No Iterations 6
+GAMG:  Solving for Y_tracer, Initial residual = 8.03578e-05, Final residual = 3.49497e-08, No Iterations 4
+GAMG:  Solving for Y_tracer, Initial residual = 6.89026e-06, Final residual = 9.1411e-08, No Iterations 2
+GAMG:  Solving for Y_tracer, Initial residual = 9.08191e-07, Final residual = 1.46262e-08, No Iterations 2
+GAMG:  Solving for Y_tracer, Initial residual = 1.53873e-07, Final residual = 1.65432e-08, No Iterations 1
+GAMG:  Solving for Y_tracer, Initial residual = 3.8226e-08, Final residual = 3.8226e-08, No Iterations 0
+Y_tracer is converged: initial residual 3.8226e-08 < 1e-07; outer iteration 7
+Y_tracer min/max = -1.30155e-30 8.88981e-07
+ExecutionTime = 23.63 s  ClockTime = 23 s
 
 Time = 0.028
 
@@ -242,7 +298,16 @@ GAMG:  Solving for Y_PbI2_g, Initial residual = 1.12487e-07, Final residual = 5.
 GAMG:  Solving for Y_PbI2_g, Initial residual = 7.88506e-08, Final residual = 7.88506e-08, No Iterations 0
 Y_PbI2_g is converged: initial residual 7.88506e-08 < 1e-07; outer iteration 21
 Y_PbI2_g min/max = 3.3453e-38 9.13268e-07
-ExecutionTime = 22.9 s  ClockTime = 23 s
+GAMG:  Solving for Y_tracer, Initial residual = 0.0287589, Final residual = 8.90657e-08, No Iterations 8
+GAMG:  Solving for Y_tracer, Initial residual = 0.00115427, Final residual = 4.66875e-08, No Iterations 6
+GAMG:  Solving for Y_tracer, Initial residual = 7.00041e-05, Final residual = 3.09097e-08, No Iterations 4
+GAMG:  Solving for Y_tracer, Initial residual = 5.98969e-06, Final residual = 7.96445e-08, No Iterations 2
+GAMG:  Solving for Y_tracer, Initial residual = 7.85688e-07, Final residual = 8.85654e-08, No Iterations 1
+GAMG:  Solving for Y_tracer, Initial residual = 1.8272e-07, Final residual = 2.22797e-08, No Iterations 1
+GAMG:  Solving for Y_tracer, Initial residual = 4.44508e-08, Final residual = 4.44508e-08, No Iterations 0
+Y_tracer is converged: initial residual 4.44508e-08 < 1e-07; outer iteration 7
+Y_tracer min/max = -3.10517e-30 9.19815e-07
+ExecutionTime = 27.05 s  ClockTime = 27 s
 
 Time = 0.032
 
@@ -269,7 +334,16 @@ GAMG:  Solving for Y_PbI2_g, Initial residual = 1.00872e-07, Final residual = 4.
 GAMG:  Solving for Y_PbI2_g, Initial residual = 7.05934e-08, Final residual = 7.05934e-08, No Iterations 0
 Y_PbI2_g is converged: initial residual 7.05934e-08 < 1e-07; outer iteration 21
 Y_PbI2_g min/max = 4.16638e-38 9.25662e-07
-ExecutionTime = 25.64 s  ClockTime = 25 s
+GAMG:  Solving for Y_tracer, Initial residual = 0.0247176, Final residual = 7.46762e-08, No Iterations 8
+GAMG:  Solving for Y_tracer, Initial residual = 0.00101606, Final residual = 9.3954e-08, No Iterations 5
+GAMG:  Solving for Y_tracer, Initial residual = 6.20213e-05, Final residual = 2.93675e-08, No Iterations 4
+GAMG:  Solving for Y_tracer, Initial residual = 5.30891e-06, Final residual = 7.09651e-08, No Iterations 2
+GAMG:  Solving for Y_tracer, Initial residual = 6.88546e-07, Final residual = 7.78061e-08, No Iterations 1
+GAMG:  Solving for Y_tracer, Initial residual = 1.59086e-07, Final residual = 1.96414e-08, No Iterations 1
+GAMG:  Solving for Y_tracer, Initial residual = 3.86837e-08, Final residual = 3.86837e-08, No Iterations 0
+Y_tracer is converged: initial residual 3.86837e-08 < 1e-07; outer iteration 7
+Y_tracer min/max = -3.22593e-30 9.41307e-07
+ExecutionTime = 30.28 s  ClockTime = 30 s
 
 Time = 0.036
 
@@ -295,7 +369,16 @@ GAMG:  Solving for Y_PbI2_g, Initial residual = 1.3514e-07, Final residual = 6.1
 GAMG:  Solving for Y_PbI2_g, Initial residual = 9.26401e-08, Final residual = 9.26401e-08, No Iterations 0
 Y_PbI2_g is converged: initial residual 9.26401e-08 < 1e-07; outer iteration 20
 Y_PbI2_g min/max = 5.46573e-38 9.35314e-07
-ExecutionTime = 28.24 s  ClockTime = 28 s
+GAMG:  Solving for Y_tracer, Initial residual = 0.0216771, Final residual = 6.9981e-08, No Iterations 8
+GAMG:  Solving for Y_tracer, Initial residual = 0.000907267, Final residual = 8.54895e-08, No Iterations 5
+GAMG:  Solving for Y_tracer, Initial residual = 5.58696e-05, Final residual = 2.66613e-08, No Iterations 4
+GAMG:  Solving for Y_tracer, Initial residual = 4.74242e-06, Final residual = 6.38553e-08, No Iterations 2
+GAMG:  Solving for Y_tracer, Initial residual = 6.10913e-07, Final residual = 6.93821e-08, No Iterations 1
+GAMG:  Solving for Y_tracer, Initial residual = 1.40862e-07, Final residual = 1.75581e-08, No Iterations 1
+GAMG:  Solving for Y_tracer, Initial residual = 3.44095e-08, Final residual = 3.44095e-08, No Iterations 0
+Y_tracer is converged: initial residual 3.44095e-08 < 1e-07; outer iteration 7
+Y_tracer min/max = -7.55551e-31 9.56439e-07
+ExecutionTime = 33.42 s  ClockTime = 34 s
 
 Time = 0.04
 
@@ -321,12 +404,19 @@ GAMG:  Solving for Y_PbI2_g, Initial residual = 1.29121e-07, Final residual = 6.
 GAMG:  Solving for Y_PbI2_g, Initial residual = 8.9028e-08, Final residual = 8.9028e-08, No Iterations 0
 Y_PbI2_g is converged: initial residual 8.9028e-08 < 1e-07; outer iteration 20
 Y_PbI2_g min/max = 6.89029e-38 9.43054e-07
-ExecutionTime = 30.83 s  ClockTime = 31 s
+GAMG:  Solving for Y_tracer, Initial residual = 0.0193079, Final residual = 6.71241e-08, No Iterations 8
+GAMG:  Solving for Y_tracer, Initial residual = 0.000819962, Final residual = 7.84761e-08, No Iterations 5
+GAMG:  Solving for Y_tracer, Initial residual = 5.0778e-05, Final residual = 9.93376e-08, No Iterations 3
+GAMG:  Solving for Y_tracer, Initial residual = 4.31466e-06, Final residual = 6.13456e-08, No Iterations 2
+GAMG:  Solving for Y_tracer, Initial residual = 5.53032e-07, Final residual = 6.4108e-08, No Iterations 1
+GAMG:  Solving for Y_tracer, Initial residual = 1.27856e-07, Final residual = 1.68218e-08, No Iterations 1
+GAMG:  Solving for Y_tracer, Initial residual = 3.18173e-08, Final residual = 3.18173e-08, No Iterations 0
+Y_tracer is converged: initial residual 3.18173e-08 < 1e-07; outer iteration 7
+Y_tracer min/max = -2.84705e-30 9.67206e-07
+ExecutionTime = 36.45 s  ClockTime = 37 s
 
 ...
 ...
-
-
 
 Time = 15.964
 
@@ -339,7 +429,15 @@ GAMG:  Solving for Y_PbI2_g, Initial residual = 2.34523e-07, Final residual = 6.
 GAMG:  Solving for Y_PbI2_g, Initial residual = 8.35271e-08, Final residual = 8.35271e-08, No Iterations 0
 Y_PbI2_g is converged: initial residual 8.35271e-08 < 1e-07; outer iteration 7
 Y_PbI2_g min/max = 9.97771e-07 1e-06
-ExecutionTime = 2505.18 s  ClockTime = 2505 s
+GAMG:  Solving for Y_tracer, Initial residual = 0.00472926, Final residual = 4.782e-08, No Iterations 6
+GAMG:  Solving for Y_tracer, Initial residual = 0.000222124, Final residual = 6.063e-08, No Iterations 4
+GAMG:  Solving for Y_tracer, Initial residual = 1.23782e-05, Final residual = 2.94164e-08, No Iterations 3
+GAMG:  Solving for Y_tracer, Initial residual = 8.36532e-07, Final residual = 8.79563e-08, No Iterations 1
+GAMG:  Solving for Y_tracer, Initial residual = 1.27353e-07, Final residual = 1.93115e-08, No Iterations 1
+GAMG:  Solving for Y_tracer, Initial residual = 2.52694e-08, Final residual = 2.52694e-08, No Iterations 0
+Y_tracer is converged: initial residual 2.52694e-08 < 1e-07; outer iteration 6
+Y_tracer min/max = 9.99782e-07 1e-06
+ExecutionTime = 3514.17 s  ClockTime = 3516 s
 
 Time = 15.968
 
@@ -352,7 +450,15 @@ GAMG:  Solving for Y_PbI2_g, Initial residual = 2.34595e-07, Final residual = 6.
 GAMG:  Solving for Y_PbI2_g, Initial residual = 8.35515e-08, Final residual = 8.35515e-08, No Iterations 0
 Y_PbI2_g is converged: initial residual 8.35515e-08 < 1e-07; outer iteration 7
 Y_PbI2_g min/max = 9.97791e-07 1e-06
-ExecutionTime = 2505.65 s  ClockTime = 2506 s
+GAMG:  Solving for Y_tracer, Initial residual = 0.00473204, Final residual = 4.78842e-08, No Iterations 6
+GAMG:  Solving for Y_tracer, Initial residual = 0.000222257, Final residual = 6.0678e-08, No Iterations 4
+GAMG:  Solving for Y_tracer, Initial residual = 1.23863e-05, Final residual = 2.94372e-08, No Iterations 3
+GAMG:  Solving for Y_tracer, Initial residual = 8.37126e-07, Final residual = 8.80163e-08, No Iterations 1
+GAMG:  Solving for Y_tracer, Initial residual = 1.27448e-07, Final residual = 1.93259e-08, No Iterations 1
+GAMG:  Solving for Y_tracer, Initial residual = 2.52897e-08, Final residual = 2.52897e-08, No Iterations 0
+Y_tracer is converged: initial residual 2.52897e-08 < 1e-07; outer iteration 6
+Y_tracer min/max = 9.99785e-07 1e-06
+ExecutionTime = 3514.99 s  ClockTime = 3516 s
 
 Time = 15.972
 
@@ -365,7 +471,15 @@ GAMG:  Solving for Y_PbI2_g, Initial residual = 2.34668e-07, Final residual = 6.
 GAMG:  Solving for Y_PbI2_g, Initial residual = 8.3576e-08, Final residual = 8.3576e-08, No Iterations 0
 Y_PbI2_g is converged: initial residual 8.3576e-08 < 1e-07; outer iteration 7
 Y_PbI2_g min/max = 9.9781e-07 1e-06
-ExecutionTime = 2506.12 s  ClockTime = 2506 s
+GAMG:  Solving for Y_tracer, Initial residual = 0.00473481, Final residual = 4.79485e-08, No Iterations 6
+GAMG:  Solving for Y_tracer, Initial residual = 0.000222391, Final residual = 6.07262e-08, No Iterations 4
+GAMG:  Solving for Y_tracer, Initial residual = 1.23943e-05, Final residual = 2.94581e-08, No Iterations 3
+GAMG:  Solving for Y_tracer, Initial residual = 8.3772e-07, Final residual = 8.80763e-08, No Iterations 1
+GAMG:  Solving for Y_tracer, Initial residual = 1.27543e-07, Final residual = 1.93403e-08, No Iterations 1
+GAMG:  Solving for Y_tracer, Initial residual = 2.531e-08, Final residual = 2.531e-08, No Iterations 0
+Y_tracer is converged: initial residual 2.531e-08 < 1e-07; outer iteration 6
+Y_tracer min/max = 9.99788e-07 1e-06
+ExecutionTime = 3515.81 s  ClockTime = 3517 s
 
 Time = 15.976
 
@@ -378,7 +492,15 @@ GAMG:  Solving for Y_PbI2_g, Initial residual = 2.3474e-07, Final residual = 6.5
 GAMG:  Solving for Y_PbI2_g, Initial residual = 8.36004e-08, Final residual = 8.36004e-08, No Iterations 0
 Y_PbI2_g is converged: initial residual 8.36004e-08 < 1e-07; outer iteration 7
 Y_PbI2_g min/max = 9.97829e-07 1e-06
-ExecutionTime = 2506.6 s  ClockTime = 2507 s
+GAMG:  Solving for Y_tracer, Initial residual = 0.00473758, Final residual = 4.80129e-08, No Iterations 6
+GAMG:  Solving for Y_tracer, Initial residual = 0.000222524, Final residual = 6.07742e-08, No Iterations 4
+GAMG:  Solving for Y_tracer, Initial residual = 1.24023e-05, Final residual = 2.94791e-08, No Iterations 3
+GAMG:  Solving for Y_tracer, Initial residual = 8.38314e-07, Final residual = 8.81362e-08, No Iterations 1
+GAMG:  Solving for Y_tracer, Initial residual = 1.27637e-07, Final residual = 1.93544e-08, No Iterations 1
+GAMG:  Solving for Y_tracer, Initial residual = 2.53301e-08, Final residual = 2.53301e-08, No Iterations 0
+Y_tracer is converged: initial residual 2.53301e-08 < 1e-07; outer iteration 6
+Y_tracer min/max = 9.9979e-07 1e-06
+ExecutionTime = 3516.66 s  ClockTime = 3518 s
 
 Time = 15.98
 
@@ -391,7 +513,15 @@ GAMG:  Solving for Y_PbI2_g, Initial residual = 2.34812e-07, Final residual = 6.
 GAMG:  Solving for Y_PbI2_g, Initial residual = 8.36248e-08, Final residual = 8.36248e-08, No Iterations 0
 Y_PbI2_g is converged: initial residual 8.36248e-08 < 1e-07; outer iteration 7
 Y_PbI2_g min/max = 9.97848e-07 1e-06
-ExecutionTime = 2507.08 s  ClockTime = 2507 s
+GAMG:  Solving for Y_tracer, Initial residual = 0.00474035, Final residual = 4.80771e-08, No Iterations 6
+GAMG:  Solving for Y_tracer, Initial residual = 0.000222658, Final residual = 6.08226e-08, No Iterations 4
+GAMG:  Solving for Y_tracer, Initial residual = 1.24104e-05, Final residual = 2.95e-08, No Iterations 3
+GAMG:  Solving for Y_tracer, Initial residual = 8.38907e-07, Final residual = 8.81964e-08, No Iterations 1
+GAMG:  Solving for Y_tracer, Initial residual = 1.27732e-07, Final residual = 1.93688e-08, No Iterations 1
+GAMG:  Solving for Y_tracer, Initial residual = 2.53506e-08, Final residual = 2.53506e-08, No Iterations 0
+Y_tracer is converged: initial residual 2.53506e-08 < 1e-07; outer iteration 6
+Y_tracer min/max = 9.99793e-07 1e-06
+ExecutionTime = 3517.53 s  ClockTime = 3519 s
 
 Time = 15.984
 
@@ -404,7 +534,15 @@ GAMG:  Solving for Y_PbI2_g, Initial residual = 2.34885e-07, Final residual = 6.
 GAMG:  Solving for Y_PbI2_g, Initial residual = 8.36491e-08, Final residual = 8.36491e-08, No Iterations 0
 Y_PbI2_g is converged: initial residual 8.36491e-08 < 1e-07; outer iteration 7
 Y_PbI2_g min/max = 9.97866e-07 1e-06
-ExecutionTime = 2507.56 s  ClockTime = 2507 s
+GAMG:  Solving for Y_tracer, Initial residual = 0.00474312, Final residual = 4.81413e-08, No Iterations 6
+GAMG:  Solving for Y_tracer, Initial residual = 0.000222791, Final residual = 6.08707e-08, No Iterations 4
+GAMG:  Solving for Y_tracer, Initial residual = 1.24184e-05, Final residual = 2.9521e-08, No Iterations 3
+GAMG:  Solving for Y_tracer, Initial residual = 8.39501e-07, Final residual = 8.82562e-08, No Iterations 1
+GAMG:  Solving for Y_tracer, Initial residual = 1.27827e-07, Final residual = 1.93831e-08, No Iterations 1
+GAMG:  Solving for Y_tracer, Initial residual = 2.53708e-08, Final residual = 2.53708e-08, No Iterations 0
+Y_tracer is converged: initial residual 2.53708e-08 < 1e-07; outer iteration 6
+Y_tracer min/max = 9.99796e-07 1e-06
+ExecutionTime = 3518.35 s  ClockTime = 3520 s
 
 Time = 15.988
 
@@ -417,7 +555,15 @@ GAMG:  Solving for Y_PbI2_g, Initial residual = 2.34957e-07, Final residual = 6.
 GAMG:  Solving for Y_PbI2_g, Initial residual = 8.36735e-08, Final residual = 8.36735e-08, No Iterations 0
 Y_PbI2_g is converged: initial residual 8.36735e-08 < 1e-07; outer iteration 7
 Y_PbI2_g min/max = 9.97885e-07 1e-06
-ExecutionTime = 2508.05 s  ClockTime = 2508 s
+GAMG:  Solving for Y_tracer, Initial residual = 0.00474589, Final residual = 4.82059e-08, No Iterations 6
+GAMG:  Solving for Y_tracer, Initial residual = 0.000222924, Final residual = 6.09188e-08, No Iterations 4
+GAMG:  Solving for Y_tracer, Initial residual = 1.24264e-05, Final residual = 2.9542e-08, No Iterations 3
+GAMG:  Solving for Y_tracer, Initial residual = 8.40094e-07, Final residual = 8.83163e-08, No Iterations 1
+GAMG:  Solving for Y_tracer, Initial residual = 1.27922e-07, Final residual = 1.93977e-08, No Iterations 1
+GAMG:  Solving for Y_tracer, Initial residual = 2.53914e-08, Final residual = 2.53914e-08, No Iterations 0
+Y_tracer is converged: initial residual 2.53914e-08 < 1e-07; outer iteration 6
+Y_tracer min/max = 9.99799e-07 1e-06
+ExecutionTime = 3519.18 s  ClockTime = 3520 s
 
 Time = 15.992
 
@@ -430,7 +576,15 @@ GAMG:  Solving for Y_PbI2_g, Initial residual = 2.3503e-07, Final residual = 6.5
 GAMG:  Solving for Y_PbI2_g, Initial residual = 8.36979e-08, Final residual = 8.36979e-08, No Iterations 0
 Y_PbI2_g is converged: initial residual 8.36979e-08 < 1e-07; outer iteration 7
 Y_PbI2_g min/max = 9.97903e-07 1e-06
-ExecutionTime = 2508.53 s  ClockTime = 2508 s
+GAMG:  Solving for Y_tracer, Initial residual = 0.00474866, Final residual = 4.82704e-08, No Iterations 6
+GAMG:  Solving for Y_tracer, Initial residual = 0.000223057, Final residual = 6.0967e-08, No Iterations 4
+GAMG:  Solving for Y_tracer, Initial residual = 1.24344e-05, Final residual = 2.95628e-08, No Iterations 3
+GAMG:  Solving for Y_tracer, Initial residual = 8.40688e-07, Final residual = 8.83763e-08, No Iterations 1
+GAMG:  Solving for Y_tracer, Initial residual = 1.28016e-07, Final residual = 1.94119e-08, No Iterations 1
+GAMG:  Solving for Y_tracer, Initial residual = 2.54115e-08, Final residual = 2.54115e-08, No Iterations 0
+Y_tracer is converged: initial residual 2.54115e-08 < 1e-07; outer iteration 6
+Y_tracer min/max = 9.99802e-07 1e-06
+ExecutionTime = 3520.01 s  ClockTime = 3521 s
 
 Time = 15.996
 
@@ -443,7 +597,15 @@ GAMG:  Solving for Y_PbI2_g, Initial residual = 2.35102e-07, Final residual = 6.
 GAMG:  Solving for Y_PbI2_g, Initial residual = 8.37223e-08, Final residual = 8.37223e-08, No Iterations 0
 Y_PbI2_g is converged: initial residual 8.37223e-08 < 1e-07; outer iteration 7
 Y_PbI2_g min/max = 9.97921e-07 1e-06
-ExecutionTime = 2509.01 s  ClockTime = 2509 s
+GAMG:  Solving for Y_tracer, Initial residual = 0.00475142, Final residual = 4.83353e-08, No Iterations 6
+GAMG:  Solving for Y_tracer, Initial residual = 0.000223191, Final residual = 6.1015e-08, No Iterations 4
+GAMG:  Solving for Y_tracer, Initial residual = 1.24425e-05, Final residual = 2.95839e-08, No Iterations 3
+GAMG:  Solving for Y_tracer, Initial residual = 8.4128e-07, Final residual = 8.84361e-08, No Iterations 1
+GAMG:  Solving for Y_tracer, Initial residual = 1.28111e-07, Final residual = 1.94263e-08, No Iterations 1
+GAMG:  Solving for Y_tracer, Initial residual = 2.54319e-08, Final residual = 2.54319e-08, No Iterations 0
+Y_tracer is converged: initial residual 2.54319e-08 < 1e-07; outer iteration 6
+Y_tracer min/max = 9.99804e-07 1e-06
+ExecutionTime = 3520.85 s  ClockTime = 3522 s
 
 Time = 16
 
@@ -456,7 +618,15 @@ GAMG:  Solving for Y_PbI2_g, Initial residual = 2.35174e-07, Final residual = 6.
 GAMG:  Solving for Y_PbI2_g, Initial residual = 8.37467e-08, Final residual = 8.37467e-08, No Iterations 0
 Y_PbI2_g is converged: initial residual 8.37467e-08 < 1e-07; outer iteration 7
 Y_PbI2_g min/max = 9.97939e-07 1e-06
+GAMG:  Solving for Y_tracer, Initial residual = 0.00475419, Final residual = 4.83995e-08, No Iterations 6
+GAMG:  Solving for Y_tracer, Initial residual = 0.000223324, Final residual = 6.10634e-08, No Iterations 4
+GAMG:  Solving for Y_tracer, Initial residual = 1.24505e-05, Final residual = 2.96048e-08, No Iterations 3
+GAMG:  Solving for Y_tracer, Initial residual = 8.41873e-07, Final residual = 8.84962e-08, No Iterations 1
+GAMG:  Solving for Y_tracer, Initial residual = 1.28206e-07, Final residual = 1.94407e-08, No Iterations 1
+GAMG:  Solving for Y_tracer, Initial residual = 2.54523e-08, Final residual = 2.54523e-08, No Iterations 0
+Y_tracer is converged: initial residual 2.54523e-08 < 1e-07; outer iteration 6
+Y_tracer min/max = 9.99807e-07 1e-06
 Wrote c_PbI2_g [mol/m3]
-ExecutionTime = 2509.52 s  ClockTime = 2509 s
+ExecutionTime = 3521.7 s  ClockTime = 3523 s
 
 End
