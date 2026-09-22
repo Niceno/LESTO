@@ -3,7 +3,7 @@
 constant/speciesTransportProperties
 
   - list of transported species and their state
-  - diffusivity model for gases and prescribed source for solids
+  - diffusivity model for gases and source model for solids
   - pressure unit used by the PbI2-He diffusivity correlation
 
 ------------------------------------------------------------------------------*/
@@ -32,7 +32,10 @@ tracer {
 }
 
 PbI2_s {
-  state             solid;       /* can be gas or solid */
-  source            1e-6;        /* uniform source [kg/(m3 s)] */
+  state             solid;              /* can be gas or solid */
+  sourceModel       temperatureLinear;  /* recomputed every physical time step */
+  source            1e-6;               /* S0: source at Tcold [kg/(m3 s)] */
+  Thot              1000;               /* K; source is zero here */
+  Tcold             300;                /* K; source equals S0 here */
 }
 
