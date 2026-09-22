@@ -53,5 +53,13 @@ cells are uncoupled and the equation is solved directly with OpenFOAM's
 The gaseous-species equations remain unchanged from case 009 and their residual
 histories are expected to remain unchanged.
 
-The solid source is still applied in every cell. It is not yet restricted to
-near-wall cells, and no gas-to-solid mass coupling is included yet.
+The thermochemistry routine still evaluates a candidate source in every cell.
+The CFD solver then retains the solid source only in the first layer of cells
+adjacent to boundary patches of OpenFOAM type `wall` and sets it to zero
+everywhere else. The wall-cell mask is constructed once at startup directly
+from the boundary-face-to-cell connectivity because the mesh is fixed.
+
+The solid equation itself is unchanged: it remains a local transient
+accumulation equation solved with the `diagonal` solver. No gas-to-solid mass
+coupling is included yet, so formation of `PbI2_s` does not yet remove mass
+from `PbI2_g`.

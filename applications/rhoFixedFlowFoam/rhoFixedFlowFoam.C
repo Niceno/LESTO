@@ -16,7 +16,8 @@ equation is solved.
 
 Solid species may also be listed.  Their Y_<speciesName> fields are read,
 registered and written.  At this development step a solid species is advanced
-only by a volumetric source; it has no convection or diffusion.
+only by a volumetric source; it has no convection or diffusion.  The source is
+applied only in cells adjacent to the WALL boundary patch.
 
 The source terms are supplied by one thermochemistry routine which receives the
 local temperature, pressure and all species values.  The present implementation
@@ -48,6 +49,7 @@ PROGRAM FLOW
   - read the frozen thermodynamic and carrier-flow fields
   - read the species list and their properties
   - create Y_i for every species and rhoD_i for gaseous species
+  - identify cells adjacent to the WALL boundary patch
 
   At the present solid-species development step, a solid Y_i field is advanced
   only by ddt(rho,Y_i) = source.  No rhoD_i is created for a solid species.
@@ -55,7 +57,8 @@ PROGRAM FLOW
   - while physical time advances {
       solve all gaseous species
       evaluate thermochemistry once in every cell
-      solve all solid species using the returned source terms
+      suppress solid sources outside WALL-adjacent cells
+      solve all solid species using the restricted source terms
       write requested fields
     }
 
@@ -181,8 +184,8 @@ int main(int argc, char *argv[]) {
   /*--------------------------------------------------------------------------
   speciesTransportProperties contains the species list and one sub-dictionary
   for each species.  Gaseous species select a diffusivity model and transport
-  properties.  Solid species appear in the same list but do not select or use a
-  diffusivity model.
+  properties.  Solid species appear in the same list but do not select or use
+  a diffusivity model.
 
   Their source terms are supplied later by evaluateThermochemistry(), which is
   deliberately kept separate from the transport solver.
@@ -202,11 +205,11 @@ int main(int argc, char *argv[]) {
       << exit(FatalError);
   }
 
-  /*--------------------------------------------------------------------------
+  /*-----------------------------------------------------------------------
   Numerical controls shared by all gaseous species are kept in controlDict.
   The linear-solver and under-relaxation settings remain field-specific in
   fvSolution, while convection schemes remain field-specific in fvSchemes.
-  --------------------------------------------------------------------------*/
+  -----------------------------------------------------------------------*/
   const dictionary& transportControls =
     runTime.controlDict().subDict("speciesTransport");
 
@@ -266,11 +269,11 @@ int main(int argc, char *argv[]) {
         << exit(FatalError);
     }
 
-    /*--------------------------------------------------------------------
+    /*---------------------------------------------------------------------
     A solid species has no diffusivity.  Its source is not configured here;
     evaluateThermochemistry() determines the source from the complete local
     thermochemical state during the physical-time loop.
-    --------------------------------------------------------------------*/
+    ---------------------------------------------------------------------*/
     /*
     Read and register the species field for both allowed states.  AUTO_WRITE
     ensures that an unchanged solid field is still written at output times.
@@ -396,6 +399,55 @@ int main(int argc, char *argv[]) {
     }
   }
 
+  /*-------------------------------------------------------------------------
+  Build a mask for the first layer of cells adjacent to the boundary region
+  named WALL.  OpenFOAM already stores the owner cell of every boundary face,
+  so no geometrical search is needed: faceCells() gives the adjacent internal
+  cells directly.
+
+  The mesh and carrier flow are fixed, so this connectivity is inspected only
+  once at startup.  The thermochemistry routine remains unaware of the mesh;
+  the CFD solver later suppresses solid-source terms in cells for which
+  wallAdjacentCell is false.
+  -------------------------------------------------------------------------*/
+  bool haveSolidSpecies = false;
+  forAll(state, speciesi) {
+    if (state[speciesi] == "solid") {
+      haveSolidSpecies = true;
+      break;
+    }
+  }
+
+  boolList wallAdjacentCell(mesh.nCells(), false);
+
+  if (haveSolidSpecies) {
+
+    const label wallPatchi = mesh.boundaryMesh().findPatchID("WALL");
+
+    if (wallPatchi < 0) {
+      FatalErrorInFunction
+        << "Solid species are configured, but boundary patch WALL was not found."
+        << exit(FatalError);
+    }
+
+    const labelUList& wallCells =
+      mesh.boundary()[wallPatchi].faceCells();
+
+    forAll(wallCells, facei) {
+      wallAdjacentCell[wallCells[facei]] = true;
+    }
+
+    label nWallAdjacentCells = 0;
+    forAll(wallAdjacentCell, celli) {
+      if (wallAdjacentCell[celli]) {
+        ++nWallAdjacentCells;
+      }
+    }
+    reduce(nWallAdjacentCells, sumOp<label>());
+
+    Info<< "Cells adjacent to WALL: " << nWallAdjacentCells << nl;
+  }
+
   Info<< "Frozen fields: U, p, e, T, rho, phi, mu, kappa" << nl
     << "Configured species: " << speciesNames << nl
     << "No SIMPLE/PIMPLE, pressure, momentum or energy solve." << nl
@@ -448,14 +500,28 @@ int main(int argc, char *argv[]) {
       );
 
       forAll(speciesNames, speciesi) {
-        speciesSource[speciesi][celli] = localSources[speciesi];
+
+        scalar sourceValue = localSources[speciesi];
+
+        /*--------------------------------------------------------------------
+        At this development step solid accumulation is allowed only in the
+        first cell layer adjacent to wall boundary patches.  Gas-source
+        values are left untouched for future coupled thermochemistry, although
+        gas equations do not use them yet.
+        --------------------------------------------------------------------*/
+        if (state[speciesi] == "solid" && !wallAdjacentCell[celli]) {
+          sourceValue = 0;
+        }
+
+        speciesSource[speciesi][celli] = sourceValue;
       }
     }
 
-    /*-------------------------------------------------------------------------
+    /*------------------------------------------------------------------------
     Solid species have no convection or diffusion.  They are advanced only by
-    the source returned by the thermochemistry routine above.
-    -------------------------------------------------------------------------*/
+    the thermochemistry source retained in cells adjacent to wall patches; the
+    source has been set to zero in all other cells.
+    ------------------------------------------------------------------------*/
     forAll(species, speciesi) {
       if (state[speciesi] == "solid") {
         #include "solveSolidSpecies.H"
