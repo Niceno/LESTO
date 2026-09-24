@@ -10,7 +10,7 @@ species loop, so speciesi identifies the species currently being solved.
 
 The frozen carrier fields rho and phi are not modified.  For species i,
 
-  ddt(rho,Y_i) + div(phi,Y_i) - laplacian(rhoD_i,Y_i) = 0
+  ddt(rho,Y_i) + div(phi,Y_i) - laplacian(rhoD_i,Y_i) = S_i
 
 where rhoD_i = rho*D_i.  Up to nCorr+1 scalar solves are performed within the
 same physical time step.  The old-time field remains fixed during these
@@ -29,13 +29,17 @@ OPENFOAM OBJECTS USED HERE
 
 /*-----------------------------------------------------------------------------
 Obtain references to the current species mass fraction and its density-weighted
-diffusion coefficient.  Y.name() is also the lookup name used by fvSolution and
-fvSchemes, e.g. Y_PbI2_g or Y_tracer.
+diffusion coefficient and thermochemistry source.  Y.name() is also the lookup
+name used by fvSolution and fvSchemes, e.g. Y_PbI2_g or Y_tracer.
 -----------------------------------------------------------------------------*/
-volScalarField& Y = species[speciesi];
-volScalarField& rhoDi = rhoD[speciesi];
-const word& fieldName = Y.name();
+      volScalarField & Y         = species[speciesi];
+      volScalarField & rhoDi     = rhoD[speciesi];
+const volScalarField & source    = speciesSource[speciesi];
+const word           & fieldName = Y.name();
 
+/*------------------------------
+Read the under-relaxation factor
+------------------------------*/
 scalar relaxation = 0;
 if (mesh.solution().relaxEquation(fieldName)) {
   relaxation = mesh.solution().equationRelaxationFactor(fieldName);
@@ -54,12 +58,20 @@ Repeatedly assemble and solve the same physical-time equation.  OpenFOAM's fvm
 operators build an implicit finite-volume matrix.  The old-time contribution
 from the previous physical time remains unchanged throughout these correctors.
 ----------------------------------------------------------------------------*/
+const dimensionedScalar    zeroSource("zeroSource", source.dimensions(), 0);
+const dimensionedScalar    Yfloor("Yfloor", dimless, 1e-12);
+const tmp <volScalarField> sinkCoeff =
+  -min(source, zeroSource)/max(Y, Yfloor);
+
 for (label corr = 0; corr <= nCorr; ++corr) {
 
   fvScalarMatrix YEqn (
-    fvm::ddt(rho, Y)
-      + fvm::div(phi, Y, divScheme)
-      - fvm::laplacian(rhoDi, Y)
+    fvm::ddt(rho, Y)                 /* unsteady term */
+      + fvm::div(phi, Y, divScheme)  /* advection term */
+      - fvm::laplacian(rhoDi, Y)     /* diffusion term */
+      + fvm::Sp(sinkCoeff(), Y)      /* negative source */
+      ==
+      max(source, zeroSource)        /* positive source */
   );
 
   /*---------------------------------------------------------------------------
@@ -82,6 +94,22 @@ if (!converged && tolerance > 0) {
   WarningInFunction << fieldName << " reached " << nCorr+1
     << " scalar solves without meeting outer tolerance " << tolerance
     << ". Last initial residual: " << initialResidual << nl;
+}
+
+/*-----------------------------------------------------------------------
+The gas sink is implicit due to linearization of the source term, so the
+amount consumed uses the gas value after the solve, not the source value
+evaluated at the start of the time step.  Give the solid that same amount
+to conserve the gas-to-solid transfer.
+-----------------------------------------------------------------------*/
+if (speciesNames[speciesi] == "PbI2_g") {
+  forAll(speciesNames, solidi) {
+    if (speciesNames[solidi] == "PbI2_s") {
+      speciesSource[solidi] = sinkCoeff()*Y;
+      speciesSource[speciesi] = -speciesSource[solidi];
+      break;
+    }
+  }
 }
 
 Info<< fieldName << " min/max = " << gMin(Y.primitiveField())

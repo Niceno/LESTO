@@ -17,40 +17,65 @@ void evaluateThermochemistry (
       << exit(FatalError);
   }
 
-  /*-------------------------------------------------------------------------
+  /*--------------------------------------------------------------------------
   Mock thermochemistry model.
 
   These are intentionally local test parameters, not case input.  They mimic
   quantities that would eventually be determined by the thermochemistry/GEMS
   calculation rather than by the CFD transport dictionaries.
 
-  For now only PbI2_s receives a non-zero source:
+  Case 011 introduces the first conservative interaction between two species:
 
-      S_PbI2_s = S0 * (Thot - T)/(Thot - Tcold)
+      PbI2_g  ->  PbI2_s
 
-  This retains the temperature dependence used in the previous development
-  step.  Pressure and the species values are passed through the interface but
-  are not used yet; they are already available for the future GEMS model.
-  -------------------------------------------------------------------------*/
-  const scalar S0    = 1.0e-6;  /* kg/(m3 s) */
+  The precipitation rate retains the temperature dependence from case 010.
+  No additional dependence on Y_PbI2_g is imposed in this baby step.  The new
+  interaction is only the equal and opposite transfer between gaseous and solid
+  PbI2.
+
+      Sprecip = S0 * (Thot - T)/(Thot - Tcold)  <--= NOT CORRECT!!!
+
+      S_PbI2_g = -Sprecip
+      S_PbI2_s = +Sprecip
+
+  The equal and opposite source terms conserve PbI2 mass locally.
+  --------------------------------------------------------------------------*/
   const scalar Thot  = 1000.0;  /* K */
   const scalar Tcold = 300.0;   /* K */
 
   sources = scalar(0);
 
+  label gasIndex   = -1;
+  label solidIndex = -1;
+
   forAll(speciesNames, speciesi) {
+    if (speciesNames[speciesi] == "PbI2_g") {
+      gasIndex = speciesi;
+    }
     if (speciesNames[speciesi] == "PbI2_s") {
-      sources[speciesi] = S0*(Thot - T)/(Thot - Tcold);
+      solidIndex = speciesi;
     }
   }
 
-  /*------------------------------------------------------------------------
-  Silence unused-argument warnings in this mock implementation.  Both values
-  belong to the interface because a real thermochemistry call will need the
-  complete local state.
-  ------------------------------------------------------------------------*/
+  if (gasIndex >= 0 && solidIndex >= 0) {
+
+    const scalar K = 1.0;           /* mock deposition rate kg/(m3 s) ...
+                                       ... per unit mass fraction */
+    const scalar zero = scalar(0);  /* OpenFOAM's zero scalar */
+
+    const scalar precipitation =
+      K * max((Thot - T)/(Thot - Tcold), zero)
+        * max(speciesValues[gasIndex], zero);
+
+    sources[gasIndex]   = -precipitation;
+    sources[solidIndex] =  precipitation;
+  }
+
+  /*-------------------------------------------------------------------------
+  Pressure belongs to the interface because a real thermochemistry call will
+  need the complete local state.  The present mock model does not use it yet.
+  -------------------------------------------------------------------------*/
   (void) p;
-  (void) speciesValues;
 }
 
 }

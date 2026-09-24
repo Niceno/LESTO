@@ -1,4 +1,4 @@
-/*------------------------------------------------------------------------------
+/*-NEW--------------------------------------------------------------------------
 
 rhoFixedFlowFoam -- fixed carrier flow, transient species transport, OF v2606.
 
@@ -9,10 +9,9 @@ https://www.gnu.org/licenses/gpl-3.0.html
 
 PURPOSE
 
-rhoFixedFlowFoam advances a list of passive gaseous species on an already
-converged carrier flow.  The carrier fields U, p, T/e, rho and phi are read
-from disk and remain fixed; no momentum, pressure, continuity or energy
-equation is solved.
+rhoFixedFlowFoam advances gaseous and solid species on an already converged
+carrier flow.  The carrier fields U, p, T/e, rho and phi are read from disk and
+remain fixed; no momentum, pressure, continuity or energy equation is solved.
 
 Solid species may also be listed.  Their Y_<speciesName> fields are read,
 registered and written.  At this development step a solid species is advanced
@@ -27,7 +26,7 @@ step.
 For every gaseous species i, the solver reads the mass-fraction field
 Y_<speciesName> and solves
 
-  ddt(rho,Y_i) + div(phi,Y_i) - laplacian(rhoD_i,Y_i) = 0,
+  ddt(rho,Y_i) + div(phi,Y_i) - laplacian(rhoD_i,Y_i) = S_i,
 
 where rhoD_i = rho*D_i.  The molecular diffusivity D_i is selected separately
 for each species in constant/speciesTransportProperties.  The currently
@@ -55,10 +54,10 @@ PROGRAM FLOW
   only by ddt(rho,Y_i) = source.  No rhoD_i is created for a solid species.
 
   - while physical time advances {
-      solve all gaseous species
       evaluate thermochemistry once in every cell
-      suppress solid sources outside WALL-adjacent cells
-      solve all solid species using the restricted source terms
+      suppress precipitation sources outside WALL-adjacent cells
+      solve all gaseous species using the thermochemistry source terms
+      solve all solid species using the same source terms
       write requested fields
     }
 
@@ -239,8 +238,8 @@ int main(int argc, char *argv[]) {
   entries remain null because the solid equation has no diffusion term.
 
   speciesSource[i] stores the thermochemistry source for species i in
-  kg/(m3 s).  The source fields are updated once per physical time step after
-  the gaseous species have been advanced.
+  kg/(m3 s).  The source fields are updated once at the beginning of each
+  physical time step and are then shared by the gas and solid equations.
   */
   PtrList <volScalarField> species        (speciesNames.size());
   PtrList <volScalarField> rhoD           (speciesNames.size());
@@ -295,11 +294,9 @@ int main(int argc, char *argv[]) {
         << exit(FatalError);
     }
 
-    /*----------------------------------------------------------------------
-    Create a source field for every species.  At present only solid-source
-    fields are used by an equation, but keeping the list generic mirrors the
-    interface expected from a future coupled thermochemistry calculation.
-    ----------------------------------------------------------------------*/
+    /*--------------------------------------
+    Create a source field for every species.
+    --------------------------------------*/
     speciesSource.set (
       speciesi,
       new volScalarField (
@@ -307,7 +304,7 @@ int main(int argc, char *argv[]) {
                  runTime.timeName(),
                  mesh,
                  IOobject::NO_READ,
-                 IOobject::NO_WRITE),
+                 IOobject::AUTO_WRITE),
         mesh,
         dimensionedScalar("zeroSource", dimDensity/dimTime, 0)
       )
@@ -418,6 +415,9 @@ int main(int argc, char *argv[]) {
     }
   }
 
+  /*-----------------------
+  Find wall-adjencent cells
+  -----------------------*/
   boolList wallAdjacentCell(mesh.nCells(), false);
 
   if (haveSolidSpecies) {
@@ -458,26 +458,17 @@ int main(int argc, char *argv[]) {
 
     Info<< "Time = " << runTime.timeName() << nl << endl;
 
-    /*-------------------------------------------------------------------------
-    The carrier flow remains frozen.  First advance all gaseous species exactly
-    as before.  They are presently uncoupled from thermochemistry source terms,
-    so their residual histories remain unchanged.
-    -------------------------------------------------------------------------*/
-    forAll(species, speciesi) {
-      if (state[speciesi] == "gas") {
-        #include "solveGasSpecies.H"
-      }
-    }
+    /*----------------------------------------------------------------------
+    Evaluate the complete thermochemistry state once in every cell at the
+    beginning of the physical time step.  The routine receives T, p, all
+    species names and the current species values, and returns one volumetric
+    source for every species.  The same source vector is then used by both
+    gas and solid equations, which makes the PbI2_g -> PbI2_s exchange
+    conservative.
 
-    /*-------------------------------------------------------------------------
-    Evaluate the complete thermochemistry state once in every cell after the
-    gaseous species have been advanced.  The routine receives T, p, all species
-    names and all current species values, and returns one volumetric source for
-    every species.
-
-    The present routine is deliberately a simple mock-up.  Its interface is the
-    part intended to survive when the implementation is eventually replaced by
-    a GEMS call.
+    The present routine is deliberately a simple mock-up.  Its interface is
+    the part intended to survive when the implementation is eventually
+    replaced by a GEMS call.
     -------------------------------------------------------------------------*/
     const volScalarField& T = thermo.T();
     const volScalarField& p = thermo.p();
@@ -504,12 +495,12 @@ int main(int argc, char *argv[]) {
         scalar sourceValue = localSources[speciesi];
 
         /*--------------------------------------------------------------------
-        At this development step solid accumulation is allowed only in the
-        first cell layer adjacent to wall boundary patches.  Gas-source
-        values are left untouched for future coupled thermochemistry, although
-        gas equations do not use them yet.
+        At this development step every non-zero thermochemistry source belongs
+        to the PbI2 precipitation reaction.  The complete source vector is
+        therefore suppressed outside the first cell layer adjacent to WALL, so
+        the PbI2_g sink and PbI2_s source always act in exactly the same cells.
         --------------------------------------------------------------------*/
-        if (state[speciesi] == "solid" && !wallAdjacentCell[celli]) {
+        if (haveSolidSpecies && !wallAdjacentCell[celli]) {
           sourceValue = 0;
         }
 
@@ -518,8 +509,38 @@ int main(int argc, char *argv[]) {
     }
 
     /*------------------------------------------------------------------------
+    Advance gaseous species with the thermochemistry source included on the
+    right-hand side of the transport equation.
+    ------------------------------------------------------------------------*/
+    forAll(species, speciesi) {
+      if (state[speciesi] == "gas") {
+        #include "solveGasSpecies.H"
+      }
+    }
+
+    /*------------------------------------------------------------------------
+    Print the volume-integrated thermochemistry source for every species.
+    Equal and opposite PbI2_g/PbI2_s values provide a direct conservation check
+    for the new gas-solid coupling.
+    ------------------------------------------------------------------------*/
+    scalar netThermochemistrySource = 0;
+
+    forAll(speciesSource, speciesi) {
+      const scalar integratedSource =
+        fvc::domainIntegrate(speciesSource[speciesi]).value();
+
+      Info<< "Integrated source " << speciesNames[speciesi] << " = "
+        << integratedSource << " kg/s" << nl;
+
+      netThermochemistrySource += integratedSource;
+    }
+
+    Info<< "Net thermochemistry source = " << netThermochemistrySource
+      << " kg/s" << nl;
+
+    /*------------------------------------------------------------------------
     Solid species have no convection or diffusion.  They are advanced only by
-    the thermochemistry source retained in cells adjacent to wall patches; the
+    the same thermochemistry source retained in cells adjacent to WALL; the
     source has been set to zero in all other cells.
     ------------------------------------------------------------------------*/
     forAll(species, speciesi) {

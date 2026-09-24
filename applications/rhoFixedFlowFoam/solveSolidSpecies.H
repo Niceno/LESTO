@@ -14,10 +14,10 @@ created by the volumetric source returned by evaluateThermochemistry():
 
   ddt(rho,Y_i) = S_i
 
-The thermochemistry source is evaluated once per cell and physical time step,
-after all gaseous species have been advanced.  The equation contains only a
-transient diagonal term, so it is solved once per physical time step with
-OpenFOAM's diagonal linear solver.  No nCorr loop or under-relaxation is
+The thermochemistry source is evaluated once per cell at the beginning of the
+physical time step and is shared with the gas equation.  The equation contains
+only a transient diagonal term, so it is solved once per physical time step
+with OpenFOAM's diagonal linear solver.  No nCorr loop or under-relaxation is
 required.
 
 ------------------------------------------------------------------------------*/
@@ -35,10 +35,14 @@ const word& fieldName = Y.name();
 Assemble and solve the accumulation-only equation.  There are deliberately
 no convection or diffusion terms here.
 ------------------------------------------------------------------------*/
+const dimensionedScalar zeroSource("zeroSource", source.dimensions(), 0);
+const dimensionedScalar Yfloor("Yfloor", dimless, 1e-12);
+
 fvScalarMatrix YEqn (
-  fvm::ddt(rho, Y)
+  fvm::ddt(rho, Y)                                       /* unstead term */
+  + fvm::Sp(-min(source, zeroSource)/max(Y, Yfloor), Y)  /* negative source */
   ==
-  source
+  max(source, zeroSource)                                /* positive source */
 );
 
 YEqn.solve(fieldName);
