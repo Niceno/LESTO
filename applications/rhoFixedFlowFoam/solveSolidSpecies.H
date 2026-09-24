@@ -37,6 +37,7 @@ no convection or diffusion terms here.
 ------------------------------------------------------------------------*/
 const dimensionedScalar zeroSource("zeroSource", source.dimensions(), 0);
 const dimensionedScalar Yfloor("Yfloor", dimless, 1e-12);
+
 const tmp<volScalarField> sinkCoeff =
   -min(source, zeroSource)/max(Y, Yfloor);
 
