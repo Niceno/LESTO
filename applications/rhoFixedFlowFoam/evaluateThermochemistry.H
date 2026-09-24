@@ -11,8 +11,8 @@ evaluateThermochemistry
 PURPOSE
 
 Provides one local thermochemistry interface for all species.  The solver calls
-this routine once per cell and physical time step after the gaseous species have
-been advanced.
+this routine once per cell at the beginning of each physical time step, before
+the species transport equations are advanced.
 
 The routine receives the complete local state currently available to the CFD
 solver:
@@ -33,11 +33,11 @@ transport loop.
 namespace Foam {
 
   void evaluateThermochemistry (
-    const scalar T,
-    const scalar p,
-    const wordList& speciesNames,
-    const scalarField& speciesValues,
-    scalarField& sources
+    const scalar        T,
+    const scalar        p,
+    const wordList    & speciesNames,
+    const scalarField & speciesValues,
+          scalarField & sources
   );
 
 }
