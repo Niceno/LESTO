@@ -37,15 +37,19 @@ no convection or diffusion terms here.
 ------------------------------------------------------------------------*/
 const dimensionedScalar zeroSource("zeroSource", source.dimensions(), 0);
 const dimensionedScalar Yfloor("Yfloor", dimless, 1e-12);
+const tmp<volScalarField> sinkCoeff =
+  -min(source, zeroSource)/max(Y, Yfloor);
 
 fvScalarMatrix YEqn (
   fvm::ddt(rho, Y)                                       /* unstead term */
-  + fvm::Sp(-min(source, zeroSource)/max(Y, Yfloor), Y)  /* negative source */
+  + fvm::Sp(sinkCoeff(), Y)                              /* negative source */
   ==
   max(source, zeroSource)                                /* positive source */
 );
 
 YEqn.solve(fieldName);
+
+#include "collectSpeciesBalance.H"
 
 Info<< fieldName << " min/max = " << gMin(Y.primitiveField())
   << " " << gMax(Y.primitiveField()) << nl;

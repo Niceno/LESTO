@@ -103,8 +103,9 @@ int main(int argc, char *argv[]) {
   Please note that "he" is OpenFOAM's enthalpy (h) or energy (e) variable.
   --------------------------------------------------------------------------*/
   Info << "Reading frozen thermophysical state" << nl;
-  autoPtr<fluidThermo> pThermo(fluidThermo::New(mesh));
-  fluidThermo& thermo = pThermo();
+  autoPtr     <fluidThermo> pThermo(fluidThermo::New(mesh));
+  fluidThermo & thermo = pThermo();
+
   thermo.validate(args.executable(), "e");
   thermo.he().writeOpt() = IOobject::AUTO_WRITE;
 
@@ -456,6 +457,11 @@ int main(int argc, char *argv[]) {
 
   while (runTime.loop()) {
 
+    /* Lists for checking the species mass conservation */
+    List <scalar> speciesBoundaryInRate (species.size(), 0);
+    List <scalar> speciesBoundaryOutRate(species.size(), 0);
+    List <scalar> realizedSourceRate    (species.size(), 0);
+
     Info<< "Time = " << runTime.timeName() << nl << endl;
 
     /*----------------------------------------------------------------------
@@ -548,6 +554,8 @@ int main(int argc, char *argv[]) {
         #include "solveSolidSpecies.H"
       }
     }
+
+    #include "checkSpeciesConservation.H"
 
     runTime.write();
 

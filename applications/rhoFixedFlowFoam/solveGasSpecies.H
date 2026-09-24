@@ -63,6 +63,8 @@ const dimensionedScalar    Yfloor("Yfloor", dimless, 1e-12);
 const tmp <volScalarField> sinkCoeff =
   -min(source, zeroSource)/max(Y, Yfloor);
 
+mesh.setFluxRequired(fieldName);
+
 for (label corr = 0; corr <= nCorr; ++corr) {
 
   fvScalarMatrix YEqn (
@@ -82,12 +84,18 @@ for (label corr = 0; corr <= nCorr; ++corr) {
   YEqn.relax(relaxation);
   initialResidual = YEqn.solve(fieldName).initialResidual();
 
+  if (initialResidual < tolerance || corr == nCorr) {
+    #include "collectSpeciesBalance.H"
+  }
+
   if (initialResidual < tolerance) {
     Info<< fieldName << " is converged: initial residual " << initialResidual
       << " < " << tolerance << "; outer iteration " << corr+1 << nl;
     converged = true;
     break;
   }
+
+
 }
 
 if (!converged && tolerance > 0) {

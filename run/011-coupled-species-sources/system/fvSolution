@@ -23,15 +23,6 @@ solvers {
     directSolveCoarsest   yes;
   }
 
-  Y_tracer {
-    solver          GAMG;
-    tolerance       1e-7;
-    relTol          0;
-    smoother        GaussSeidel;
-
-    directSolveCoarsest   yes;
-  }
-
   Y_PbI2_s {
     solver          diagonal;
   }
@@ -41,6 +32,5 @@ relaxationFactors {
 
   equations {
     Y_PbI2_g        0.995;
-    Y_tracer        0.995;
   }
 }
