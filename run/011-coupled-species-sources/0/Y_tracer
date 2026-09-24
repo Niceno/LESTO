@@ -1,0 +1,21 @@
+FoamFile{format ascii;  class volScalarField;  object Y_tracer;}
+
+dimensions      [0 0 0 0 0 0 0];
+
+internalField   uniform 0;
+
+boundaryField {
+
+  INLET {
+    type            fixedValue;
+    value           uniform 1e-6;
+  }
+
+  OUTLET {
+    type            zeroGradient;
+  }
+
+  WALL {
+    type            zeroGradient;
+  }
+}

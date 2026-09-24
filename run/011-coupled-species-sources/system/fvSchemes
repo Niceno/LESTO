@@ -1,0 +1,47 @@
+/*------------------------------------------------------------------------------
+
+system/fvSchemes
+
+  - time discretization
+  - gradient schemes
+  - convection/divergence schemes
+  - diffusion/Laplacian schemes
+  - interpolation schemes
+  - face-normal gradient schemes
+
+------------------------------------------------------------------------------*/
+FoamFile{version 2.0;  format ascii;  class dictionary;  object fvSchemes;}
+/*----------------------------------------------------------------------------*/
+
+ddtSchemes {
+
+  default         Euler;
+}
+
+gradSchemes {
+
+  default         Gauss linear;
+}
+
+divSchemes {
+
+  default             none;
+
+  div(phi,Y_PbI2_g)   Gauss upwind;
+  div(phi,Y_tracer)   Gauss upwind;
+}
+
+laplacianSchemes {
+
+  default         Gauss linear corrected;
+}
+
+interpolationSchemes {
+
+  default         linear;
+}
+
+snGradSchemes {
+
+  default         corrected;
+}
