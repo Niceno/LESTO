@@ -57,7 +57,7 @@ PROGRAM FLOW
       evaluate thermochemistry once in every cell
       suppress precipitation sources outside WALL-adjacent cells
       solve all gaseous species using the thermochemistry source terms
-      solve all solid species using the same source terms
+      solve all solid species using the updated source terms
       write requested fields
     }
 
@@ -239,8 +239,9 @@ int main(int argc, char *argv[]) {
   entries remain null because the solid equation has no diffusion term.
 
   speciesSource[i] stores the thermochemistry source for species i in
-  kg/(m3 s).  The source fields are updated once at the beginning of each
-  physical time step and are then shared by the gas and solid equations.
+  kg/(m3 s).  The source fields are evaluated at the beginning of each
+  physical time step.  The PbI2 sources are adjusted after the gas solve to
+  pass the realized gas sink to the solid equation.
   */
   PtrList <volScalarField> species        (speciesNames.size());
   PtrList <volScalarField> rhoD           (speciesNames.size());
@@ -468,9 +469,8 @@ int main(int argc, char *argv[]) {
     Evaluate the complete thermochemistry state once in every cell at the
     beginning of the physical time step.  The routine receives T, p, all
     species names and the current species values, and returns one volumetric
-    source for every species.  The same source vector is then used by both
-    gas and solid equations, which makes the PbI2_g -> PbI2_s exchange
-    conservative.
+    source for every species.  After the gas solve, the PbI2_s source is set
+    to the realized PbI2_g sink, making their exchange conservative.
 
     The present routine is deliberately a simple mock-up.  Its interface is
     the part intended to survive when the implementation is eventually
@@ -546,7 +546,7 @@ int main(int argc, char *argv[]) {
 
     /*------------------------------------------------------------------------
     Solid species have no convection or diffusion.  They are advanced only by
-    the same thermochemistry source retained in cells adjacent to WALL; the
+    the adjusted thermochemistry source retained in cells adjacent to WALL; the
     source has been set to zero in all other cells.
     ------------------------------------------------------------------------*/
     forAll(species, speciesi) {

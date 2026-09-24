@@ -28,12 +28,11 @@ void evaluateThermochemistry (
 
       PbI2_g  ->  PbI2_s
 
-  The precipitation rate retains the temperature dependence from case 010.
-  No additional dependence on Y_PbI2_g is imposed in this baby step.  The new
-  interaction is only the equal and opposite transfer between gaseous and solid
-  PbI2.
+  The precipitation rate retains the temperature dependence from case 010
+  and is proportional to the local Y_PbI2_g.  The interaction is the equal
+  and opposite transfer between gaseous and solid PbI2.
 
-      Sprecip = S0 * (Thot - T)/(Thot - Tcold)  <--= NOT CORRECT!!!
+      Sprecip = K * max((Thot - T)/(Thot - Tcold), 0) * max(Y_PbI2_g, 0)
 
       S_PbI2_g = -Sprecip
       S_PbI2_s = +Sprecip

@@ -2,15 +2,15 @@
 
 ## Purpose
 
-`rhoFixedFlowFoam` advances one or more passive gaseous species on an already
-converged `rhoSimpleFoam` carrier flow.
+`rhoFixedFlowFoam` advances gaseous species and accumulates solid species on an
+already converged `rhoSimpleFoam` carrier flow.
 
 The carrier fields `U`, `p`, `e/T`, `rho` and `phi` are read from the saved
 steady solution and remain frozen throughout the transient species calculation.
 No momentum, pressure, continuity or energy equation is solved, and there is no
 SIMPLE/PIMPLE loop.
 
-The gaseous species are defined at run time in
+Gaseous and solid species are defined at run time in
 `constant/speciesTransportProperties`.  The solver therefore does not need to
 be rebuilt when another passive gaseous species is added.  A one-species case
 is simply a species list containing one entry.
@@ -27,7 +27,7 @@ and represents a dimensionless mass fraction:
 
 Each species is advanced in physical time with
 
-    ddt(rho,Y_i) + div(phi,Y_i) - laplacian(rhoD_i,Y_i) = 0
+    ddt(rho,Y_i) + div(phi,Y_i) - laplacian(rhoD_i,Y_i) = S_i
 
 where
 
@@ -35,6 +35,13 @@ where
 
 `D_i` is the molecular diffusivity in m2/s.  The coefficient entering the
 finite-volume diffusion term is therefore `rhoD_i`, with units kg/(m s).
+
+Solid species have no convection or diffusion and satisfy `ddt(rho,Y_i) = S_i`.
+In case 011 a mock precipitation source transfers PbI2 from gas to solid in
+cells adjacent to `WALL`.  It depends on temperature and local `Y_PbI2_g`;
+the solid source is adjusted after the gas solve to match the realized sink.
+After each time step, the solver reports the inventory, boundary fluxes,
+sources and balance error for each configured species and their total.
 
 ## Frozen carrier fields
 
@@ -136,11 +143,11 @@ concentration output.
 
 ## Current limitations
 
-- All transported species are currently passive gaseous species.
-- Species equations are uncoupled from each other.
-- No chemistry or thermodynamic-equilibrium source terms are included.
-- No deposition or precipitation is included yet.
-- No solid-species accumulation equation is included yet.
+- Gaseous species are transported; solid species accumulate without transport.
+- The only current species interaction is `PbI2_g` -> `PbI2_s`.
+- The precipitation source is a mock model; no GEMS coupling is included yet.
+- Precipitation is currently restricted to cells adjacent to `WALL`.
+- Solid species have no convection or diffusion equation.
 - The carrier flow is frozen and is not modified by species transport.
 - `PbI2He` is currently the only variable-diffusivity model and is restricted
   to `PbI2_g`.

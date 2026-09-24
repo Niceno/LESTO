@@ -10,12 +10,14 @@ solid-species loop, so speciesi identifies the solid species currently being
 solved.
 
 At this development step the solid has no convection and no diffusion.  It is
-created by the volumetric source returned by evaluateThermochemistry():
+created by the volumetric source from evaluateThermochemistry(), adjusted
+after the gas solve:
 
   ddt(rho,Y_i) = S_i
 
 The thermochemistry source is evaluated once per cell at the beginning of the
-physical time step and is shared with the gas equation.  The equation contains
+physical time step.  The PbI2_s source is then adjusted to match the realized
+gas sink.  The equation contains
 only a transient diagonal term, so it is solved once per physical time step
 with OpenFOAM's diagonal linear solver.  No nCorr loop or under-relaxation is
 required.
